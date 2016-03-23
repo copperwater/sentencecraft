@@ -7,6 +7,7 @@ mongo = PyMongo(app)
 
 @app.route('/')
 def home_page():
+    mongo.db.users.insert({"online": True})
     test = mongo.db.users.find({'online':True})
     return dumps(test)
 
