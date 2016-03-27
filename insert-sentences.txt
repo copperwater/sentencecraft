@@ -1,0 +1,5 @@
+use app
+db.sentences.insert({"content": "Sample sentence 1."})
+db.sentences.insert({"content": "Let's do this."})
+db.sentences.insert({"content": "Crafting the sentences."})
+db.sentences.insert({"content": "Doing the things."})
