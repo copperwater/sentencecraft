@@ -1,5 +1,5 @@
 use app
-db.sentences.insert({"content": "Sample sentence 1."})
-db.sentences.insert({"content": "Let's do this."})
-db.sentences.insert({"content": "Crafting the sentences."})
-db.sentences.insert({"content": "Doing the things."})
+db.sentences.insert({"content": "Sample sentence 1.", "complete": true})
+db.sentences.insert({"content": "Let's do this.", "complete": true})
+db.sentences.insert({"content": "Crafting the sentences.", "complete": true})
+db.sentences.insert({"content": "Doing the things.", "complete":true})
