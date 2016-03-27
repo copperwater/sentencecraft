@@ -5,6 +5,10 @@ from bson.json_util import dumps
 app = Flask(__name__)
 mongo = PyMongo(app)
 
+@app.route('/view')
+def api_view_sentences:
+    return mongo.db.sentences.find({'complete':True})
+
 @app.route('/')
 def home_page():
     mongo.db.users.insert({"online": True})
