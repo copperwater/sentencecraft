@@ -1,4 +1,5 @@
 from flask import Flask
+from flask import request # lets us access request parameters
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 
@@ -6,11 +7,11 @@ app = Flask(__name__)
 mongo = PyMongo(app)
 
 @app.route('/view')
-def api_view_sentences:
+def api_view_sentences():
     count = request.args.get('count')
     # TODO: use count to limit the number of sentences
     sentences = mongo.db.sentences.find({'complete':True})
-    return dumps(sentences)
+    return 'Your count was '+count+' '+dumps(sentences)
 
 @app.route('/')
 def home_page():
