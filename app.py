@@ -25,10 +25,11 @@ def api_view_sentences():
     if (count is None): count = '10'
 
     try: i_count = int(count)
-    except: count = '10' 
+    except ValueError: i_count = 10 
 
     # TODO: order returned sentences
-    sentences = mongo.db.sentences.find({'complete':True}).limit(int(count))
+    sentences = mongo.db.sentences.find({'complete':True}).limit(i_count)
+
     return 'Your count was '+count+' '+dumps(sentences)
 
 if __name__ == '__main__':
