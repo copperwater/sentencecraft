@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request # lets us access request parameters
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
+import flask
 
 app = Flask("app")
 mongo = PyMongo(app)
@@ -27,6 +28,11 @@ def api_view_sentences():
     #return 'Your count was '+count+' '+dumps(sentences)
     test = mongo.db.sentences.find()
     return dumps(test)
+	
+@app.route('/view-HTML')
+def view_HTML_sample():
+	sentences = mongo.db.sentences.find()
+	return flask.render_template('index.html', sentences = sentences)
 
 if __name__ == '__main__':
     app.run(debug=True)
