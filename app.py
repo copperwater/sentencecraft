@@ -7,7 +7,10 @@ mongo = PyMongo(app)
 
 @app.route('/view')
 def api_view_sentences:
-    return mongo.db.sentences.find({'complete':True})
+    count = request.args.get('count')
+    # TODO: use count to limit the number of sentences
+    sentences = mongo.db.sentences.find({'complete':True})
+    return dumps(sentences)
 
 @app.route('/')
 def home_page():
