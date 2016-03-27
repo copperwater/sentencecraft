@@ -21,12 +21,15 @@ mongo = PyMongo(app)
 
 @app.route('/view-sentences/')
 def api_view_sentences():
-    #count = request.args.get('count')
-    # TODO: use count to limit the number of sentences
-    sentences = mongo.db.sentences.find({'complete':True})
-    #return 'Your count was '+count+' '+dumps(sentences)
-    test = mongo.db.sentences.find()
-    return dumps(test)
+    count = request.args.get('count')
+    if (count is None): count = '10'
+
+    try: i_count = int(count)
+    except: count = '10' 
+
+    # TODO: order returned sentences
+    sentences = mongo.db.sentences.find({'complete':True}).limit(int(count))
+    return 'Your count was '+count+' '+dumps(sentences)
 
 if __name__ == '__main__':
     app.run(debug=True)
