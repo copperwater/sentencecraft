@@ -1,12 +1,12 @@
 ''' 
-AbstractCollection module. This provides an abstract base class for collections
+LexemeCollection module. This provides an abstract base class for collections
 of different lexemes to inherit from. 
 '''
 
 # abstract base class module
 import abc
 
-class AbstractCollection(object):
+class LexemeCollection(object):
     # define metaclass properly as abstract
     __metaclass__ = abc.ABCMeta
     
