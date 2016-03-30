@@ -1,5 +1,19 @@
+// Work in the "app" database
 use app
-db.sentences.insert({"content": "Sample sentence 1.", "complete": true})
-db.sentences.insert({"content": "Let's do this.", "complete": true})
-db.sentences.insert({"content": "Crafting the sentences.", "complete": true})
-db.sentences.insert({"content": "Doing the things.", "complete":true})
+
+// Clear all existing sentences
+db.sentences.remove({})
+
+db.sentences.insert({"text": "Sample sentence 1.", "complete": true})
+db.sentences.insert({"text": "Let's do this.", "complete": true})
+db.sentences.insert({"text": "Crafting the sentences.", "complete": true})
+db.sentences.insert({"text": "Doing the things.", "complete":true})
+db.sentences.insert({"text": "So I was", "complete": false})
+db.sentences.insert({"text": "The quick brown fox jumped over the lazy", "complete":false})
+db.sentences.insert({"text": "I like shorts, they're comfy and easy to wear!", "complete":true})
+db.sentences.insert({"text": "Shark populations are in decline", "complete":false})
+db.sentences.insert({"text": "Whether 'tis nobler in the mind to suffer the slings and arrows of outrageous fortunes, or to take arms against a sea of troubles, and by opposing end them?", "complete": true})
+db.sentences.insert({"text": "The sky is green.", "complete": true})
+db.sentences.insert({"text": "lol rofl roflmao roflmaoqxz omgwtfbbq", "complete": true})
+db.sentences.insert({"text": "The Rensselaer Student Onion celebrated its 125th anniversary this year", "complete": true})
+db.sentences.insert({"text": "PSA: Don't stick forks in toasters!", "complete": true})
