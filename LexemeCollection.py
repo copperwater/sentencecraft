@@ -11,5 +11,5 @@ class LexemeCollection(object):
     __metaclass__ = abc.ABCMeta
     
     @abc.abstractmethod # define abstract methods
-    def Foo(sthg):
+    def Foo(self):
         pass
