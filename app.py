@@ -30,5 +30,11 @@ def api_view_sentences():
     sentences = mongo.db.sentences.find({'complete':True}).sort("_id", -1).limit(int(count))
     return 'Your count was '+count+' '+dumps(sentences)
 
+@app.route('/incomplete-sentence/')
+def api_get_incomplete_sentence():
+    sentence = mongo.db.sentences.find({'complete':False}).sort("_id", -1).limit(1)
+    return dumps(sentence)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
