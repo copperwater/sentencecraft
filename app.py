@@ -35,6 +35,10 @@ def api_get_incomplete_sentence():
     sentence = mongo.db.sentences.find({'complete':False}).sort("_id", -1).limit(1)
     return dumps(sentence)
 
+@app.route('/view-HTML')
+def view_HTML_sample():
+    sentences = mongo.db.sentences.find()
+    return flask.render_template('index.html', sentences = sentences)
 
 if __name__ == '__main__':
     app.run(debug=True)
