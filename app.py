@@ -2,6 +2,7 @@ from flask import Flask
 from flask import request # lets us access request parameters
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
+import flask
 
 app = Flask("app")
 mongo = PyMongo(app)
