@@ -39,7 +39,7 @@ def api_get_incomplete_sentence():
 @app.route('/view-HTML')
 def view_HTML_sample():
     sentences = mongo.db.sentences.find()
-    return flask.render_template('index.html', sentences = sentences)
+    return flask.render_template('index.html',sentences = sentences)
 
 if __name__ == '__main__':
     app.run(debug=True)
