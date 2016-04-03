@@ -1,0 +1,96 @@
+/* CSS Resets for all main displaying elements. */
+html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, cite, code, em, img, q, s, strike, strong, sub, sup, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, section, summary, mark {
+    margin: 0;
+    padding: 0;
+    border: 0px none;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+/* Global styles */
+body {
+    background-color: #fafaff;
+    font-family:helvetica;
+}
+
+/* Header styles */
+header {
+    margin: 5px auto 25px auto;
+    background-color:#faa;
+    width:60%;
+}
+img#pagetitle {
+    display:block;
+    max-width:400px;
+    margin:0 auto;
+}
+nav#controls {
+    background-color:#afa;
+    margin: 0 auto;
+    padding: 8px 0 8px;
+    text-align:center;
+}
+nav#modes {
+    display:inline-block;
+    padding-right:4px;
+    background-color: #4a4;
+}
+nav#lexemes {
+    display:inline-block;
+    padding-left:4px;
+    background-color:#a44;
+}
+button {
+    padding:10px;
+    min-width:150px;
+}
+button.switchmode {
+    background-color:#aaf;
+    border:0.5px black solid;
+    border-radius: 6px;
+    font-size: 170%;
+}
+button.switchlexeme {
+    background-color: #993;
+    border:0.5px black solid;
+    border-radius:6px;
+    font-size:170%;
+}
+
+/* Main content styles */
+main {
+    width:60%;
+    margin:0 auto;
+    text-align:center;
+}
+section#text {
+    font-size:200%;
+    padding: 0.4em 0em 0.4em 0em;
+}
+input#entry {
+    display:inline;
+    /* input must define a font-size to not render at default font size, even
+       if the font-size changes nothing. */
+    font-size:100%;
+    width:40%;
+}
+section#tags {
+    /* text-align:left; */
+    margin:1em 0 1em;
+}
+span.tag {
+    background-color:#ea3;
+    padding:0.4em;
+    border-radius:6px;
+}
+button.submit {
+    font-size: 200%;
+    width:40%;
+    margin-top:10px;
+    padding:6px;
+    background-color:#228;
+    color:#fff;
+    border:none;
+    border-radius:10px;
+}
