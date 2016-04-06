@@ -6,6 +6,10 @@ import LexemeCollection
 
 class WordCollection(LexemeCollection):
 
-    # Foo inherited from LexemeCollection
-    def Foo(self):
-        print "sjdfks"
+    # Abstract function instantiations
+    def __init__(self, firstlex, tagList):
+        LexemeCollection.__init__(self, firstlex, tagList)
+
+    # Concatenate words and separate them with a single space.
+    def view(self):
+        ' '.join(lexemes)

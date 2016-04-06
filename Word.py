@@ -6,6 +6,13 @@ import Lexeme
 
 class Word(Lexeme):
 
+    # Abstract function instantiations
+    def __init__(self, textString):
+        Lexeme.__init__(self, textString);
+
+    def getText(self):
+        return Lexeme.getText(self)
+
     # Valid words consist of only alphabetic characters.
     # TODO: Valid words can also be all numbers and can end with a , or ;
     def isValid(self):

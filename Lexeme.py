@@ -33,3 +33,7 @@ class Lexeme(object):
     # Render this lexeme as a string.
     def getText(self):
         return text
+
+    # Also provide a Python-friendly way to render it as a string.
+    def __str__(self):
+        return getText(self)

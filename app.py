@@ -3,6 +3,8 @@ from flask import request # lets us access request parameters
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
+import Word
+import WordCollection
 
 app = Flask("app")
 mongo = PyMongo(app)
@@ -10,7 +12,7 @@ mongo = PyMongo(app)
 # To manually insert sentences into the database
 # > mongo
 # > use app
-# > db.sentences.insert({"content": "Illuminati confirmed." 
+# > db.sentences.insert({"content": "Illuminati confirmed."
 #                "complete": true})
 
 # To insert from a file
@@ -26,14 +28,14 @@ def api_view_sentences():
     if (count is None): count = '10'
 
     try: i_count = int(count)
-    except ValueError: i_count = 10 
+    except ValueError: i_count = 10
 
     sentences = mongo.db.sentences.find({'complete':True}).sort("_id", -1).limit(int(count))
     return 'Your count was '+count+' '+dumps(sentences)
 
 @app.route('/incomplete-sentence/')
 def api_get_incomplete_sentence():
-    sentence = mongo.db.sentences.find_one({'complete':False})    
+    sentence = mongo.db.sentences.find_one({'complete':False})
     try:
         key = sentence['key']
         return 'The key was: {0}'.format(key) + dumps(sentence)
