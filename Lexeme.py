@@ -10,20 +10,26 @@ class Lexeme(object):
 
     text=''
 
+    # Constructor
     def __init__(self, textString):
         text=textString
 
+    # Determine if this is a valid instance of its lexeme
     @abc.abstractmethod
     def isValid(self):
         raise NotImplementedError('Unimplemented abstract method!')
 
+    # Determine if this is a valid lexeme to appear at the start of a
+    # collection.
     @abc.abstractmethod
     def isValidBeginning(self):
         raise NotImplementedError('Unimplemented abstract method!')
 
+    # Determine if this is a valid lexeme to appear at the end of a collection.
     @abc.abstractmethod
     def isValidEnd(self):
         raise NotImplementedError('Unimplemented abstract method!')
 
+    # Render this lexeme as a string.
     def getText(self):
         return text
