@@ -1,10 +1,12 @@
 package sentencecraft.sentencecraft;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,5 +50,25 @@ public class MainMenu extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    /*called on button click. Will check for the button and create appropriate intent*/
+    public void buttonResponse(View view){
+        Intent intent;
+        switch(view.getId()){
+            case R.id.main_start:
+                intent = new Intent(this, StartSentence.class);
+                break;
+            case R.id.main_continue:
+                intent = new Intent(this, ContinueSentence.class);
+                break;
+            case R.id.main_view:
+                intent = new Intent(this, ViewSentence.class);
+                break;
+            default:
+                Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
+                return;
+        }
+        startActivity(intent);
     }
 }
