@@ -1,3 +1,6 @@
+# Python bytecode
+*.pyc
+
 # Xcode
 #
 build/
