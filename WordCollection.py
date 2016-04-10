@@ -2,7 +2,7 @@
 WordCollection - module for a collection of words, which form a sentence.
 '''
 
-import LexemeCollection
+from LexemeCollection import LexemeCollection
 
 class WordCollection(LexemeCollection):
 
