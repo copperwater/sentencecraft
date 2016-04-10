@@ -8,7 +8,12 @@ import abc
 import uuid
 import Lexeme
 
+
 class LexemeCollection(object):
+    '''
+    Abstract represention a collection of lexemes.
+    A collection of sentences, words etc.
+    '''
     # define metaclass properly as abstract
     __metaclass__ = abc.ABCMeta
 
@@ -28,27 +33,35 @@ class LexemeCollection(object):
         self.complete = False
         self.key = ''
 
-    # Add a new lexeme to the list, possibly completing the sentence.
-    def append(self, lex, doFinish=False):
+    def append(self, lex, do_finish=False):
+        """
+        Add a new lexeme to the list, possibly completing the sentence.
+        """
         # TODO type check on lex == Lexeme
         self.lexemes.append(lex)
-        if doFinish:
+        if do_finish:
             self.complete = True
 
-    # Mark this lexeme as reserved by generating a random UUID key.
-    def checkOut(self):
+    def check_out(self):
+        """
+        Mark this lexeme as reserved by generating a random UUID key.
+        """
         # TODO: check if it already has a key
-        key = uuid.uuid4()
+        self.key = uuid.uuid4()
 
-    # Test the lexemes to make sure they are all correctly valid.
     def validate(self):
-        for lex in lexemes[1:-1]:
-            if not lex.isValid(): return False
+        """
+        Test the lexemes to make sure they are all correctly valid.
+        """
+        for lex in self.__metaclass__.lexemes[1:-1]:
+            if not lex.isValid():
+                return False
 
-        return lexemes[0].isValidBeginning() and
-            lexemes[-1].isValidEnd()
+        return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
 
-    # Render as a string
     @abc.abstractmethod # define this as an abstract method
     def view(self):
+        """
+        Render as a string
+        """
         raise NotImplementedError('Unimplemented abstract method!')
