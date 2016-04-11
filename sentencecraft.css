@@ -43,11 +43,17 @@ button {
     min-width:150px;
     color:#000;
 }
+button:hover {
+  cursor:pointer;
+}
 button.switchmode {
     background-color:#1a1aff;
     border:0.5px black solid;
     border-radius: 6px;
     font-size: 170%;
+}
+button.switchmode:hover {
+  background-color:#6b6bff;
 }
 button.switchmode.active {
   background-color:#0000b3;
@@ -59,6 +65,9 @@ button.switchlexeme {
     border-radius:6px;
     font-size:170%;
 }
+button.switchlexeme:hover {
+  background-color:#ff6b6b;
+}
 button.switchlexeme.active {
   background-color:#b30000;
   color:#fff;
@@ -69,6 +78,9 @@ main {
     width:60%;
     margin:0 auto;
     text-align:center;
+}
+input {
+  border:1px #ccf solid;
 }
 
 /* Styles for the view mode */
@@ -121,4 +133,23 @@ button.submit {
     color:#fff;
     border:none;
     border-radius:10px;
+}
+
+/* Styles for the start mode */
+/* Uses #entry styles from the continue/complete behavior */
+input.tag {
+  width:8em;
+  padding:0.2em;
+}
+button#moretags {
+  padding:0;
+  min-width:2em;
+  width:2em;
+  height:2em;
+  border:none;
+  border-radius:0.5em;
+  background-color:#1a1aff;
+}
+button#moretags:hover {
+  background-color:#6b6bff;
 }
