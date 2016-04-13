@@ -17,10 +17,10 @@ class LexemeCollection(object):
     # define metaclass properly as abstract
     __metaclass__ = abc.ABCMeta
 
-    lexemes = []
-    tags = []
-    complete = False
-    key = ''
+    lexemes = [] # list of Lexemes
+    tags = [] # list of strings
+    complete = False # boolean
+    key = '' # string
 
     # Constructor
     def __init__(self, firstlex, tagList):
@@ -60,8 +60,8 @@ class LexemeCollection(object):
         return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
 
     @abc.abstractmethod # define this as an abstract method
-    def view(self):
+    def view(self, format):
         """
-        Render as a string
+        Render in various data formats according to the parameter.
         """
         raise NotImplementedError('Unimplemented abstract method!')
