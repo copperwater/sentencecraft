@@ -7,7 +7,6 @@ from flask import request
 from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
-import uuid
 import Word
 import WordCollection
 
@@ -72,8 +71,6 @@ def api_complete_sentence():
         return "inserted sentence {0}".format(lexeme)
     except:
         return "ERROR invalid key\n"
-    
-    
 
 @APP.route('/start-sentence/', methods=['POST'])
 def api_start_incomplete_sentence():
