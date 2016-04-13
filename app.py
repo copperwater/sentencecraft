@@ -66,10 +66,10 @@ def api_complete_sentence():
         return "ERROR: missing key/sentence_addition"
     try:
         to_complete = MONGO.db.sentences.find_one({"key":key, "complete":False})
-        words = to_complete["words"] + sentence_addition.split(' ')
+        lexeme = to_complete["lexeme"] + sentence_addition.split(' ')
         MONGO.db.sentences.update({"_id": to_complete['_id']}, {
-            '$set': {"complete":True, "words":words, "key":''}}, upsert = False)
-        return "inserted sentence {0}".format(words)
+            '$set': {"complete":True, "lexeme":lexeme, "key":''}}, upsert = False)
+        return "inserted sentence {0}".format(lexeme)
     except:
         return "ERROR invalid key\n"
     
@@ -83,9 +83,9 @@ def api_start_incomplete_sentence():
     via POST http request
     """
     sentence_start = request.form["sentence_start"]
-    words = sentence_start.split(' ')
+    lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
-    MONGO.db.sentences.insert({"words": words, "complete": False, "key": key})
+    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
 @APP.route('/view-HTML/')
