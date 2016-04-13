@@ -9,6 +9,7 @@ from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
 import Word
+import WordCollection
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -51,6 +52,28 @@ def api_get_incomplete_sentence():
         return 'The key was: {0}'.format(key) + dumps(sentence)
     except KeyError:
         return "ERROR: no key found"
+
+@APP.route('/complete-sentence/', methods=['POST'])
+def api_complete_sentence():
+    """
+    endpoint for completing an incomplete sentence based on a key
+    """
+    try:
+        sentence_addition = request.form["sentence_addition"]
+        key = request.form["key"]
+        print "key {0}\n".format(key)
+    except:
+        return "ERROR: missing key/sentence_addition"
+    try:
+        to_complete = MONGO.db.sentences.find_one({"key":key, "complete":False})
+        words = to_complete["words"] + sentence_addition.split(' ')
+        MONGO.db.sentences.update({"_id": to_complete['_id']}, {
+            '$set': {"complete":True, "words":words, "key":''}}, upsert = False)
+        return "inserted sentence {0}".format(words)
+    except:
+        return "ERROR invalid key\n"
+    
+    
 
 @APP.route('/start-sentence/', methods=['POST'])
 def api_start_incomplete_sentence():
