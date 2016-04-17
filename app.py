@@ -8,7 +8,8 @@ from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
-import Word
+from Word import Word
+from WordCollection import WordCollection
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -37,6 +38,11 @@ def api_view_sentences():
         i_count = 10
 
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+    jsonStr = ''
+    for s in sentences:
+        wc = WordCollection()
+        wc.import_json(s)
+        jsonStr += wc.view('json')
     return 'Your count was '+count+' '+dumps(sentences)
 
 @APP.route('/incomplete-sentence/')
