@@ -9,6 +9,7 @@ from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
 import Word
+import json
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -70,8 +71,15 @@ def view_html_sample():
     """
     endpoint for viewing sentences in the database
     """
+    print "view html"
     sentences = MONGO.db.sentences.find()
-    return render_template('index.html', sentences=sentences)
+    return render_template('index.html')
+	
+@APP.route('/fetchdata')
+def fetch_data():
+    print "fetchdata"
+    json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
+    return json_data
 
 if __name__ == '__main__':
     APP.run(debug=True)
