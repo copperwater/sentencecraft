@@ -19,7 +19,7 @@ class WordCollection(LexemeCollection):
             if self.key != '':
                 prejson['key']=key
             if len(self.tags) > 0:
-                prejson['tags'] = tags
+                prejson['tags'] = self.tags
             prejson['foo']='bar'
             return json.dumps(prejson)
         else:
