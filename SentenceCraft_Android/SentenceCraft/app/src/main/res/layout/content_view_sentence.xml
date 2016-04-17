@@ -96,6 +96,14 @@
             android:layout_height="wrap_content"
             android:textColor="@color/colorBlack"
             android:text="7.What's done is done." />
+
+        <Button android:id="@+id/test"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="clickme"
+            android:onClick="changetext"/>
+
     </TableLayout>
 
 </LinearLayout>
