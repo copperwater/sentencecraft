@@ -7,10 +7,6 @@ from LexemeCollection import LexemeCollection
 
 class WordCollection(LexemeCollection):
 
-    # Abstract function instantiations
-    def __init__(self, firstlex, tagList):
-        LexemeCollection.__init__(self, firstlex, tagList)
-
     # Concatenate words and separate them with a single space.
     def view(self, format):
         if format.lower() == 'json':
@@ -23,6 +19,7 @@ class WordCollection(LexemeCollection):
                 prejson['key']=key
             if len(self.tags) > 0:
                 prejson['tags'] = tags
+            prejson['foo']=bar
             return json.dumps(prejson)
         else:
             raise ValueError('Must specify a valid format!')
