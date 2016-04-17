@@ -8,7 +8,8 @@ from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
-import Word
+from Word import Word
+from WordCollection import WordCollection
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -37,6 +38,11 @@ def api_view_sentences():
         i_count = 10
 
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+    jsonStr = ''
+    for s in sentences:
+        wc = WordCollection()
+        wc.import_json(s)
+        jsonStr += wc.view('json')
     return 'Your count was '+count+' '+dumps(sentences)
 
 @APP.route('/incomplete-sentence/')
@@ -52,6 +58,26 @@ def api_get_incomplete_sentence():
     except KeyError:
         return "ERROR: no key found"
 
+@APP.route('/complete-sentence/', methods=['POST'])
+def api_complete_sentence():
+    """
+    endpoint for completing an incomplete sentence based on a key
+    """
+    try:
+        sentence_addition = request.form["sentence_addition"]
+        key = request.form["key"]
+        print "key {0}\n".format(key)
+    except:
+        return "ERROR: missing key/sentence_addition"
+    try:
+        to_complete = MONGO.db.sentences.find_one({"key":key, "complete":False})
+        lexeme = to_complete["lexeme"] + sentence_addition.split(' ')
+        MONGO.db.sentences.update({"_id": to_complete['_id']}, {
+            '$set': {"complete":True, "lexeme":lexeme, "key":''}}, upsert = False)
+        return "inserted sentence {0}".format(lexeme)
+    except:
+        return "ERROR invalid key\n"
+
 @APP.route('/start-sentence/', methods=['POST'])
 def api_start_incomplete_sentence():
     """
@@ -60,9 +86,9 @@ def api_start_incomplete_sentence():
     via POST http request
     """
     sentence_start = request.form["sentence_start"]
-    words = sentence_start.split(' ')
+    lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
-    MONGO.db.sentences.insert({"words": words, "complete": False, "key": key})
+    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
 @APP.route('/view-HTML/')

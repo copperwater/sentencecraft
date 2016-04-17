@@ -6,49 +6,73 @@ of different lexemes to inherit from.
 # abstract base class module
 import abc
 import uuid
+import json
 import Lexeme
 
+
 class LexemeCollection(object):
+    '''
+    Abstract represention a collection of lexemes.
+    A collection of sentences, words etc.
+    '''
     # define metaclass properly as abstract
     __metaclass__ = abc.ABCMeta
 
-    lexemes = []
-    tags = []
-    complete = False
-    key = ''
+    lexemes = [] # list of Lexemes
+    tags = [] # list of strings
+    complete = False # boolean
+    key = '' # string
 
     # Constructor
-    def __init__(self, firstlex, tagList):
-        #TODO: type check on firstlex == string and tagList == list of string
-        newlex = Lexeme(firstlex)
-        if not newlex.isValid():
-            raise ValueError(firstlex + ' is not a valid beginning lexeme')
-        self.lexemes = [newlex]
+    def __init__(self, lexList=[], complete=False, tagList=[], key=''):
+        self.lexemes = lexList
+        self.complete = complete
         self.tags = tagList
-        self.complete = False
-        self.key = ''
+        self.key = key
 
-    # Add a new lexeme to the list, possibly completing the sentence.
-    def append(self, lex, doFinish=False):
+    '''
+    Secondary "constructor" methods which can load it more specifically.
+    '''
+    def import_json(self, jsonobj):
+        print jsonobj
+        print jsonobj['_id']
+        #parsedobj = json.load(jsonobj)
+        self.lexemes = parsedobj['lexemes']
+        self.complete = parsedobj['complete']
+        if 'tags' in parsedobj:
+            self.tags = parsedobj['tags']
+        if 'key' in parsedobj:
+            self.key = parsedobj['key']
+
+    def append(self, lex, do_finish=False):
+        """
+        Add a new lexeme to the list, possibly completing the sentence.
+        """
         # TODO type check on lex == Lexeme
         self.lexemes.append(lex)
-        if doFinish:
+        if do_finish:
             self.complete = True
 
-    # Mark this lexeme as reserved by generating a random UUID key.
-    def checkOut(self):
+    def check_out(self):
+        """
+        Mark this lexeme as reserved by generating a random UUID key.
+        """
         # TODO: check if it already has a key
-        key = uuid.uuid4()
+        self.key = uuid.uuid4()
 
-    # Test the lexemes to make sure they are all correctly valid.
     def validate(self):
-        for lex in lexemes[1:-1]:
-            if not lex.isValid(): return False
+        """
+        Test the lexemes to make sure they are all correctly valid.
+        """
+        for lex in self.__metaclass__.lexemes[1:-1]:
+            if not lex.isValid():
+                return False
 
-        return lexemes[0].isValidBeginning() and
-            lexemes[-1].isValidEnd()
+        return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
 
-    # Render as a string
     @abc.abstractmethod # define this as an abstract method
-    def view(self):
+    def view(self, format):
+        """
+        Render in various data formats according to the parameter.
+        """
         raise NotImplementedError('Unimplemented abstract method!')

@@ -12,12 +12,12 @@ html, body, div, span, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, cite
 body {
     background-color: #fafaff;
     font-family:helvetica;
+    color: #000;
 }
 
 /* Header styles */
 header {
     margin: 5px auto 25px auto;
-    background-color:#faa;
     width:60%;
 }
 img#pagetitle {
@@ -26,7 +26,6 @@ img#pagetitle {
     margin:0 auto;
 }
 nav#controls {
-    background-color:#afa;
     margin: 0 auto;
     padding: 8px 0 8px;
     text-align:center;
@@ -34,28 +33,44 @@ nav#controls {
 nav#modes {
     display:inline-block;
     padding-right:4px;
-    background-color: #4a4;
 }
 nav#lexemes {
     display:inline-block;
     padding-left:4px;
-    background-color:#a44;
 }
 button {
     padding:10px;
     min-width:150px;
+    color:#000;
+}
+button:hover {
+  cursor:pointer;
 }
 button.switchmode {
-    background-color:#aaf;
+    background-color:#1a1aff;
     border:0.5px black solid;
     border-radius: 6px;
     font-size: 170%;
 }
+button.switchmode:hover {
+  background-color:#6b6bff;
+}
+button.switchmode.active {
+  background-color:#0000b3;
+  color:#fff;
+}
 button.switchlexeme {
-    background-color: #993;
+    background-color: #ff1a1a;
     border:0.5px black solid;
     border-radius:6px;
     font-size:170%;
+}
+button.switchlexeme:hover {
+  background-color:#ff6b6b;
+}
+button.switchlexeme.active {
+  background-color:#b30000;
+  color:#fff;
 }
 
 /* Main content styles */
@@ -64,6 +79,30 @@ main {
     margin:0 auto;
     text-align:center;
 }
+input {
+  border:1px #ccf solid;
+}
+
+/* Styles for the view mode */
+ul#lexlist {
+  display:block;
+  list-style-type:none;
+  font-size:140%;
+  text-align:left;
+}
+ul#lexlist li {
+  padding: 0.3em;
+  border-bottom: 1px #ccf solid;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+ul#lexlist li:hover {
+  background-color:#e6e6ff;
+  cursor:pointer;
+}
+
+/* Styles for the continue/complete mode */
 section#text {
     font-size:200%;
     padding: 0.4em 0em 0.4em 0em;
@@ -74,6 +113,7 @@ input#entry {
        if the font-size changes nothing. */
     font-size:100%;
     width:40%;
+    padding:0.2em;
 }
 section#tags {
     /* text-align:left; */
@@ -93,4 +133,23 @@ button.submit {
     color:#fff;
     border:none;
     border-radius:10px;
+}
+
+/* Styles for the start mode */
+/* Uses #entry styles from the continue/complete behavior */
+input.tag {
+  width:8em;
+  padding:0.2em;
+}
+button#moretags {
+  padding:0;
+  min-width:2em;
+  width:2em;
+  height:2em;
+  border:none;
+  border-radius:0.5em;
+  background-color:#1a1aff;
+}
+button#moretags:hover {
+  background-color:#6b6bff;
 }

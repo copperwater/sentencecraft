@@ -2,7 +2,7 @@
 Word module. Word is an instance of Lexeme.
 '''
 
-import Lexeme
+from Lexeme import Lexeme
 
 class Word(Lexeme):
 
