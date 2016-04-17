@@ -6,6 +6,7 @@ of different lexemes to inherit from.
 # abstract base class module
 import abc
 import uuid
+import json
 import Lexeme
 
 
@@ -17,21 +18,31 @@ class LexemeCollection(object):
     # define metaclass properly as abstract
     __metaclass__ = abc.ABCMeta
 
-    lexemes = []
-    tags = []
-    complete = False
-    key = ''
+    lexemes = [] # list of Lexemes
+    tags = [] # list of strings
+    complete = False # boolean
+    key = '' # string
 
     # Constructor
-    def __init__(self, firstlex, tagList):
-        #TODO: type check on firstlex == string and tagList == list of string
-        newlex = Lexeme(firstlex)
-        if not newlex.isValid():
-            raise ValueError(firstlex + ' is not a valid beginning lexeme')
-        self.lexemes = [newlex]
+    def __init__(self, lexList=[], complete=False, tagList=[], key=''):
+        self.lexemes = lexList
+        self.complete = complete
         self.tags = tagList
-        self.complete = False
-        self.key = ''
+        self.key = key
+
+    '''
+    Secondary "constructor" methods which can load it more specifically.
+    '''
+    def import_json(self, jsonobj):
+        print jsonobj
+        print jsonobj['_id']
+        #parsedobj = json.load(jsonobj)
+        self.lexemes = parsedobj['lexemes']
+        self.complete = parsedobj['complete']
+        if 'tags' in parsedobj:
+            self.tags = parsedobj['tags']
+        if 'key' in parsedobj:
+            self.key = parsedobj['key']
 
     def append(self, lex, do_finish=False):
         """
@@ -60,8 +71,8 @@ class LexemeCollection(object):
         return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
 
     @abc.abstractmethod # define this as an abstract method
-    def view(self):
+    def view(self, format):
         """
-        Render as a string
+        Render in various data formats according to the parameter.
         """
         raise NotImplementedError('Unimplemented abstract method!')

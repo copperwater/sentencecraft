@@ -9,8 +9,8 @@
     <img id="pagetitle" src="sentencecraft.png">
     <nav id="controls">
       <nav id="modes">
-        <button type="button" id="write" class="switchmode active">Write</button>
-        <button type="button" id="start" class="switchmode">Start</button>
+        <button type="button" id="write" class="switchmode">Write</button>
+        <button type="button" id="start" class="switchmode active">Start</button>
         <button type="button" id="view" class="switchmode">View</button>
       </nav>
       <nav id="lexemes">
@@ -21,13 +21,13 @@
   </header>
   <main>
     <section id="text">
-      <span id="prevtext">... It was delicious,</span>
-      <input id="entry" />
+      <input id="entry" value="Today's dinner " />
     </section>
     <section id="tags">
-      <span class="tag">yum</span>
-      <span class="tag">food</span>
-      <span class="tag">cannibalism</span>
+      Tags:
+      <input class="tag" value="cheese" />
+      <input class="tag" value="macaroni" />
+      <button type="button" id="moretags">+</button>
     </section>
     <button type="submit" id="write" class="submit">WRITE</button>
   </main>
