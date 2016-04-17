@@ -30,20 +30,6 @@ class LexemeCollection(object):
         self.tags = tagList
         self.key = key
 
-    '''
-    Secondary "constructor" methods which can load it more specifically.
-    '''
-    def import_json(self, jsonobj):
-        print jsonobj
-        print jsonobj['_id']
-        #parsedobj = json.load(jsonobj)
-        self.lexemes = parsedobj['lexemes']
-        self.complete = parsedobj['complete']
-        if 'tags' in parsedobj:
-            self.tags = parsedobj['tags']
-        if 'key' in parsedobj:
-            self.key = parsedobj['key']
-
     def append(self, lex, do_finish=False):
         """
         Add a new lexeme to the list, possibly completing the sentence.
@@ -69,6 +55,13 @@ class LexemeCollection(object):
                 return False
 
         return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
+
+    '''
+    Secondary "constructor" methods which can load it more specifically.
+    '''
+    @abc.abstractmethod
+    def import_json(self, jsonobj):
+        raise NotImplementedError('Unimplemented abstract method!')
 
     @abc.abstractmethod # define this as an abstract method
     def view(self, format):
