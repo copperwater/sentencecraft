@@ -90,6 +90,7 @@ def api_start_incomplete_sentence():
     sentence_start = request.form["sentence_start"]
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
+    print "Received API Call! Lexeme : {0}\n".format(sentence_start);
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
