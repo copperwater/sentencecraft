@@ -20,7 +20,6 @@ class WordCollection(LexemeCollection):
                 prejson['key']=key
             if len(self.tags) > 0:
                 prejson['tags'] = self.tags
-            prejson['foo']='bar'
             return json.dumps(prejson)
         else:
             raise ValueError('Must specify a valid format!')
