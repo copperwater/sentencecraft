@@ -46,7 +46,6 @@ def api_view_sentences():
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
     jsonStr = ''
     for s in sentences:
-        print "here"
         wc = WordCollection()
         wc.import_json(s)
         jsonStr += wc.view('json')
@@ -92,9 +91,14 @@ def api_start_incomplete_sentence():
     incomplete sentence into the database
     via POST http request
     """
+    try:
+        tags = request.form["tags"]
+    except:
+        tags = []
     sentence_start = request.form["sentence_start"]
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
+    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
     print "Received API Call! Lexeme : {0}\n".format(sentence_start);
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
