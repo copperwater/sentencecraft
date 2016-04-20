@@ -31,6 +31,10 @@ def api_view_sentences():
     returns a list of count sentences
     from a GET http request
     """
+    """
+    Below line of code is for testing purpose
+    """
+    print "Received call from Web UI"
     count = request.args.get('count')
     if count is None:
         count = '10'
