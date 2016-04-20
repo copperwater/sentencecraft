@@ -29,7 +29,7 @@ class WordCollection(LexemeCollection):
         print jsonobj
         print jsonobj['_id']
         self.lexemes = []
-        for lexStr in jsonobj['lexeme']:
+        for lexStr in jsonobj['lexemes']:
             self.lexemes.append(Word.Word(lexStr))
         self.complete = jsonobj['complete']
         if 'tags' in jsonobj:
