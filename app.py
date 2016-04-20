@@ -52,6 +52,7 @@ def api_view_sentences():
     #return 'Your count was '+count+' ' + jsonStr
     return jsonStr
 
+
 @APP.route('/incomplete-sentence/')
 def api_get_incomplete_sentence():
     """
@@ -59,6 +60,13 @@ def api_get_incomplete_sentence():
     from a GET http request
     """
     sentence = MONGO.db.sentences.find_one({'complete':False})
+    wc = WordCollection()
+    wc.import_json(sentence)
+
+    # check out and generate a key for this sentence
+    wc.check_out()
+
+    
     try:
         key = sentence['key']
         return 'The key was: {0}'.format(key) + dumps(sentence)
