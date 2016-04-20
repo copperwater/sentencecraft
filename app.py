@@ -1,4 +1,4 @@
-"""
+﻿"""
 SentenceCraft API
 """
 import uuid
@@ -8,6 +8,8 @@ from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
+import Word
+import json
 from Word import Word
 from WordCollection import WordCollection
 
@@ -90,6 +92,8 @@ def api_start_incomplete_sentence():
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
+    print "Received API Call! Lexeme : {0}\n".format(sentence_start);
+    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
 @APP.route('/view-HTML/')
@@ -97,8 +101,15 @@ def view_html_sample():
     """
     endpoint for viewing sentences in the database
     """
+    print "view html"
     sentences = MONGO.db.sentences.find()
-    return render_template('index.html', sentences=sentences)
+    return render_template('index.html')
+	
+@APP.route('/fetchdata')
+def fetch_data():
+    print "fetchdata"
+    json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
+    return json_data
 
 if __name__ == '__main__':
     APP.run(debug=True)
