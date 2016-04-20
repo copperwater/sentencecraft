@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html>
 	<head>
 	    <title>SentenceCraft</title>  
@@ -60,17 +60,29 @@
 
         <script>
             var app = angular.module('sentence_craft_app', []);
-            app.controller('view_controller', function ($scope) {
+            app.controller('view_controller', function ($scope,$http) {
                 $scope.operation_type = 'StartNewSentence';
                 console.log("Entered view controler");
                 $scope.view_start_new_sentence_panel = function () {
                     $scope.operation_type = 'StartNewSentence';
-                    console.log("Entered write sentences controler");
+                    console.log("Entered write sentences controler");                    
                 }
 
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
+
                     console.log("Entered view sentences controler");
+                    $http({
+                        url: 'http://127.0.0.1:5000/view-sentences/',
+                        method: "GET"
+                        })
+                        .then(function (response) {
+                            console.log(response);
+                            // success
+                        },
+                        function (response) { // optional
+                            // failed
+                        });
                 }
             });
 
