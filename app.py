@@ -94,7 +94,10 @@ def api_start_incomplete_sentence():
     incomplete sentence into the database
     via POST http request
     """
-    tags = request.form["tags"]
+    try:
+        tags = request.form["tags"]
+    except:
+        tags = []
     sentence_start = request.form["sentence_start"]
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
