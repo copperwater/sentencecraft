@@ -1,4 +1,4 @@
-"""
+﻿"""
 SentenceCraft API
 """
 import uuid
@@ -8,6 +8,8 @@ from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
 import uuid
+import Word
+import json
 from Word import Word
 from WordCollection import WordCollection
 
@@ -40,7 +42,6 @@ def api_view_sentences():
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
     jsonStr = ''
     for s in sentences:
-        print "here"
         wc = WordCollection()
         wc.import_json(s)
         jsonStr += wc.view('json')
@@ -93,9 +94,12 @@ def api_start_incomplete_sentence():
     incomplete sentence into the database
     via POST http request
     """
+    tags = request.form["tags"]
     sentence_start = request.form["sentence_start"]
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
+    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
+    print "Received API Call! Lexeme : {0}\n".format(sentence_start);
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
@@ -104,8 +108,15 @@ def view_html_sample():
     """
     endpoint for viewing sentences in the database
     """
+    print "view html"
     sentences = MONGO.db.sentences.find()
-    return render_template('index.html', sentences=sentences)
+    return render_template('index.html')
+	
+@APP.route('/fetchdata')
+def fetch_data():
+    print "fetchdata"
+    json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
+    return json_data
 
 if __name__ == '__main__':
     APP.run(debug=True)

@@ -1,8 +1,127 @@
+<!doctype html>
 <html>
 	<head>
-	<head>
+	    <title>SentenceCraft</title>  
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="/static/content/styles/sentencecraft.css" />
+	</head>
 
-	<body>
-	<p>Test</p>
+	<body ng-app="sentence_craft_app" ng-controller="view_controller">
+        <header>
+            <img id="pagetitle" src="../static/content/images/sentencecraft.png">
+            <nav id="controls">
+                <nav id="modes">
+                    <button type="button" id="write" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
+                    <button type="button" id="start" class="switchmode active">Continue</button>
+                    <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
+                </nav>
+                <nav id="lexemes">
+                    <button type="button" id="sentence" class="switchlexeme active">Sentence</button>
+                    <button type="button" id="paragraph" class="switchlexeme">Paragraph</button>
+                </nav>
+            </nav>
+        </header>
+        <div ng-switch on="operation_type">
+            <div ng-switch-when="StartNewSentence">
+                <main ng-controller="start_new_sentence_controller">
+                    <section id="text">
+                        <input id="entry" value="Today's dinner " ng-model="sentence_start_text"/>
+                    </section>
+                    <section id="tags">
+                        Tags:
+                        <input class="tag" value="cheese" />
+                        <input class="tag" value="macaroni" />
+                        <button type="button" id="moretags">+</button>
+                    </section>
+                    <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
+                </main>
+            </div>
+            <div ng-switch-when="ViewSentenceList">
+                <main>
+                    <ul id="lexlist">
+                        <li>The sentence is a sentence.</li>
+                        <li>The sentence is a sentence2.</li>
+                        <li>The sentence is a sentence3.</li>
+                        <li>The sentence is a sentence4.</li>
+                        <li>The sentence is a sentence5.</li>
+                        <li>The sentence is a sentence6.</li>
+                        <li>The sentence is a sentence7.</li>
+                        <li>The sentence is a sentence8.</li>
+                        <li>The sentence is a sentence9.</li>
+                        <li>The sentence is a sentence10.</li>
+                        <li>The sentence is a really really really really really really really really really really really really really really really really really really really really really really really really really long sentence.</li>
+                    </ul>
+                </main>
+            </div>
+        </div>
+
+        <script>
+            var app = angular.module('sentence_craft_app', []);
+            app.controller('view_controller', function ($scope) {
+                $scope.operation_type = 'StartNewSentence';
+                console.log("Entered view controler");
+                $scope.view_start_new_sentence_panel = function () {
+                    $scope.operation_type = 'StartNewSentence';
+                    console.log("Entered write sentences controler");
+                }
+
+                $scope.view_sentence_list_panel = function () {
+                    $scope.operation_type = 'ViewSentenceList';
+                    console.log("Entered view sentences controler");
+                }
+            });
+
+            app.controller('start_new_sentence_controller', function ($scope,$http) {
+                $scope.sentence_start_text = 'StartNewSentenceTestText';
+                console.log("Entered start sentences controller");
+                $scope.start_new_sentence_api_call = function () {                    
+                    console.log("Entered write new sentences function");
+                    //var api_url = "http://127.0.0.1:5000/start-sentence/";
+
+                    //$http({
+                    //    url: 'api_url',
+                    //    method: "POST",
+                    //    data: { 'sentence_start' :  $scope.sentence_start_text}
+                    //})
+                    //.then(function (response) {
+                    //    // success
+                    //},
+                    //function (response) { // optional
+                    //    // failed
+                    //});
+
+                    var data = $.param({
+                        json: JSON.stringify({
+                            sentence_start: $scope.sentence_start_text
+                        })
+                    });
+                    $http({
+                        url: 'http://127.0.0.1:5000/start-sentence/',
+                            method: "POST",
+                            data: $.param({ sentence_start: "TestText" }),
+                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                        })
+                        .then(function (response) {
+                            // success
+                        },
+                        function (response) { // optional
+                            // failed
+                        });
+
+                }
+            });
+        </script>
+
+
+        <!--$http.get(url).success(function (data,response) {
+        var sentencesjson = JSON.parse(response);
+        $scope.sentences = data;
+        $scope.myname = "Chetan";
+        console.log($scope.sentences);
+        });-->
+
 	</body>
 </html>
