@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">SentenceCraft</string>
     <string name="action_settings">Settings</string>
+    <string name="action_back">Back</string>
     <string name="app_slogan">Don\'t Finish What You Start.</string>
     <string name="app_enter">Go.</string>
     <string name="app_create">Create.</string>
