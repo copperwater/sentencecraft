@@ -86,13 +86,22 @@ def api_view_sentences():
     except ValueError:
         i_count = 10
 
-    sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+    try:
+        tags=request.form['tags'].split(',')
+        print tags
+    except:
+        tags=[]
+    if (len(tags) != 0):
+        sentences = MONGO.db.sentences.find({"$and": [{'complete':True},
+            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(i_count)
+    else:
+        sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+
     json_list = []
     for sentence in sentences:
         wc = WordCollection()
         wc.import_json(sentence)
         json_list.append(wc.view('json'))
-    #return 'Your count was '+count+' ' + jsonStr
     return json.dumps(json_list), 200
 
 @APP.route('/incomplete-sentence/', strict_slashes=False)
@@ -223,7 +232,7 @@ def view_html_sample():
     """
     print "view html"
     sentences = MONGO.db.sentences.find()
-    return render_template('index.html')1
+    return render_template('index.html')
 
 # Run this once and only in one thread. Note that it will not run until the
 # first request comes in; it will not run automatically at startup.
