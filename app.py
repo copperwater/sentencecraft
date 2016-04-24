@@ -100,6 +100,7 @@ def api_start_incomplete_sentence():
     incomplete sentence into the database
     via POST http request
     """
+    print "Received new sentence api CALL"
     try:
         tags = request.form["tags"]
     except:
@@ -108,7 +109,7 @@ def api_start_incomplete_sentence():
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
-    print "Received API Call! Lexeme : {0}\n".format(sentence_start);
+    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags);
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
