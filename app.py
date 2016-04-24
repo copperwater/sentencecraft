@@ -42,6 +42,7 @@ def check_out():
     and timestamp. Then return the uuid.
     '''
     new_uuid = str(uuid.uuid4())
+    new_uuid = 'w'
     stamp = int(time.time())
     LC_MAP[new_uuid] = stamp
     return new_uuid
@@ -173,7 +174,7 @@ def api_complete_sentence():
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
         {'$set':
-            {"complete":True, "lexemes":wc.lexemes, "key":""}}, upsert = False)
+            {"complete":True, "lexemes":wc.lexemes_as_stringlist(), "key":""}}, upsert = False)
 
     # remove it from the timeout list
     del LC_MAP[key]
@@ -195,12 +196,6 @@ def api_start_incomplete_sentence():
         tags = request.form["tags"].split(',')
     except:
         tags = []
-    sentence_start = request.form["sentence_start"]
-    lexeme = sentence_start.split(' ')
-    key = uuid.uuid4()
-    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
-    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags)
-    return sentence_start
 
     # Get the starting list of lexemes
     # Possible TODO: make sure this is capped at some value
