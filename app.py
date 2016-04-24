@@ -1,20 +1,33 @@
 ﻿"""
 SentenceCraft API
 """
+
+# Standard modules
 import uuid
+import sched
+import threading
+import time
+import sys
+import json
+
+# Tech stack modules
 from flask import Flask
 from flask import request
 from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
-import uuid
+
+# Local SentenceCraft modules
 import Word
-import json
 from Word import Word
 from WordCollection import WordCollection
+import SentenceCraftConfig as config
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
+
+# Set up the dictionary of keys to lexeme collections
+lcMap = {}
 
 # To manually insert sentences into the database
 # > mongo
@@ -60,7 +73,8 @@ def api_get_incomplete_sentence():
     # check out and generate a key for this sentence
     wc.check_out()
 
-    
+
+
     try:
         key = sentence['key']
         return 'The key was: {0}'.format(key) + dumps(sentence)
@@ -85,7 +99,7 @@ def api_complete_sentence():
             '$set': {"complete":True, "lexeme":lexeme, "key":''}}, upsert = False)
         return "inserted sentence {0}".format(lexeme)
     except:
-        return "ERROR invalid key\n"
+        return "ERROR: invalid key\n"
 
 @APP.route('/start-sentence/', methods=['POST'])
 def api_start_incomplete_sentence():
@@ -114,12 +128,29 @@ def view_html_sample():
     print "view html"
     sentences = MONGO.db.sentences.find()
     return render_template('index.html')
-	
+
 @APP.route('/fetchdata')
 def fetch_data():
     print "fetchdata"
     json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
     return json_data
+
+# Check to see if any lexeme collections have timed out
+def poll_for_expired():
+    while True:
+        try:
+            print "Poll for expired LCs"
+            time.sleep(config.polling_delay)
+        except:
+            break
+
+# Run this once and only in one thread. Note that it will not run until the
+# first request comes in; it will not run automatically at startup.
+@APP.before_first_request
+def single_thread_setup():
+    # Start a new thread for polling
+    threading.Thread(None, poll_for_expired).start()
+
 
 if __name__ == '__main__':
     APP.run(debug=True)
