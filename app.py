@@ -93,7 +93,7 @@ def api_view_sentences():
         wc.import_json(sentence)
         json_list.append(wc.view('json'))
     #return 'Your count was '+count+' ' + jsonStr
-    return json.dumps(json_list)
+    return json.dumps(json_list), 200
 
 @APP.route('/incomplete-sentence/', strict_slashes=False)
 def api_get_incomplete_sentence():
@@ -129,7 +129,7 @@ def api_get_incomplete_sentence():
         'key': key
     }
 
-    return json.dumps(prejson)
+    return json.dumps(prejson), 200
 
 @APP.route('/complete-sentence', methods=['POST'], strict_slashes=False)
 def api_complete_sentence():
@@ -223,13 +223,7 @@ def view_html_sample():
     """
     print "view html"
     sentences = MONGO.db.sentences.find()
-    return render_template('index.html')
-
-@APP.route('/fetchdata')
-def fetch_data():
-    print "fetchdata"
-    json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
-    return json_data
+    return render_template('index.html')1
 
 # Run this once and only in one thread. Note that it will not run until the
 # first request comes in; it will not run automatically at startup.
