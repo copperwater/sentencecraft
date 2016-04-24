@@ -185,7 +185,6 @@ def api_start_incomplete_sentence():
     key = uuid.uuid4()
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
     print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags);
-    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
     # Get the starting list of lexemes
