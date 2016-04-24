@@ -30,33 +30,33 @@ MONGO = PyMongo(APP)
 # This will be a map of UUID strings to 2-tuples. The first element will
 # be the lexeme collection, the second will be the timestamp in seconds at
 # which it was created.
-lcMap = {}
+LC_MAP = {}
 
 '''
  API functions that are not special Flask functions (without an @ directive).
 '''
 
-def check_out(LexCollec):
+def check_out(lex_collec):
     '''
-    Put the LexemeCollection into the lcMap with a newly generated UUID
+    Put the LexemeCollection into the LC_MAP with a newly generated UUID
     and timestamp. Then return the uuid.
     '''
     new_uuid = str(uuid.uuid4())
     stamp = int(time.time())
-    lcMap[new_uuid] = (LexCollec, stamp)
+    LC_MAP[new_uuid] = (lex_collec, stamp)
     print 'checked out', new_uuid
     return new_uuid
 
 
 def poll_for_expired():
     '''
-    Check to see if any active LexemeCollections have been in lcMap longer than
+    Check to see if any active LexemeCollections have been in LC_MAP longer than
     the limit in SentenceCraftConfig. If they are, remove them.
     '''
     while True: #continue this indefinitely
-        for key in list(lcMap):
-            if (int(time.time()) - lcMap[key][1]) > config.lexeme_collection_active_time:
-                del lcMap[key]
+        for key in list(LC_MAP):
+            if (int(time.time()) - LC_MAP[key][1]) > config.lexeme_collection_active_time:
+                del LC_MAP[key]
                 print 'Timeout'
         time.sleep(config.polling_delay)
 
@@ -88,13 +88,13 @@ def api_view_sentences():
         i_count = 10
 
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
-    jsonList = []
-    for s in sentences:
+    json_list = []
+    for sentence in sentences:
         wc = WordCollection()
-        wc.import_json(s)
-        jsonList.append(wc.view('json'))
+        wc.import_json(sentence)
+        json_list.append(wc.view('json'))
     #return 'Your count was '+count+' ' + jsonStr
-    return json.dumps(jsonList)
+    return json.dumps(json_list)
 
 
 @APP.route('/incomplete-sentence/')
@@ -139,7 +139,7 @@ def api_complete_sentence():
         return "ERROR: key or sentence_addition is missing"
 
     # check that the key is not timed out
-    if not key in lcMap:
+    if not key in LC_MAP:
         return "ERROR: This sentence has timed out"
 
     # get the document in the database
@@ -161,7 +161,7 @@ def api_complete_sentence():
             {"complete":True, "lexemes":full_lexemes, "key":""}}, upsert = False)
 
     # remove it from the timeout list
-    del lcMap[key]
+    del LC_MAP[key]
 
     # return 200 OK
     return "Successfully completed the sentence", 200
@@ -184,7 +184,7 @@ def api_start_incomplete_sentence():
     lexeme = sentence_start.split(' ')
     key = uuid.uuid4()
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
-    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags);
+    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags)
     return sentence_start
 
     # Get the starting list of lexemes
