@@ -113,7 +113,7 @@
                     $http({
                         url: 'http://127.0.0.1:5000/start-sentence/',
                             method: "POST",
-                            data: $.param({ sentence_start: "TestText" }),
+                            data: $.param({ sentence_start: $scope.sentence_start_text }),
                             headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
                         })
                         .then(function (response) {
