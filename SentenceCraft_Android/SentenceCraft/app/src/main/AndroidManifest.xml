@@ -21,15 +21,18 @@
         <activity
             android:name=".StartSentence"
             android:label="@string/title_activity_start_sentence"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainMenu"/>
         <activity
             android:name=".ContinueSentence"
             android:label="@string/title_activity_continue_sentence"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainMenu"/>
         <activity
             android:name=".ViewSentence"
             android:label="@string/title_activity_view_sentence"
-            android:theme="@style/AppTheme.NoActionBar" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:parentActivityName=".MainMenu"/>
     </application>
 
 </manifest>

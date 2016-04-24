@@ -88,13 +88,13 @@ def api_view_sentences():
         i_count = 10
 
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
-    jsonStr = ''
+    jsonList = []
     for s in sentences:
         wc = WordCollection()
         wc.import_json(s)
-        jsonStr += wc.view('json')
+        jsonList.append(wc.view('json'))
     #return 'Your count was '+count+' ' + jsonStr
-    return jsonStr
+    return json.dumps(jsonList)
 
 
 @APP.route('/incomplete-sentence/')
