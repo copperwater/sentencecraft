@@ -173,8 +173,9 @@ def api_start_incomplete_sentence():
     via POST http request
     """
     # Set the tags variable correctly
+    # The assumption is that tags will not contain a ','
     try:
-        tags = request.form["tags"]
+        tags = request.form["tags"].split(',')
     except:
         tags = []
 
