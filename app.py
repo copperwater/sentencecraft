@@ -188,11 +188,9 @@ def api_start_incomplete_sentence():
     endpoint for inserting an incomplete sentence into the database
     via POST http request
     """
-    print "Received new sentence api CALL"
     # Set the tags variable correctly
     # The assumption is that tags will not contain a ','
     try:
-        print request.form
         tags = request.form["tags"].split(',')
     except:
         tags = []
@@ -200,6 +198,15 @@ def api_start_incomplete_sentence():
     # Get the starting list of lexemes
     # Possible TODO: make sure this is capped at some value
     first_lexemes = request.form['sentence_start'].split(' ')
+
+    # Construct them as Lexemes and validate them
+    curr_lex = Word(first_lexemes[0])
+    if not curr_lex.is_valid_beginning:
+        return "ERROR: "+first_lexemes[0]+" is not a valid beginning"
+    for lex in first_lexemes[1:]:
+        curr_lex = Word(lex)
+        if not curr_lex.is_valid():
+            return "ERROR: "+first_lexemes[0]+" is not valid"
 
     # Insert into the database
     MONGO.db.sentences.insert(
