@@ -27,7 +27,38 @@ APP = Flask("app")
 MONGO = PyMongo(APP)
 
 # Set up the dictionary of keys to lexeme collections
+# This will be a map of UUID strings to 2-tuples. The first element will
+# be the lexeme collection, the second will be the timestamp in seconds at
+# which it was created.
 lcMap = {}
+
+'''
+ API functions that are not special Flask functions (without an @ directive).
+'''
+
+def check_out(LexCollec):
+    '''
+    Put the LexemeCollection into the lcMap with a newly generated UUID
+    and timestamp. Then return the uuid.
+    '''
+    new_uuid = uuid.uuid4()
+    stamp = int(time.time())
+    lcMap[new_uuid] = (LexCollec, stamp)
+    print 'checked out', new_uuid
+    return new_uuid
+
+
+def poll_for_expired():
+    '''
+    Check to see if any active LexemeCollections have been in lcMap longer than
+    the limit in SentenceCraftConfig. If they are, remove them.
+    '''
+    while True: #continue this indefinitely
+        for key in list(lcMap):
+            if (int(time.time()) - lcMap[key][1]) > config.lexeme_collection_active_time:
+                del lcMap[key]
+                print 'Timeout'
+        time.sleep(config.polling_delay)
 
 # To manually insert sentences into the database
 # > mongo
@@ -69,23 +100,33 @@ def api_view_sentences():
 @APP.route('/incomplete-sentence/')
 def api_get_incomplete_sentence():
     """
-    returns a singular incomplete sentence
+    returns a single incomplete sentence
     from a GET http request
     """
-    sentence = MONGO.db.sentences.find_one({'complete':False})
-    wc = WordCollection()
-    wc.import_json(sentence)
+    sentence = MONGO.db.sentences.find_one(
+        {'complete':False,
+         '$or': [
+            {'active' : {'$exists': False}},
+            {'active' : True}]
+        })
+    lc = WordCollection()
+    lc.import_json(sentence)
 
     # check out and generate a key for this sentence
-    wc.check_out()
+    key = check_out(lc)
 
+    # mark the sentence in the db as active, so other requests won't get the
+    # same sentence
+    MONGO.db.sentences.update({'_id': sentence['_id']},
+                              {'$set': {'active': True}},
+                              upsert=False)
 
+    prejson = {
+        'lexemecollection': lc.view('json'),
+        'key': str(key)
+    }
 
-    try:
-        key = sentence['key']
-        return 'The key was: {0}'.format(key) + dumps(sentence)
-    except KeyError:
-        return "ERROR: no key found"
+    return json.dumps(prejson)
 
 @APP.route('/complete-sentence/', methods=['POST'])
 def api_complete_sentence():
@@ -139,15 +180,6 @@ def fetch_data():
     print "fetchdata"
     json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
     return json_data
-
-# Check to see if any lexeme collections have timed out
-def poll_for_expired():
-    while True:
-        try:
-            print "Poll for expired LCs"
-            time.sleep(config.polling_delay)
-        except:
-            break
 
 # Run this once and only in one thread. Note that it will not run until the
 # first request comes in; it will not run automatically at startup.

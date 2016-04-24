@@ -21,14 +21,12 @@ class LexemeCollection(object):
     lexemes = [] # list of Lexemes
     tags = [] # list of strings
     complete = False # boolean
-    key = '' # string
 
     # Constructor
-    def __init__(self, lexList=[], complete=False, tagList=[], key=''):
+    def __init__(self, lexList=[], complete=False, tagList=[]):
         self.lexemes = lexList
         self.complete = complete
         self.tags = tagList
-        self.key = key
 
     def append(self, lex, do_finish=False):
         """
@@ -38,13 +36,6 @@ class LexemeCollection(object):
         self.lexemes.append(lex)
         if do_finish:
             self.complete = True
-
-    def check_out(self):
-        """
-        Mark this lexeme as reserved by generating a random UUID key.
-        """
-        # TODO: check if it already has a key
-        self.key = uuid.uuid4()
 
     def validate(self):
         """
