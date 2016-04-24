@@ -28,8 +28,6 @@ class WordCollection(LexemeCollection):
 
     # Construct this from a JSON object/dictionary.
     def import_json(self, jsonobj):
-        print jsonobj
-        print jsonobj['_id']
         self.lexemes = []
         for lexStr in jsonobj['lexemes']:
             self.lexemes.append(Word.Word(lexStr))
