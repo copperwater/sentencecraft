@@ -41,11 +41,29 @@ class LexemeCollection(object):
         """
         Test the lexemes to make sure they are all correctly valid.
         """
-        for lex in self.__metaclass__.lexemes[1:-1]:
-            if not lex.isValid():
+        for lex in self.lexemes[1:-1]:
+            if not lex.is_valid():
+                print lex.get_text(), "is not valid"
                 return False
 
-        return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
+        if not self.lexemes[0].is_valid_beginning():
+            print self.lexemes[0].get_text(), "is not a valid beginning"
+            return False
+
+        if not self.lexemes[-1].is_valid_end():
+            print self.lexemes[-1].get_text(), "is not a valid end"
+            return False
+
+        return True
+
+    def lexemes_as_stringlist(self):
+        '''
+        Return a list of all the lexemes represented as strings.
+        '''
+        lst = []
+        for lex in self.lexemes:
+            lst.append(lex.get_text())
+        return lst
 
     '''
     Secondary "constructor" methods which can load it more specifically.

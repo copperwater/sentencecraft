@@ -42,6 +42,7 @@ def check_out():
     and timestamp. Then return the uuid.
     '''
     new_uuid = str(uuid.uuid4())
+    new_uuid = 'w'
     stamp = int(time.time())
     LC_MAP[new_uuid] = stamp
     return new_uuid
@@ -68,7 +69,7 @@ def poll_for_expired():
 # To insert from a file
 # > "mongo < insert-sentences.txt"
 
-@APP.route('/view-sentences/')
+@APP.route('/view-sentences/', strict_slashes=False)
 def api_view_sentences():
     """
     returns a list of count sentences
@@ -77,7 +78,6 @@ def api_view_sentences():
     """
     Below line of code is for testing purpose
     """
-    print "Received call from Web UI"
     count = request.args.get('count')
     if count is None:
         count = '10'
@@ -104,8 +104,7 @@ def api_view_sentences():
         json_list.append(wc.view('json'))
     return json.dumps(json_list)
 
-
-@APP.route('/incomplete-sentence/')
+@APP.route('/incomplete-sentence/', strict_slashes=False)
 def api_get_incomplete_sentence():
     """
     returns a single incomplete sentence from a GET http request
@@ -140,7 +139,7 @@ def api_get_incomplete_sentence():
 
     return json.dumps(prejson)
 
-@APP.route('/complete-sentence/', methods=['POST'])
+@APP.route('/complete-sentence', methods=['POST'], strict_slashes=False)
 def api_complete_sentence():
     """
     endpoint for completing an incomplete sentence based on a key
@@ -182,7 +181,7 @@ def api_complete_sentence():
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
         {'$set':
-            {"complete":True, "lexemes":wc.lexemes, "key":""}}, upsert = False)
+            {"complete":True, "lexemes":wc.lexemes_as_stringlist(), "key":""}}, upsert = False)
 
     # remove it from the timeout list
     del LC_MAP[key]
@@ -190,30 +189,31 @@ def api_complete_sentence():
     # return 200 OK
     return "Successfully completed the sentence", 200
 
-@APP.route('/start-sentence/', methods=['POST'])
+@APP.route('/start-sentence/', methods=['POST'], strict_slashes=False)
 def api_start_incomplete_sentence():
     """
     endpoint for inserting an incomplete sentence into the database
     via POST http request
     """
-    print "Received new sentence api CALL"
     # Set the tags variable correctly
     # The assumption is that tags will not contain a ','
     try:
-        print request.form
         tags = request.form["tags"].split(',')
     except:
         tags = []
-    sentence_start = request.form["sentence_start"]
-    lexeme = sentence_start.split(' ')
-    key = uuid.uuid4()
-    MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key, "tags":tags})
-    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags)
-    return sentence_start
 
     # Get the starting list of lexemes
     # Possible TODO: make sure this is capped at some value
     first_lexemes = request.form['sentence_start'].split(' ')
+
+    # Construct them as Lexemes and validate them
+    curr_lex = Word(first_lexemes[0])
+    if not curr_lex.is_valid_beginning:
+        return "ERROR: "+first_lexemes[0]+" is not a valid beginning"
+    for lex in first_lexemes[1:]:
+        curr_lex = Word(lex)
+        if not curr_lex.is_valid():
+            return "ERROR: "+first_lexemes[0]+" is not valid"
 
     # Insert into the database
     MONGO.db.sentences.insert(

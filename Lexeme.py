@@ -40,6 +40,13 @@ class Lexeme(object):
         """
         raise NotImplementedError('Unimplemented abstract method!')
 
+    @abc.abstractmethod
+    def type(self):
+        '''
+        Return a string that is the type of this lexeme, like "word".
+        '''
+        raise NotImplementedError('Unimplemented abstract method!')
+
     def get_text(self):
         """
         Render this lexeme as a string

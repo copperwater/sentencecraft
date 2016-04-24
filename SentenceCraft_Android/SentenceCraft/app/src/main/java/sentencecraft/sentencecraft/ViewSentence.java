@@ -1,5 +1,8 @@
 package sentencecraft.sentencecraft;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -52,13 +55,24 @@ public class ViewSentence extends AppCompatActivity {
     }
 
     public void changetext(View view){
-        String me = "";
+        /*String me = "";
         Random myrand = new Random();
         for(int i = 0; i < 20; ++i){
             me += myrand.nextInt(10);
-        }
+        }*/
+        View myview = findViewById(android.R.id.content);
+
         Button but = (Button) findViewById(R.id.test);
-        but.setText(me);
+        //but.setText(me);
+        String stringUrl = "http://www.google.com";
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.test).execute(stringUrl);
+        } else {
+            but.setText("No network connection available.");
+        }
     }
 
 }
