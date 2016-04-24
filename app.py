@@ -109,7 +109,8 @@ def api_get_incomplete_sentence():
 
     # make sure there was really a sentence
     if sentence is None:
-        return 'ERROR: No incomplete sentences are available.'
+        return 'ERROR: No incomplete sentences are available.', 503
+        # 503 Service Unavailable
 
     lc = WordCollection()
     lc.import_json(sentence)
@@ -139,17 +140,19 @@ def api_complete_sentence():
         sentence_addition = request.form["sentence_addition"]
         key = request.form["key"]
     except: # TODO: figure out and except the specific error here
-        return "ERROR: key or sentence_addition is missing"
+        return "ERROR: key or sentence_addition is missing", 400
+        # 400 Bad Request
 
     # check that the key is not timed out
     if not key in LC_MAP:
-        return "ERROR: This sentence has timed out"
+        return "ERROR: This sentence has timed out", 408
+        # 408 Request Timed Out
 
     # get the document in the database
     to_complete = MONGO.db.sentences.find_one({"key":key})
     if to_complete is None:
         # this should never happen
-        return 'ERROR: No sentence matching your key was found in the db'
+        return 'ERROR: No sentence matching your key was found in the db', 400
 
     # import into a WordCollection
     wc = WordCollection()
@@ -160,13 +163,13 @@ def api_complete_sentence():
 
     # make sure it is a valid ending lexeme
     if not final_lexeme.is_valid_end():
-        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type()
+        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(), 400
 
     wc.append(final_lexeme, True)
 
     # validate it
     if not wc.validate():
-        return 'ERROR: The overall sentence is not valid'
+        return 'ERROR: The overall sentence is not valid', 400
 
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
@@ -200,11 +203,11 @@ def api_start_incomplete_sentence():
     # Construct them as Lexemes and validate them
     curr_lex = Word(first_lexemes[0])
     if not curr_lex.is_valid_beginning:
-        return "ERROR: "+first_lexemes[0]+" is not a valid beginning"
+        return "ERROR: "+first_lexemes[0]+" is not a valid beginning", 400
     for lex in first_lexemes[1:]:
         curr_lex = Word(lex)
         if not curr_lex.is_valid():
-            return "ERROR: "+first_lexemes[0]+" is not valid"
+            return "ERROR: "+first_lexemes[0]+" is not valid", 400
 
     # Insert into the database
     MONGO.db.sentences.insert(
