@@ -41,11 +41,11 @@ class LexemeCollection(object):
         """
         Test the lexemes to make sure they are all correctly valid.
         """
-        for lex in self.__metaclass__.lexemes[1:-1]:
-            if not lex.isValid():
+        for lex in self.lexemes[1:-1]:
+            if not lex.is_valid():
                 return False
 
-        return self.lexemes[0].isValidBeginning() and self.lexemes[-1].isValidEnd()
+        return self.lexemes[0].is_valid_beginning() and self.lexemes[-1].is_valid_end()
 
     '''
     Secondary "constructor" methods which can load it more specifically.
