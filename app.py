@@ -44,6 +44,10 @@ def api_view_sentences():
     returns a list of count sentences
     from a GET http request
     """
+    """
+    Below line of code is for testing purpose
+    """
+    print "Received call from Web UI"
     count = request.args.get('count')
     if count is None:
         count = '10'
@@ -58,7 +62,9 @@ def api_view_sentences():
         wc = WordCollection()
         wc.import_json(s)
         jsonStr += wc.view('json')
+    #return 'Your count was '+count+' ' + jsonStr
     return jsonStr
+
 
 @APP.route('/incomplete-sentence/')
 def api_get_incomplete_sentence():
