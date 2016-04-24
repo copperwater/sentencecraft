@@ -36,15 +36,14 @@ lcMap = {}
  API functions that are not special Flask functions (without an @ directive).
 '''
 
-def check_out(LexCollec):
+def check_out():
     '''
     Put the LexemeCollection into the lcMap with a newly generated UUID
     and timestamp. Then return the uuid.
     '''
     new_uuid = str(uuid.uuid4())
     stamp = int(time.time())
-    lcMap[new_uuid] = (LexCollec, stamp)
-    print 'checked out', new_uuid
+    lcMap[new_uuid] = stamp
     return new_uuid
 
 
@@ -55,7 +54,7 @@ def poll_for_expired():
     '''
     while True: #continue this indefinitely
         for key in list(lcMap):
-            if (int(time.time()) - lcMap[key][1]) > config.lexeme_collection_active_time:
+            if (int(time.time()) - lcMap[key]) > config.lexeme_collection_active_time:
                 del lcMap[key]
                 print 'Timeout'
         time.sleep(config.polling_delay)
@@ -108,11 +107,16 @@ def api_get_incomplete_sentence():
             {'key' : {'$exists': False}},
             {'key' : ""}]
         })
+
+    # make sure there was really a sentence
+    if sentence is None:
+        return 'ERROR: No incomplete sentences are available.'
+
     lc = WordCollection()
     lc.import_json(sentence)
 
     # check out and generate a key for this sentence
-    key = check_out(lc)
+    key = check_out()
 
     # mark the sentence in the db as active (by giving it its key), so other
     # requests won't get the same sentence
@@ -148,17 +152,28 @@ def api_complete_sentence():
         # this should never happen
         return 'ERROR: No sentence matching your key was found in the db'
 
-    # prepare the list of final lexemes
-    # remember list append does not return anything
-    full_lexemes = to_complete["lexemes"]
-    full_lexemes.append(sentence_addition.split(' ')[0])
-    print full_lexemes
+    # import into a WordCollection
+    wc = WordCollection()
+    wc.import_json(to_complete)
+
+    # get the last lexeme as a Word
+    final_lexeme = Word(sentence_addition.split(' ')[0])
+
+    # make sure it is a valid ending lexeme
+    if not final_lexeme.is_valid_end():
+        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type()
+
+    wc.append(final_lexeme, True)
+
+    # validate it
+    if not wc.validate():
+        return 'ERROR: The overall sentence is not valid'
 
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
         {'$set':
-            {"complete":True, "lexemes":full_lexemes, "key":""}}, upsert = False)
+            {"complete":True, "lexemes":wc.lexemes, "key":""}}, upsert = False)
 
     # remove it from the timeout list
     del lcMap[key]
