@@ -60,13 +60,25 @@
 
         <script>
             var app = angular.module('sentence_craft_app', []);
-            app.controller('view_controller', function ($scope,$http) {
+            app.controller('view_controller', function ($scope,$http,$window) {
                 $scope.operation_type = 'StartNewSentence';
 
-                $scope.tag_list = ['tag1', 'tag2', 'tag3'];
-
                 $scope.add_new_tag = function () {
-                    $scope.tag_list.push('');
+                    console.log("Here!");
+                    if ($scope.tag_list == undefined){
+                        console.log("Null found");
+                        $scope.tag_list = [''];
+                    }                        
+                    else {
+                        console.log($scope.tag_list.length);
+                        if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
+                            console.log("Please add the tag text!");
+                            $window.alert("Please add the tag text!");
+                        }
+                        else {
+                            $scope.tag_list.push('');
+                        }                        
+                    }
                 };
 
                 console.log("Entered view controler");
