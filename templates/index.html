@@ -46,20 +46,28 @@
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
-            <div ng-switch-when="ViewSentenceList" ng-controller="view_sentences_controller">
+            <div ng-switch-when="ViewSentenceList">
                 <main>
-                    <p>Greeting: {greeting}</p>
-                    <!--<ul id="lexlist" ng-repeat="sentence in sentence_list">
-                        <li>Sentence : {{ sentence }}</li>
-                        
-                    </ul>-->
-                    
+                    <ul>
+                        <li ng-repeat="sentence in sentence_list">
+                            {{ sentence }}
+                        </li>
+                    </ul>
                 </main>
             </div>
         </div>
 
         <script>
             var app = angular.module('sentence_craft_app', []);
+
+            app.factory('sentence_list_shared_service', function() {
+                return {
+                    sentence_list: {
+
+                    }
+                };
+            });
+
             app.controller('view_controller', function ($scope,$http,$window) {
                 $scope.operation_type = 'StartNewSentence';
 
@@ -90,26 +98,23 @@
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
 
-                    console.log("Entered view sentences controler");
+                    console.log("Entered view sentences call");
+
                     $http({
                         url: 'http://127.0.0.1:5000/view-sentences/',
                         method: "GET"
-                        })
-                        .then(function (response,data) {
-                            console.log(response);
+                    })
+                    .then(function (response, data) {
+                            console.log('Lexemes: ' + response.data.lexemes);
                             $scope.sentence_list = response.data.lexemes;
                             console.log($scope.sentence_list);
                             $scope.greeting = "Hello!";
-                        },
+                    },
                         function (response) { // optional
                             // failed
-                        });
+                    });
                 }
-            });
-
-            app.controller('view_sentences_controller', function ($scope, $http) {             
-                $scope.greeting = "Hello";
-            });
+            });            
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
                 console.log("Entered start sentences controller");
