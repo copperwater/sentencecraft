@@ -1,4 +1,7 @@
 This application will have a company name of SentenceCraft
      		 will have a company domain of SentenceCraft
 
-This application will support a minimum SDK of API15 (Android 4.0.3) (IceCreamSandwich)
+This application will support a minimum SDK of API16 (Android 4.1) (IceCreamSandwich)
+
+UPDATES:
+4/24 application changed to use min api level 16 to support android:parentActivityName
