@@ -69,7 +69,7 @@ def poll_for_expired():
 # To insert from a file
 # > "mongo < insert-sentences.txt"
 
-@APP.route('/view-sentences/')
+@APP.route('/view-sentences/', strict_slashes=False)
 def api_view_sentences():
     """
     returns a list of count sentences
@@ -78,7 +78,6 @@ def api_view_sentences():
     """
     Below line of code is for testing purpose
     """
-    print "Received call from Web UI"
     count = request.args.get('count')
     if count is None:
         count = '10'
@@ -96,8 +95,7 @@ def api_view_sentences():
     #return 'Your count was '+count+' ' + jsonStr
     return json.dumps(json_list)
 
-
-@APP.route('/incomplete-sentence/')
+@APP.route('/incomplete-sentence/', strict_slashes=False)
 def api_get_incomplete_sentence():
     """
     returns a single incomplete sentence from a GET http request
@@ -132,7 +130,7 @@ def api_get_incomplete_sentence():
 
     return json.dumps(prejson)
 
-@APP.route('/complete-sentence/', methods=['POST'])
+@APP.route('/complete-sentence', methods=['POST'], strict_slashes=False)
 def api_complete_sentence():
     """
     endpoint for completing an incomplete sentence based on a key
@@ -182,7 +180,7 @@ def api_complete_sentence():
     # return 200 OK
     return "Successfully completed the sentence", 200
 
-@APP.route('/start-sentence/', methods=['POST'])
+@APP.route('/start-sentence/', methods=['POST'], strict_slashes=False)
 def api_start_incomplete_sentence():
     """
     endpoint for inserting an incomplete sentence into the database
