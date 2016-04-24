@@ -24,6 +24,7 @@
                 </nav>
             </nav>
         </header>
+        
         <div ng-switch on="operation_type">
             <div ng-switch-when="StartNewSentence">
                 <main ng-controller="start_new_sentence_controller">
@@ -33,7 +34,7 @@
                     <section id="tags">
                         <button ng_click="add_new_tag()">Add new tag</button>
                         <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]">
+                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
                         </section>
                      
                     </section>
@@ -48,11 +49,9 @@
             </div>
             <div ng-switch-when="ViewSentenceList">
                 <main>
-                    <ul>
-                        <li ng-repeat="sentence in sentence_list">
-                            {{ sentence }}
-                        </li>
-                    </ul>
+                    <section>
+                        <input type="text" ng-model="sentence_list.lexemes"/>
+                    </section>
                 </main>
             </div>
         </div>
@@ -60,16 +59,9 @@
         <script>
             var app = angular.module('sentence_craft_app', []);
 
-            app.factory('sentence_list_shared_service', function() {
-                return {
-                    sentence_list: {
-
-                    }
-                };
-            });
-
             app.controller('view_controller', function ($scope,$http,$window) {
                 $scope.operation_type = 'StartNewSentence';
+
 
                 $scope.add_new_tag = function () {
                     console.log("Here!");
@@ -97,16 +89,15 @@
 
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
-
                     console.log("Entered view sentences call");
-
                     $http({
                         url: 'http://127.0.0.1:5000/view-sentences/',
                         method: "GET"
                     })
-                    .then(function (response, data) {
-                            console.log('Lexemes: ' + response.data.lexemes);
-                            $scope.sentence_list = response.data.lexemes;
+                    .then(function (response) {
+                            console.log('Lexemes: ' + response.data);
+
+                            $scope.sentence_list = response.data;
                             console.log($scope.sentence_list);
                             $scope.greeting = "Hello!";
                     },
