@@ -100,8 +100,8 @@
             });
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
-                $scope.sentence_start_text = 'StartNewSentenceTestText';
                 console.log("Entered start sentences controller");
+
                 $scope.start_new_sentence_api_call = function () {                    
                     console.log("Entered write new sentences function");
                     console.log($scope.tag_list);                    

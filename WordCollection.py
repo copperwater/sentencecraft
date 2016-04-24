@@ -11,16 +11,18 @@ class WordCollection(LexemeCollection):
     # Concatenate words and separate them with a single space.
     def view(self, format):
         if format.lower() == 'json':
+            '''
+            Expected to return a Python dictonary that can be readily converted
+            to json using json.dumps, but it should NOT be a JSON object.
+            '''
             strlist=[]
             for lex in self.lexemes:
                 strlist.append(lex.get_text())
             prejson = {'lexemes' : strlist,
                         'complete' : self.complete }
-            if self.key != '':
-                prejson['key']=key
             if len(self.tags) > 0:
                 prejson['tags'] = self.tags
-            return json.dumps(prejson)
+            return prejson
         else:
             raise ValueError('Must specify a valid format!')
 
@@ -34,5 +36,3 @@ class WordCollection(LexemeCollection):
         self.complete = jsonobj['complete']
         if 'tags' in jsonobj:
             self.tags = jsonobj['tags']
-        if 'key' in jsonobj:
-            self.key = jsonobj['key']

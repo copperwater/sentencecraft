@@ -1,20 +1,64 @@
 ﻿"""
 SentenceCraft API
 """
+
+# Standard modules
 import uuid
+import sched
+import threading
+import time
+import sys
+import json
+
+# Tech stack modules
 from flask import Flask
 from flask import request
 from flask import render_template
 from flask.ext.pymongo import PyMongo
 from bson.json_util import dumps
-import uuid
+
+# Local SentenceCraft modules
 import Word
-import json
 from Word import Word
 from WordCollection import WordCollection
+import SentenceCraftConfig as config
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
+
+# Set up the dictionary of keys to lexeme collections
+# This will be a map of UUID strings to 2-tuples. The first element will
+# be the lexeme collection, the second will be the timestamp in seconds at
+# which it was created.
+lcMap = {}
+
+'''
+ API functions that are not special Flask functions (without an @ directive).
+'''
+
+def check_out(LexCollec):
+    '''
+    Put the LexemeCollection into the lcMap with a newly generated UUID
+    and timestamp. Then return the uuid.
+    '''
+    new_uuid = str(uuid.uuid4())
+    stamp = int(time.time())
+    lcMap[new_uuid] = (LexCollec, stamp)
+    print 'checked out', new_uuid
+    return new_uuid
+
+
+def poll_for_expired():
+    '''
+    Check to see if any active LexemeCollections have been in lcMap longer than
+    the limit in SentenceCraftConfig. If they are, remove them.
+    '''
+    while True: #continue this indefinitely
+        for key in list(lcMap):
+            if (int(time.time()) - lcMap[key][1]) > config.lexeme_collection_active_time:
+                del lcMap[key]
+                print 'Timeout'
+        time.sleep(config.polling_delay)
 
 # To manually insert sentences into the database
 # > mongo
@@ -44,34 +88,44 @@ def api_view_sentences():
         i_count = 10
 
     sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
-    jsonStr = ''
+    jsonList = []
     for s in sentences:
         wc = WordCollection()
         wc.import_json(s)
-        jsonStr += wc.view('json')
+        jsonList.append(wc.view('json'))
     #return 'Your count was '+count+' ' + jsonStr
-    return jsonStr
+    return json.dumps(jsonList)
 
 
 @APP.route('/incomplete-sentence/')
 def api_get_incomplete_sentence():
     """
-    returns a singular incomplete sentence
-    from a GET http request
+    returns a single incomplete sentence from a GET http request
     """
-    sentence = MONGO.db.sentences.find_one({'complete':False})
-    wc = WordCollection()
-    wc.import_json(sentence)
+    sentence = MONGO.db.sentences.find_one(
+        {'complete':False,
+         '$or': [
+            {'key' : {'$exists': False}},
+            {'key' : ""}]
+        })
+    lc = WordCollection()
+    lc.import_json(sentence)
 
     # check out and generate a key for this sentence
-    wc.check_out()
+    key = check_out(lc)
 
-    
-    try:
-        key = sentence['key']
-        return 'The key was: {0}'.format(key) + dumps(sentence)
-    except KeyError:
-        return "ERROR: no key found"
+    # mark the sentence in the db as active (by giving it its key), so other
+    # requests won't get the same sentence
+    MONGO.db.sentences.update({'_id': sentence['_id']},
+                              {'$set': {'key': key}},
+                              upsert=False)
+
+    prejson = {
+        'lexemecollection': lc.view('json'),
+        'key': key
+    }
+
+    return json.dumps(prejson)
 
 @APP.route('/complete-sentence/', methods=['POST'])
 def api_complete_sentence():
@@ -81,28 +135,49 @@ def api_complete_sentence():
     try:
         sentence_addition = request.form["sentence_addition"]
         key = request.form["key"]
-        print "key {0}\n".format(key)
-    except:
-        return "ERROR: missing key/sentence_addition"
-    try:
-        to_complete = MONGO.db.sentences.find_one({"key":key, "complete":False})
-        lexeme = to_complete["lexeme"] + sentence_addition.split(' ')
-        MONGO.db.sentences.update({"_id": to_complete['_id']}, {
-            '$set': {"complete":True, "lexeme":lexeme, "key":''}}, upsert = False)
-        return "inserted sentence {0}".format(lexeme)
-    except:
-        return "ERROR invalid key\n"
+    except: # TODO: figure out and except the specific error here
+        return "ERROR: key or sentence_addition is missing"
+
+    # check that the key is not timed out
+    if not key in lcMap:
+        return "ERROR: This sentence has timed out"
+
+    # get the document in the database
+    to_complete = MONGO.db.sentences.find_one({"key":key})
+    if to_complete is None:
+        # this should never happen
+        return 'ERROR: No sentence matching your key was found in the db'
+
+    # prepare the list of final lexemes
+    # remember list append does not return anything
+    full_lexemes = to_complete["lexemes"]
+    full_lexemes.append(sentence_addition.split(' ')[0])
+    print full_lexemes
+
+    # update the document as being complete and remove the key
+    MONGO.db.sentences.update(
+        {"_id": to_complete['_id']},
+        {'$set':
+            {"complete":True, "lexemes":full_lexemes, "key":""}}, upsert = False)
+
+    # remove it from the timeout list
+    del lcMap[key]
+
+    # return 200 OK
+    return "Successfully completed the sentence", 200
 
 @APP.route('/start-sentence/', methods=['POST'])
 def api_start_incomplete_sentence():
     """
-    endpoint for inserting an
-    incomplete sentence into the database
+    endpoint for inserting an incomplete sentence into the database
     via POST http request
     """
     print "Received new sentence api CALL"
+    # Set the tags variable correctly
+    # The assumption is that tags will not contain a ','
     try:
-        tags = request.form["tags"]
+        print request.form
+        tags = request.form["tags"].split(',')
     except:
         tags = []
     sentence_start = request.form["sentence_start"]
@@ -113,6 +188,17 @@ def api_start_incomplete_sentence():
     MONGO.db.sentences.insert({"lexeme": lexeme, "complete": False, "key": key})
     return sentence_start
 
+    # Get the starting list of lexemes
+    # Possible TODO: make sure this is capped at some value
+    first_lexemes = request.form['sentence_start'].split(' ')
+
+    # Insert into the database
+    MONGO.db.sentences.insert(
+        {"lexemes": first_lexemes, "complete": False, "tags":tags})
+
+    # return 200 OK
+    return "Successfully started the sentence", 200
+
 @APP.route('/view-HTML/')
 def view_html_sample():
     """
@@ -121,12 +207,20 @@ def view_html_sample():
     print "view html"
     sentences = MONGO.db.sentences.find()
     return render_template('index.html')
-	
+
 @APP.route('/fetchdata')
 def fetch_data():
     print "fetchdata"
     json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
     return json_data
+
+# Run this once and only in one thread. Note that it will not run until the
+# first request comes in; it will not run automatically at startup.
+@APP.before_first_request
+def single_thread_setup():
+    # Start a new thread for polling
+    threading.Thread(None, poll_for_expired).start()
+
 
 if __name__ == '__main__':
     APP.run(debug=True)

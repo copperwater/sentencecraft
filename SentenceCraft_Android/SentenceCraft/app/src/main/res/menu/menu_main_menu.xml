@@ -7,4 +7,12 @@
         android:orderInCategory="100"
         android:title="@string/action_settings"
         app:showAsAction="never" />
+    <!--
+    <item
+        android:id="@+id/action_back"
+        android:icon="@drawable/arrorback"
+        android:orderInCategory="100"
+        android:title="@string/action_back"
+        app:showAsAction="ifRoom" />
+        -->
 </menu>
