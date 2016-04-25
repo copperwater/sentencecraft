@@ -189,7 +189,7 @@ def api_complete_sentence():
 
     # validate it
     if not wc.validate():
-       return 'ERROR: The overall sentence is not valid'
+       return 'ERROR: The overall sentence is not valid', 400
 
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
