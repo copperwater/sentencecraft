@@ -35,11 +35,11 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... urls) {
 
         // params comes from the execute() call: params[0] is the url.
-        if(urls.length < 1){
+        if(urls.length < 2){
             return "Sorry don't know url to connect to.";
         }
         try {
-            return downloadUrl(urls[0]);
+            return downloadUrl(urls[0],urls[1]);
         } catch (IOException e) {
             return "Unable to retrieve web page. URL may be invalid.";
         }
@@ -51,7 +51,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         textView.setText(result);
     }
 
-    private String downloadUrl(String myurl) throws IOException {
+    private String downloadUrl(String method,String myurl) throws IOException {
 
         InputStream is = null;
         // Only display the first 500 characters of the retrieved
@@ -63,7 +63,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(method);
             conn.setDoInput(true);
             // Starts the query
             conn.connect();
