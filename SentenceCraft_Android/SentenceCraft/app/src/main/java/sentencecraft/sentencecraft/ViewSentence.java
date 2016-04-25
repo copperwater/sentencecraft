@@ -69,7 +69,7 @@ public class ViewSentence extends AppCompatActivity {
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.test).execute("GET",stringUrl);
+            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.toedit).execute("GET",stringUrl);
         } else {
             but.setText("No network connection available.");
         }
