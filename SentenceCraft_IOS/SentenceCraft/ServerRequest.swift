@@ -1,5 +1,5 @@
 //
-//  RequestObject.swift
+//  ServerRequest.swift
 //  SentenceCraft
 //
 //  Created by Tausif Ahmed on 4/22/16.
