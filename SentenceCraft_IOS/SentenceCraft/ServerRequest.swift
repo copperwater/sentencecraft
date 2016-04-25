@@ -21,30 +21,13 @@ class ServerRequest {
 			data, response, error in
 			
 			// Check for error
-			if error != nil
-			{
+			if error != nil {
 				print("error=\(error)")
 				return
 			}
 			
-			// Print out response string
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("responseString = \(responseString)")
-			
-			// Convert server json response to NSDictionary
-			do {
-				if let convertedJsonIntoDict = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-					
-					// Print out dictionary
-					print(convertedJsonIntoDict)
-					
-					// Get value by key
-					let firstNameValue = convertedJsonIntoDict["userName"] as? String
-					print(firstNameValue!)
-				}
-			} catch let error as NSError {
-				print(error.localizedDescription)
-			}
+			self.handleRequestResponse(data!, response: response!)
+
 		}
 		task.resume()
 	}
@@ -54,50 +37,48 @@ class ServerRequest {
 		let request = NSMutableURLRequest(URL:requestURL!);
 		request.HTTPMethod = "POST"
 		
-		let startJSONObject = [ "sentence_start" : sentence, "tags" : tags]
-		do {
-			let jsonData = try NSJSONSerialization.dataWithJSONObject(startJSONObject, options: [])
-			
-			request.HTTPBody = jsonData
-			print(request.HTTPBody)
+		let postString: String = "tags=\(tags)&sentence_start=\(sentence)"
+			let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
+			let postLength: String = "\(postData.length)"
+			request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+			request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+			request.HTTPBody = postData
 			
 			let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
 				data, response, error in
 				
 				// Check for error
-				if error != nil
-				{
+				if error != nil {
 					print("error=\(error)")
 					return
 				}
-				
-				// Print out response string
-				let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-				print("responseString = \(responseString)")
-				
-				// Convert server json response to NSDictionary
-				do {
-					if let convertedJsonIntoDict = try NSJSONSerialization.JSONObjectWithData(data!, options: []) as? NSDictionary {
-						
-						// Print out dictionary
-						print(convertedJsonIntoDict)
-						
-						// Get value by key
-						let firstNameValue = convertedJsonIntoDict["userName"] as? String
-						print(firstNameValue!)
-					}
-				} catch let error as NSError {
-					print(error.localizedDescription)
-				}
 			}
 			task.resume()
-
-
-		} catch {
-			print("Error -> \(error)")
-		}
-		
+			
 	}
+	
+	
+	func handleRequestResponse(data: NSData, response: NSURLResponse) {
+		// Print out response string
+		let responseString = NSString(data: data, encoding: NSUTF8StringEncoding)
+		print("responseString = \(responseString)")
+		
+		// Convert server json response to NSDictionary
+		do {
+			if let convertedJsonIntoDict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
+				
+				// Print out dictionary
+				print(convertedJsonIntoDict)
+				
+				// Get value by key
+				let firstNameValue = convertedJsonIntoDict["userName"] as? String
+				print(firstNameValue!)
+			}
+		} catch let error as NSError {
+			print(error.localizedDescription)
+		}
+	}
+	
 	
 	
 }

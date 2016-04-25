@@ -99,7 +99,7 @@ class StartLexemeViewController: UIViewController {
 	}
 	
 	func submitButtonPressed(sender: UIButton!) {
-		let tags = tagOne.text! + ", " + tagTwo.text!
+		let tags = tagOne.text!
 		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
 		navigationController?.popViewControllerAnimated(true)
 		
