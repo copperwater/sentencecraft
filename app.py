@@ -255,4 +255,4 @@ def single_thread_setup():
 
 
 if __name__ == '__main__':
-    APP.run(debug=True, host=config.flask_host, port=flask_port)
+    APP.run(debug=True, host=config.flask_host, port=config.flask_port)
