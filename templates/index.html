@@ -41,7 +41,7 @@
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
-            <div ng-switch-when="ViewSentenceList" ng-controller="view_controller">
+            <div ng-switch-when="ViewSentenceList" > 
                 <main>
                     <ul>
                         <li ng-repeat="sentence in data">
@@ -50,13 +50,20 @@
                     </ul> 
                 </main>
             </div>
-            <div ng-switch-when="ContinueSentence" ng-controller="view_controller">
+            <div ng-switch-when="ContinueSentence">
                 <main>
                     <section id="continue-text">
-                      <input id="entry" ng-model="sentence_continue_text"/>
+                      <input id="entry" ng-model="model.sentence_continue_text"/>
                     </section>  
                     <button type="submit" id="continue" class="submit" ng-click="continue_sentence_api_call(false)">CONTINUE</button>
                     <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
+                </main>
+            </div>
+            <div ng-switch-when="ContinueAnother"> 
+                <main>
+                    <h2>Sentence successfully modified. Complete another sentence?</h2>
+                    <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
+                    <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_sentence_panel()">NO</button>
                 </main>
             </div>
         </div>
@@ -86,7 +93,11 @@
             });
 
             app.controller('view_controller', function ($scope,$http,$window, dataService) {
-               $scope.add_new_tag = function () {
+                $scope.model = {
+                    sentence_continue_text : ''
+                };
+
+                $scope.add_new_tag = function () {
                 console.log("Here!");
                 if ($scope.tag_list == undefined){
                     console.log("Null found");
@@ -108,19 +119,19 @@
                    $scope.key = $scope.incomplete_sentence.data.key; 
                    $scope.complete = complete;
                    console.log($scope.key);
-                   console.log($scope.sentence_continue_text); 
-                   alert($scope.complete);
+                   console.log($scope.model.sentence_continue_text); 
                    $http({
                     url: 'http://127.0.0.1:5000/complete-sentence/',
                         method: "POST",
-                        data: $.param({ sentence_addition: $scope.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
+                        data: $.param({ sentence_addition: $scope.model.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
                         headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
                     })
                     .then(function (data,response) {
-                        
+                        $scope.operation_type = 'ContinueAnother';
+                        //$scope.$apply(); 
                     },
                     function (response) { // optional
-                        // failed
+                        alert(response);
                     });
                }
                 
@@ -130,24 +141,6 @@
                    dataService.incompleteSentence().then(function (dataResponse){
                         console.log(dataResponse);
                         $scope.incomplete_sentence = dataResponse;
-                        
-                        /*
-                        $scope.key = dataResponse.data.key;
-                        console.log($scope.sentence_continue_text);
-
-                        $http({
-                        url: 'http://127.0.0.1:5000/complete-sentence/',
-                            method: "POST",
-                            data: $.param({ sentence_addition: $scope.sentence_continue_text, key: $scope.key }),
-                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
-                        })
-                        .then(function (data,response) {
-                            
-                        },
-                        function (response) { // optional
-                            // failed
-                        });
-                        */
                    });
                }
 
@@ -200,7 +193,6 @@
                         function (response) { // optional
                             // failed
                         });
-
                 }
             });
         </script>
