@@ -68,16 +68,12 @@ def poll_for_expired():
 # To insert from a file
 # > "mongo < insert-sentences.txt"
 
-@APP.route('/view-sentences/', methods=['GET', 'POST'])
+@APP.route('/view-sentences/', methods=['GET', 'POST'], strict_slashes=False)
 def api_view_sentences():
     """
     returns a list of count sentences
     from a GET http request
     """
-    """
-    Below line of code is for testing purpose
-    """
-    print "Received call from Web UI"
     count = request.args.get('count')
     if count is None:
         count = '10'
@@ -86,14 +82,13 @@ def api_view_sentences():
     except ValueError:
         i_count = 10
 
-    print request.form
     try:
         tags=request.form['tags'].split(',')
         if(len(tags) == 1 and tags[0] == ''):
             tags = []
-        print tags
     except:
         tags=[]
+
     if (len(tags) != 0):
         sentences = MONGO.db.sentences.find({"$and": [{'complete':True},
             {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(i_count)
@@ -105,25 +100,26 @@ def api_view_sentences():
         wc = WordCollection()
         wc.import_json(sentence)
         json_list.append(wc.view('json'))
-    
+
     return json.dumps(json_list), 200
 
 
-@APP.route('/incomplete-sentence/')
+@APP.route('/incomplete-sentence/', methods=['GET'], strict_slashes=False)
 def api_get_incomplete_sentence():
     """
     returns a single incomplete sentence from a GET http request
     """
     sentence = MONGO.db.sentences.find_one(
         {'complete':False,
-         #'$or': [
-         #   {'key' : {'$exists': False}},
-         #   {'key' : ""}]
+         '$or': [
+            {'key' : {'$exists': False}},
+            {'key' : ""}]
         })
 
     # make sure there was really a sentence
     if sentence is None:
-        return 'ERROR: No incomplete sentences are available.'
+        return 'ERROR: No incomplete sentences are available.', 503
+        # 503 Service Unavailable
 
     lc = WordCollection()
     lc.import_json(sentence)
@@ -142,59 +138,59 @@ def api_get_incomplete_sentence():
         'key': key
     }
 
-    return json.dumps(prejson)
+    return json.dumps(prejson), 200
 
-@APP.route('/complete-sentence/', methods=['POST'])
+@APP.route('/complete-sentence/', methods=['POST'], strict_slashes=False)
 def api_complete_sentence():
     """
     endpoint for completing an incomplete sentence based on a key
     """
     try:
-        print request.form
         sentence_addition = request.form["sentence_addition"]
         key = request.form["key"]
         complete = request.form["complete"]
     except: # TODO: figure out and except the specific error here
-        return "ERROR: key or sentence_addition is missing"
-    
-    print "complete: " + complete
+        return "ERROR: key or sentence_addition is missing", 400
 
-    if complete == 'true': 
+    if complete == 'true':
         complete = True
-    else: 
+    else:
         complete = False
-    
+
     # check that the key is not timed out
     if not key in LC_MAP:
-        return "ERROR: This sentence has timed out"
+        return "ERROR: This sentence has timed out", 408
 
     # get the document in the database
     to_complete = MONGO.db.sentences.find_one({"key":key})
     if to_complete is None:
         # this should never happen
-        return 'ERROR: No sentence matching your key was found in the db'
-    
-    print "to complete " + str(to_complete)
+        return 'ERROR: No sentence matching your key was found in the db', 400
+
+    '''
+    TODO: This segment of code is an absolute mess.
+    It needs: limiting the lexemes to 1, validating it as a normal or ending
+    lexeme appropriately, and not just blindly slapping it on to_complete.
+    '''
+
     # import into a WordCollection
-    
+
     # get the last lexeme as a Word
     #final_lexeme = Word(sentence_addition.split(' ')[-1])
-    
+
     # make sure it is a valid ending lexeme
     #if not final_lexeme.is_valid_end():
     #    return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(),400
-    
+
     to_complete['lexemes']= to_complete['lexemes'] + (sentence_addition.split(' '))
-   
-    print 'to complete' + str(to_complete)
 
     wc = WordCollection()
     wc.import_json(to_complete)
 
     # validate it
-    #if not wc.validate():
-    #   return 'ERROR: The overall sentence is not valid'
-    
+    if not wc.validate():
+       return 'ERROR: The overall sentence is not valid'
+
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
@@ -203,13 +199,11 @@ def api_complete_sentence():
 
     # remove it from the timeout list
     del LC_MAP[key]
-    
-    print 'deleted the key'
-    
+
     # return 200 OK
     return "Successfully completed the sentence", 200
 
-@APP.route('/start-sentence/', methods=['POST'])
+@APP.route('/start-sentence/', methods=['POST'], strict_slashes=False)
 def api_start_incomplete_sentence():
     """
     endpoint for inserting an incomplete sentence into the database
@@ -219,20 +213,22 @@ def api_start_incomplete_sentence():
     # Set the tags variable correctly
     # The assumption is that tags will not contain a ','
     try:
-        print request.form
         tags = request.form["tags"].split(',')
     except:
         tags = []
-    sentence_start = request.form["sentence_start"]
-    lexeme = sentence_start.split(' ')
-    key = uuid.uuid4()
-    MONGO.db.sentences.insert({"lexemes": lexeme, "complete": False, "key": key, "tags":tags})
-    print "Received API Call! Lexeme : {0}\n Tags: {1}".format(sentence_start,tags)
-    return sentence_start
 
     # Get the starting list of lexemes
     # Possible TODO: make sure this is capped at some value
     first_lexemes = request.form['sentence_start'].split(' ')
+
+    # Construct them as Lexemes and validate them
+    curr_lex = Word(first_lexemes[0])
+    if not curr_lex.is_valid_beginning:
+        return "ERROR: "+first_lexemes[0]+" is not a valid beginning", 400
+    for lex in first_lexemes[1:]:
+        curr_lex = Word(lex)
+        if not curr_lex.is_valid():
+            return "ERROR: "+first_lexemes[0]+" is not valid", 400
 
     # Insert into the database
     MONGO.db.sentences.insert(
@@ -249,12 +245,6 @@ def view_html_sample():
     print "view html"
     sentences = MONGO.db.sentences.find()
     return render_template('index.html')
-
-@APP.route('/fetchdata')
-def fetch_data():
-    print "fetchdata"
-    json_data = '{"sentences":[{"key": "123", "sentence": "First Sentence"},{"key":"124", "sentence": "Second Sentence"}]}'
-    return json_data
 
 # Run this once and only in one thread. Note that it will not run until the
 # first request comes in; it will not run automatically at startup.
