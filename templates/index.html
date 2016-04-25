@@ -32,7 +32,8 @@
                         <input id="entry" value="Today's dinner " ng-model="sentence_start_text"/>
                     </section>
                     <section id="tags">
-                        <button ng_click="add_new_tag()">Add new tag</button>
+                        <button ng_click="add_new_tag()">Add Tag</button>
+                        <button ng_click="remove_tag()">Remove Tag</button>
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
                         </section>
@@ -44,7 +45,9 @@
             <div ng-switch-when="ViewSentenceList" > 
                 <main>
                         <section id="tags2">
-                        <button ng_click="add_new_search_tag()">Add new tag</button>
+                        <button ng_click="add_new_search_tag()">Add Tag</button>
+                        <button ng_click="remove_search_tag()">Remove Tag</button>
+
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in model.tag_list_search track by $index" ng-model="model.tag_list_search[$index]"/>
                         </section>
@@ -110,40 +113,57 @@
                 };
 
                 $scope.add_new_tag = function () {
-                console.log("Here!");
-                if ($scope.tag_list == undefined){
-                    console.log("Null found");
-                    $scope.tag_list = [''];
-                }                        
-                else {
-                    console.log($scope.tag_list.length);
-                    if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
-                        console.log("Please add the tag text!");
-                        $window.alert("Please add the tag text!");
-                    }
-                    else {
-                        $scope.tag_list.push('');
+                    console.log("Here!");
+                    if ($scope.tag_list == undefined){
+                        console.log("Null found");
+                        $scope.tag_list = [''];
                     }                        
-                }
+                    else {
+                        console.log($scope.tag_list.length);
+                        if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
+                            console.log("Please add the tag text!");
+                            $window.alert("Please add the tag text!");
+                        }
+                        else {
+                            $scope.tag_list.push('');
+                        }                        
+                    }
+                };
+
+                $scope.remove_tag = function () {
+                    if ($scope.tag_list == undefined){
+                        console.log("Null found");
+                    }                        
+                    else {
+                        console.log($scope.tag_list.length);
+                        if($scope.tag_list.length > 0){
+                            $scope.tag_list.pop();
+                        }                            
+                    }
+                };
+
+                $scope.remove_search_tag = function () {
+                    if ($scope.model.tag_list_search.length > 0){
+                        $scope.model.tag_list_search.pop();
+                    }
                 };
 
                 //TODO consider combining these methods
                 $scope.add_new_search_tag = function () {
-                console.log("Here!");
-                if ($scope.model.tag_list_search.length == 0){
-                    console.log("Null found");
-                    $scope.model.tag_list_search = [''];
-                }                        
-                else {
-                    console.log($scope.model.tag_list_search.length);
-                    if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
-                        console.log("Please add the tag text!");
-                        $window.alert("Please add the tag text!");
-                    }
-                    else {
-                        $scope.model.tag_list_search.push('');
+                    if ($scope.model.tag_list_search.length == 0){
+                        console.log("Null found");
+                        $scope.model.tag_list_search = [''];
                     }                        
-                }
+                    else {
+                        console.log($scope.model.tag_list_search.length);
+                        if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
+                            console.log("Please add the tag text!");
+                            $window.alert("Please add the tag text!");
+                        }
+                        else {
+                            $scope.model.tag_list_search.push('');
+                        }                        
+                    }
                 };
 
                $scope.continue_sentence_api_call = function(complete){
