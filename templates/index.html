@@ -43,11 +43,20 @@
             </div>
             <div ng-switch-when="ViewSentenceList" > 
                 <main>
+                        <section id="tags2">
+                        <button ng_click="add_new_search_tag()">Add new tag</button>
+                        <section class="input-group">
+                            <input class="tag" type="text" ng-repeat="input in model.tag_list_search track by $index" ng-model="model.tag_list_search[$index]"/>
+                        </section>
+                     
+                    </section>
+
                     <ul>
                         <li ng-repeat="sentence in data">
                             {[sentence]}
                         </li>
-                    </ul> 
+                    </ul>
+                    <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
                 </main>
             </div>
             <div ng-switch-when="ContinueSentence">
@@ -78,23 +87,26 @@
             }]);
 
             app.service('dataService', function($http){
-                this.viewSentence = function(){
+                this.viewSentence = function(tag_list){
                     return $http({
                             url: 'http://127.0.0.1:5000/view-sentences/',
-                            method: "GET"
+                            method: "POST",
+                            data: $.param({ tags: tag_list}),
+                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
                         });
                 }
                 this.incompleteSentence = function(){
                     return $http({
                     url: 'http://127.0.0.1:5000/incomplete-sentence/',
-                    method: "GET"
+                    method: "GET",
                     });
                 }
             });
 
             app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 $scope.model = {
-                    sentence_continue_text : ''
+                    sentence_continue_text : '',
+                    tag_list_search: []
                 };
 
                 $scope.add_new_tag = function () {
@@ -115,6 +127,25 @@
                 }
                 };
 
+                //TODO consider combining these methods
+                $scope.add_new_search_tag = function () {
+                console.log("Here!");
+                if ($scope.model.tag_list_search.length == 0){
+                    console.log("Null found");
+                    $scope.model.tag_list_search = [''];
+                }                        
+                else {
+                    console.log($scope.model.tag_list_search.length);
+                    if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
+                        console.log("Please add the tag text!");
+                        $window.alert("Please add the tag text!");
+                    }
+                    else {
+                        $scope.model.tag_list_search.push('');
+                    }                        
+                }
+                };
+
                $scope.continue_sentence_api_call = function(complete){
                    $scope.key = $scope.incomplete_sentence.data.key; 
                    $scope.complete = complete;
@@ -128,7 +159,6 @@
                     })
                     .then(function (data,response) {
                         $scope.operation_type = 'ContinueAnother';
-                        //$scope.$apply(); 
                     },
                     function (response) { // optional
                         alert(response);
@@ -153,7 +183,16 @@
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
                     console.log("Entered view sentences call");
-                    dataService.viewSentence().then(function (dataResponse) {
+                    console.log('test' + $scope.model.tag_list_search);
+
+                    var data = $.param({
+                        json: JSON.stringify({
+                            sentence_start: $scope.sentence_start_text
+                        })
+                    });
+
+                    var tagList = $scope.model.tag_list_search.toString();
+                    dataService.viewSentence(tagList).then(function (dataResponse) {
                         var data2 = dataResponse.data;
                         console.log(data2);
                         var rep = []; 
@@ -167,7 +206,8 @@
                         }
                         $scope.data = rep;
                         console.log($scope.data);
-                    })};
+                    })
+                    };
             });            
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {

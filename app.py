@@ -68,7 +68,7 @@ def poll_for_expired():
 # To insert from a file
 # > "mongo < insert-sentences.txt"
 
-@APP.route('/view-sentences/')
+@APP.route('/view-sentences/', methods=['GET', 'POST'])
 def api_view_sentences():
     """
     returns a list of count sentences
@@ -86,14 +86,27 @@ def api_view_sentences():
     except ValueError:
         i_count = 10
 
-    sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+    print request.form
+    try:
+        tags=request.form['tags'].split(',')
+        if(len(tags) == 1 and tags[0] == ''):
+            tags = []
+        print tags
+    except:
+        tags=[]
+    if (len(tags) != 0):
+        sentences = MONGO.db.sentences.find({"$and": [{'complete':True},
+            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(i_count)
+    else:
+        sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+
     json_list = []
     for sentence in sentences:
         wc = WordCollection()
         wc.import_json(sentence)
         json_list.append(wc.view('json'))
-    #return 'Your count was '+count+' ' + jsonStr
-    return json.dumps(json_list)
+    
+    return json.dumps(json_list), 200
 
 
 @APP.route('/incomplete-sentence/')
