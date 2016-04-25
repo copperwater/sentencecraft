@@ -50,6 +50,15 @@
                     </ul> 
                 </main>
             </div>
+            <div ng-switch-when="ContinueSentence" ng-controller="view_controller">
+                <main>
+                    <section id="continue-text">
+                      <input id="entry" ng-model="sentence_continue_text"/>
+                    </section>  
+                    <button type="submit" id="continue" class="submit" ng-click="continue_sentence_api_call(false)">CONTINUE</button>
+                    <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
+                </main>
+            </div>
         </div>
 
         <script>
@@ -94,20 +103,42 @@
                     }                        
                 }
                 };
+
+               $scope.continue_sentence_api_call = function(complete){
+                   $scope.key = $scope.incomplete_sentence.data.key; 
+                   $scope.complete = complete;
+                   console.log($scope.key);
+                   console.log($scope.sentence_continue_text); 
+                   alert($scope.complete);
+                   $http({
+                    url: 'http://127.0.0.1:5000/complete-sentence/',
+                        method: "POST",
+                        data: $.param({ sentence_addition: $scope.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
+                        headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                    })
+                    .then(function (data,response) {
+                        
+                    },
+                    function (response) { // optional
+                        // failed
+                    });
+               }
                 
                $scope.view_continue_list_panel = function(){
                    $scope.operation_type = 'ContinueSentence'; 
                    console.log('Continue a sentence');
-                   //TODO button for complete / continue
                    dataService.incompleteSentence().then(function (dataResponse){
                         console.log(dataResponse);
+                        $scope.incomplete_sentence = dataResponse;
+                        
+                        /*
                         $scope.key = dataResponse.data.key;
-                        $scope.hardCode = "hard coded end.";
+                        console.log($scope.sentence_continue_text);
 
                         $http({
                         url: 'http://127.0.0.1:5000/complete-sentence/',
                             method: "POST",
-                            data: $.param({ sentence_addition: $scope.hardCode, key: $scope.key }),
+                            data: $.param({ sentence_addition: $scope.sentence_continue_text, key: $scope.key }),
                             headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
                         })
                         .then(function (data,response) {
@@ -116,6 +147,7 @@
                         function (response) { // optional
                             // failed
                         });
+                        */
                    });
                }
 

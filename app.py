@@ -140,9 +140,17 @@ def api_complete_sentence():
         print request.form
         sentence_addition = request.form["sentence_addition"]
         key = request.form["key"]
+        complete = request.form["complete"]
     except: # TODO: figure out and except the specific error here
         return "ERROR: key or sentence_addition is missing"
+    
+    print "complete: " + complete
 
+    if complete == 'true': 
+        complete = True
+    else: 
+        complete = False
+    
     # check that the key is not timed out
     if not key in LC_MAP:
         return "ERROR: This sentence has timed out"
@@ -157,11 +165,11 @@ def api_complete_sentence():
     # import into a WordCollection
     
     # get the last lexeme as a Word
-    final_lexeme = Word(sentence_addition.split(' ')[-1])
+    #final_lexeme = Word(sentence_addition.split(' ')[-1])
     
     # make sure it is a valid ending lexeme
-    if not final_lexeme.is_valid_end():
-        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(),400
+    #if not final_lexeme.is_valid_end():
+    #    return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(),400
     
     to_complete['lexemes']= to_complete['lexemes'] + (sentence_addition.split(' '))
    
@@ -171,14 +179,14 @@ def api_complete_sentence():
     wc.import_json(to_complete)
 
     # validate it
-    if not wc.validate():
-       return 'ERROR: The overall sentence is not valid'
+    #if not wc.validate():
+    #   return 'ERROR: The overall sentence is not valid'
     
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
         {'$set':
-            {"complete":True, "lexemes":wc.view("string"), "key":""}}, upsert = False)
+            {"complete":complete, "lexemes":wc.view("string"), "key":""}}, upsert = False)
 
     # remove it from the timeout list
     del LC_MAP[key]
