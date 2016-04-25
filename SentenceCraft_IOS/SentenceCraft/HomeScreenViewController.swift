@@ -13,6 +13,7 @@ class HomeScreenViewController: UIViewController {
 	@IBOutlet private var startLexemeButton: UIButton!
 	@IBOutlet private var continueLexemeButton: UIButton!
 	@IBOutlet private var viewLexemesButton: UIButton!
+	var server : ServerRequest!
 	
 	func addSentenceCraftLabel() {
 		let sentenceCraftLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 500, 200))
@@ -70,7 +71,7 @@ class HomeScreenViewController: UIViewController {
 		viewLexemesButton.layer.borderWidth = 5
 		viewLexemesButton.layer.borderColor = UIColor.blueColor().CGColor
 		viewLexemesButton.addTarget(self,
-		                            action: #selector(HomeScreenViewController.viewLexemButtonPressed(_:)),
+		                            action: #selector(HomeScreenViewController.viewLexemeButtonPressed(_:)),
 		                            forControlEvents: UIControlEvents.TouchUpInside)
 		self.view.addSubview(viewLexemesButton)
 	}
@@ -84,8 +85,9 @@ class HomeScreenViewController: UIViewController {
 		self.performSegueWithIdentifier("ContinueLexemeSegue", sender: self)
 	}
 	
-	func viewLexemButtonPressed(sender: UIButton!) {
+	func viewLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("ViewLexemesSegue", sender: self)
+		server.sendViewRequest()
 	}
 	
 //	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
@@ -97,6 +99,7 @@ class HomeScreenViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		self.server = ServerRequest.init()
 		self.addSentenceCraftLabel()
 		self.createStartLexemeButton()
 		self.createContinueLexemeButton()
