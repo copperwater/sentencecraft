@@ -18,3 +18,7 @@ db.sentences.insert({"lexemes": ["lol", "rofl", "roflmao", "roflmaoqxz", "omgwtf
 db.sentences.insert({"lexemes": ["The", "Rensselaer", "Student", "Onion", "celebrated", "its", "125th", "anniversary", "this", "year"], "complete": true, "tags":["rensselaer", "union"]})
 db.sentences.insert({"lexemes": ["PSA:", "Don't", "stick", "forks", "in", "toasters!"], "complete": true})
 db.sentences.insert({"lexemes": ["Dont", "finish", "what", "you"], "complete": false})
+db.sentences.insert({"lexemes": ["Jack", "and", "Jill", "went","over","the","hill."], "complete": true})
+db.sentences.insert({"lexemes": ["I", "once", "had", "a","fish."], "complete": true})
+db.sentences.insert({"lexemes": ["To","be","or","not","to","be","that","is","the","question."], "complete": true})
+db.sentences.insert({"lexemes": ["This","sentence","was","made","with","Sentencecraft."], "complete": true})
