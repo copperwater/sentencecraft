@@ -24,6 +24,7 @@
                 </nav>
             </nav>
         </header>
+        
         <div ng-switch on="operation_type">
             <div ng-switch-when="StartNewSentence">
                 <main ng-controller="start_new_sentence_controller">
@@ -33,7 +34,7 @@
                     <section id="tags">
                         <button ng_click="add_new_tag()">Add new tag</button>
                         <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]">
+                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
                         </section>
                      
                     </section>
@@ -47,7 +48,6 @@
                             {[sentence]}
                         </li>
                     </ul> 
-                   
                 </main>
             </div>
         </div>
@@ -70,29 +70,23 @@
                 }
             });
 
-            app.controller('2-con', function($scope){
-                $scope.data = {message: "Hello"};
-            });
-        
             app.controller('view_controller', function ($scope,$http,$window, dataService) {
-                
-                $scope.operation_type = 'StartNewSentence';
-                $scope.add_new_tag = function () {
-                    console.log("Here!");
-                    if ($scope.tag_list == undefined){
-                        console.log("Null found");
-                        $scope.tag_list = [''];
-                    }                        
-                    else {
-                        console.log($scope.tag_list.length);
-                        if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
-                            console.log("Please add the tag text!");
-                            $window.alert("Please add the tag text!");
-                        }
-                        else {
-                            $scope.tag_list.push('');
-                        }                        
+               $scope.add_new_tag = function () {
+                console.log("Here!");
+                if ($scope.tag_list == undefined){
+                    console.log("Null found");
+                    $scope.tag_list = [''];
+                }                        
+                else {
+                    console.log($scope.tag_list.length);
+                    if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
+                        console.log("Please add the tag text!");
+                        $window.alert("Please add the tag text!");
                     }
+                    else {
+                        $scope.tag_list.push('');
+                    }                        
+                }
                 };
                 
 
@@ -119,10 +113,7 @@
                         }
                         $scope.data = rep;
                         console.log($scope.data);
-                    });
-                }
-                console.log($scope.sentence_list);
-
+                    })};
             });            
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
