@@ -9,11 +9,15 @@
 import Foundation
 
 class ServerRequest {
+	
+	private var serverURL: String
 
-	init() {}
+	init() {
+		serverURL = "http://127.0.0.1:5000/"
+	}
 	
 	func sendViewRequest() {
-		let requestURL = NSURL(string: "http://127.0.0.1:5000/view-sentences/")
+		let requestURL = NSURL(string: serverURL + "view-sentences/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 		request.HTTPMethod = "GET"
 		
@@ -33,7 +37,7 @@ class ServerRequest {
 	}
 	
 	func sendStartSentenceRequest(tags: String, sentence: String) {
-		let requestURL = NSURL(string: "http://127.0.0.1:5000/start-sentence/")
+		let requestURL = NSURL(string: serverURL + "start-sentence/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 		request.HTTPMethod = "POST"
 		
