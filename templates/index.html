@@ -37,22 +37,17 @@
                         </section>
                      
                     </section>
-                    <!--<section id="tags">
-                        Tags:
-                        <input class="tag" value="cheese" />
-                        <input class="tag" value="macaroni" />
-                        <button type="button" id="moretags">+</button>
-                    </section>-->
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
-            <div ng-switch-when="ViewSentenceList">
+            <div ng-switch-when="ViewSentenceList" ng-controller="view_controller">
                 <main>
                     <ul>
-                        <li ng-repeat="sentence in sentence_list">
-                            {{ sentence }}
+                        <li ng-repeat="sentence in data">
+                            {[sentence]}
                         </li>
-                    </ul>
+                    </ul> 
+                   
                 </main>
             </div>
         </div>
@@ -60,17 +55,28 @@
         <script>
             var app = angular.module('sentence_craft_app', []);
 
-            app.factory('sentence_list_shared_service', function() {
-                return {
-                    sentence_list: {
+            // Get Jinja and Angular to play nicely with each other
+            app.config(['$interpolateProvider', function($interpolateProvider) {
+                 $interpolateProvider.startSymbol('{[');
+                      $interpolateProvider.endSymbol(']}');
+            }]);
 
-                    }
-                };
+            app.service('dataService', function($http){
+                this.getData = function(){
+                    return $http({
+                            url: 'http://127.0.0.1:5000/view-sentences/',
+                            method: "GET"
+                        });
+                }
             });
 
-            app.controller('view_controller', function ($scope,$http,$window) {
+            app.controller('2-con', function($scope){
+                $scope.data = {message: "Hello"};
+            });
+        
+            app.controller('view_controller', function ($scope,$http,$window, dataService) {
+                
                 $scope.operation_type = 'StartNewSentence';
-
                 $scope.add_new_tag = function () {
                     console.log("Here!");
                     if ($scope.tag_list == undefined){
@@ -88,6 +94,7 @@
                         }                        
                     }
                 };
+                
 
                 console.log("Entered view controler");
                 $scope.view_start_new_sentence_panel = function () {
@@ -97,23 +104,25 @@
 
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
-
                     console.log("Entered view sentences call");
-
-                    $http({
-                        url: 'http://127.0.0.1:5000/view-sentences/',
-                        method: "GET"
-                    })
-                    .then(function (response, data) {
-                            console.log('Lexemes: ' + response.data.lexemes);
-                            $scope.sentence_list = response.data.lexemes;
-                            console.log($scope.sentence_list);
-                            $scope.greeting = "Hello!";
-                    },
-                        function (response) { // optional
-                            // failed
+                    dataService.getData().then(function (dataResponse) {
+                        var data2 = dataResponse.data;
+                        console.log(data2);
+                        var rep = []; 
+                        for (var i = 0; i < data2.length; ++i){
+                            var tmp = '';
+                            var lexemes = data2[i].lexemes; 
+                            for (var j=0; j < lexemes.length; ++j){
+                                tmp = tmp + lexemes[j] + ' ';
+                            }
+                            rep.push(tmp);
+                        }
+                        $scope.data = rep;
+                        console.log($scope.data);
                     });
                 }
+                console.log($scope.sentence_list);
+
             });            
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
