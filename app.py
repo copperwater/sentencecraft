@@ -103,9 +103,9 @@ def api_get_incomplete_sentence():
     """
     sentence = MONGO.db.sentences.find_one(
         {'complete':False,
-         '$or': [
-            {'key' : {'$exists': False}},
-            {'key' : ""}]
+         #'$or': [
+         #   {'key' : {'$exists': False}},
+         #   {'key' : ""}]
         })
 
     # make sure there was really a sentence
@@ -137,6 +137,7 @@ def api_complete_sentence():
     endpoint for completing an incomplete sentence based on a key
     """
     try:
+        print request.form
         sentence_addition = request.form["sentence_addition"]
         key = request.form["key"]
     except: # TODO: figure out and except the specific error here
@@ -151,33 +152,39 @@ def api_complete_sentence():
     if to_complete is None:
         # this should never happen
         return 'ERROR: No sentence matching your key was found in the db'
-
+    
+    print "to complete " + str(to_complete)
     # import into a WordCollection
+    
+    # get the last lexeme as a Word
+    final_lexeme = Word(sentence_addition.split(' ')[-1])
+    
+    # make sure it is a valid ending lexeme
+    if not final_lexeme.is_valid_end():
+        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(),400
+    
+    to_complete['lexemes']= to_complete['lexemes'] + (sentence_addition.split(' '))
+   
+    print 'to complete' + str(to_complete)
+
     wc = WordCollection()
     wc.import_json(to_complete)
 
-    # get the last lexeme as a Word
-    final_lexeme = Word(sentence_addition.split(' ')[0])
-
-    # make sure it is a valid ending lexeme
-    if not final_lexeme.is_valid_end():
-        return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type()
-
-    wc.append(final_lexeme, True)
-
     # validate it
     if not wc.validate():
-        return 'ERROR: The overall sentence is not valid'
-
+       return 'ERROR: The overall sentence is not valid'
+    
     # update the document as being complete and remove the key
     MONGO.db.sentences.update(
         {"_id": to_complete['_id']},
         {'$set':
-            {"complete":True, "lexemes":wc.lexemes, "key":""}}, upsert = False)
+            {"complete":True, "lexemes":wc.view("string"), "key":""}}, upsert = False)
 
     # remove it from the timeout list
     del LC_MAP[key]
-
+    
+    print 'deleted the key'
+    
     # return 200 OK
     return "Successfully completed the sentence", 200
 

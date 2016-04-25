@@ -15,7 +15,7 @@
             <nav id="controls">
                 <nav id="modes">
                     <button type="button" id="write" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
-                    <button type="button" id="start" class="switchmode active">Continue</button>
+                    <button type="button" id="start" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
                     <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
                 </nav>
                 <nav id="lexemes">
@@ -62,11 +62,17 @@
             }]);
 
             app.service('dataService', function($http){
-                this.getData = function(){
+                this.viewSentence = function(){
                     return $http({
                             url: 'http://127.0.0.1:5000/view-sentences/',
                             method: "GET"
                         });
+                }
+                this.incompleteSentence = function(){
+                    return $http({
+                    url: 'http://127.0.0.1:5000/incomplete-sentence/',
+                    method: "GET"
+                    });
                 }
             });
 
@@ -89,6 +95,29 @@
                 }
                 };
                 
+               $scope.view_continue_list_panel = function(){
+                   $scope.operation_type = 'ContinueSentence'; 
+                   console.log('Continue a sentence');
+                   //TODO button for complete / continue
+                   dataService.incompleteSentence().then(function (dataResponse){
+                        console.log(dataResponse);
+                        $scope.key = dataResponse.data.key;
+                        $scope.hardCode = "hard coded end.";
+
+                        $http({
+                        url: 'http://127.0.0.1:5000/complete-sentence/',
+                            method: "POST",
+                            data: $.param({ sentence_addition: $scope.hardCode, key: $scope.key }),
+                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                        })
+                        .then(function (data,response) {
+                            
+                        },
+                        function (response) { // optional
+                            // failed
+                        });
+                   });
+               }
 
                 console.log("Entered view controler");
                 $scope.view_start_new_sentence_panel = function () {
@@ -99,7 +128,7 @@
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
                     console.log("Entered view sentences call");
-                    dataService.getData().then(function (dataResponse) {
+                    dataService.viewSentence().then(function (dataResponse) {
                         var data2 = dataResponse.data;
                         console.log(data2);
                         var rep = []; 

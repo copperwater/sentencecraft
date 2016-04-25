@@ -23,6 +23,12 @@ class WordCollection(LexemeCollection):
             if len(self.tags) > 0:
                 prejson['tags'] = self.tags
             return prejson
+        elif format.lower() == 'string':
+            strs = ""
+            for lex in self.lexemes:
+                strs += lex.get_text() + ' '
+            strs = strs[:-1]
+            return strs.split(' ')
         else:
             raise ValueError('Must specify a valid format!')
 
