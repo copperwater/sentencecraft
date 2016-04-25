@@ -23,13 +23,17 @@ class WordCollection(LexemeCollection):
             if len(self.tags) > 0:
                 prejson['tags'] = self.tags
             return prejson
+        elif format.lower() == 'string':
+            strs = ""
+            for lex in self.lexemes:
+                strs += lex.get_text() + ' '
+            strs = strs[:-1]
+            return strs.split(' ')
         else:
             raise ValueError('Must specify a valid format!')
 
     # Construct this from a JSON object/dictionary.
     def import_json(self, jsonobj):
-        print jsonobj
-        print jsonobj['_id']
         self.lexemes = []
         for lexStr in jsonobj['lexemes']:
             self.lexemes.append(Word.Word(lexStr))
