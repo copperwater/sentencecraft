@@ -64,12 +64,12 @@ public class ViewSentence extends AppCompatActivity {
 
         Button but = (Button) findViewById(R.id.test);
         //but.setText(me);
-        String stringUrl = "http://www.google.com";
+        String stringUrl = "http://10.0.2.2:5000/view-sentences";
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.test).execute(stringUrl);
+            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.toedit).execute("GET",stringUrl);
         } else {
             but.setText("No network connection available.");
         }

@@ -8,11 +8,16 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -35,11 +40,11 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     protected String doInBackground(String... urls) {
 
         // params comes from the execute() call: params[0] is the url.
-        if(urls.length < 1){
+        if(urls.length < 2){
             return "Sorry don't know url to connect to.";
         }
         try {
-            return downloadUrl(urls[0]);
+            return downloadUrl(urls[0],urls[1]);
         } catch (IOException e) {
             return "Unable to retrieve web page. URL may be invalid.";
         }
@@ -48,14 +53,14 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     @Override
     protected void onPostExecute(String result) {
         TextView textView = (TextView)rootView.findViewById(btnId);
-        textView.setText(result);
+        textView.setText("1." + result);
     }
 
-    private String downloadUrl(String myurl) throws IOException {
+    private String downloadUrl(String method,String myurl) throws IOException {
 
+        String contentAsString = "";
         InputStream is = null;
-        // Only display the first 500 characters of the retrieved
-        // web page content.
+        // Read in 500 characters at a time
         int len = 500;
 
         try {
@@ -63,7 +68,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
-            conn.setRequestMethod("GET");
+            conn.setRequestMethod(method);
             conn.setDoInput(true);
             // Starts the query
             conn.connect();
@@ -72,9 +77,8 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
-            String contentAsString = readIt(is, len);
-            Log.d(appName, "recieved:" + contentAsString);
-            return contentAsString;
+            contentAsString += readIt(is, len);
+            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,len));
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
@@ -83,14 +87,37 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
                 is.close();
             }
         }
+        return interpretView(contentAsString);
     }
 
     // Reads an InputStream and converts it to a String.
-    public String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+    private String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+        int numread = 0;
+        String toreturn = "";
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
-        reader.read(buffer);
-        return new String(buffer);
+        do {
+            numread = reader.read(buffer);
+            toreturn += new String(buffer);
+        }while(numread != -1);
+        return toreturn;
     }
+
+    //interprets what's read from view-sentences
+    private String interpretView(String data){
+        String toreturn = "";
+        try{
+            JSONArray reader= new JSONArray(data);
+            JSONObject firstsentence = reader.getJSONObject(0);
+            JSONArray lexemes = firstsentence.getJSONArray("lexemes");
+            for(int i = 0; i < lexemes.length(); ++i){
+                toreturn  += lexemes.getString(i) + " ";
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return toreturn;
+    }
+
 }

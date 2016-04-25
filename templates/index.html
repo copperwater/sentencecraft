@@ -15,7 +15,7 @@
             <nav id="controls">
                 <nav id="modes">
                     <button type="button" id="write" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
-                    <button type="button" id="start" class="switchmode active">Continue</button>
+                    <button type="button" id="start" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
                     <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
                 </nav>
                 <nav id="lexemes">
@@ -24,6 +24,7 @@
                 </nav>
             </nav>
         </header>
+        
         <div ng-switch on="operation_type">
             <div ng-switch-when="StartNewSentence">
                 <main ng-controller="start_new_sentence_controller">
@@ -31,28 +32,50 @@
                         <input id="entry" value="Today's dinner " ng-model="sentence_start_text"/>
                     </section>
                     <section id="tags">
-                        <button ng_click="add_new_tag()">Add new tag</button>
+                        <button ng_click="add_new_tag()">Add Tag</button>
+                        <button ng_click="remove_tag()">Remove Tag</button>
                         <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]">
+                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
                         </section>
                      
                     </section>
-                    <!--<section id="tags">
-                        Tags:
-                        <input class="tag" value="cheese" />
-                        <input class="tag" value="macaroni" />
-                        <button type="button" id="moretags">+</button>
-                    </section>-->
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
-            <div ng-switch-when="ViewSentenceList">
+            <div ng-switch-when="ViewSentenceList" > 
                 <main>
+                        <section id="tags2">
+                        <button ng_click="add_new_search_tag()">Add Tag</button>
+                        <button ng_click="remove_search_tag()">Remove Tag</button>
+
+                        <section class="input-group">
+                            <input class="tag" type="text" ng-repeat="input in model.tag_list_search track by $index" ng-model="model.tag_list_search[$index]"/>
+                        </section>
+                     
+                    </section>
+
                     <ul>
-                        <li ng-repeat="sentence in sentence_list">
-                            {{ sentence }}
+                        <li ng-repeat="sentence in data">
+                            {[sentence]}
                         </li>
                     </ul>
+                    <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
+                </main>
+            </div>
+            <div ng-switch-when="ContinueSentence">
+                <main>
+                    <section id="continue-text">
+                      <input id="entry" ng-model="model.sentence_continue_text"/>
+                    </section>  
+                    <button type="submit" id="continue" class="submit" ng-click="continue_sentence_api_call(false)">CONTINUE</button>
+                    <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
+                </main>
+            </div>
+            <div ng-switch-when="ContinueAnother"> 
+                <main>
+                    <h2>Sentence successfully modified. Complete another sentence?</h2>
+                    <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
+                    <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_sentence_panel()">NO</button>
                 </main>
             </div>
         </div>
@@ -60,16 +83,34 @@
         <script>
             var app = angular.module('sentence_craft_app', []);
 
-            app.factory('sentence_list_shared_service', function() {
-                return {
-                    sentence_list: {
+            // Get Jinja and Angular to play nicely with each other
+            app.config(['$interpolateProvider', function($interpolateProvider) {
+                 $interpolateProvider.startSymbol('{[');
+                      $interpolateProvider.endSymbol(']}');
+            }]);
 
-                    }
-                };
+            app.service('dataService', function($http){
+                this.viewSentence = function(tag_list){
+                    return $http({
+                            url: 'http://127.0.0.1:5000/view-sentences/',
+                            method: "POST",
+                            data: $.param({ tags: tag_list}),
+                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                        });
+                }
+                this.incompleteSentence = function(){
+                    return $http({
+                    url: 'http://127.0.0.1:5000/incomplete-sentence/',
+                    method: "GET",
+                    });
+                }
             });
 
-            app.controller('view_controller', function ($scope,$http,$window) {
-                $scope.operation_type = 'StartNewSentence';
+            app.controller('view_controller', function ($scope,$http,$window, dataService) {
+                $scope.model = {
+                    sentence_continue_text : '',
+                    tag_list_search: []
+                };
 
                 $scope.add_new_tag = function () {
                     console.log("Here!");
@@ -89,6 +130,70 @@
                     }
                 };
 
+                $scope.remove_tag = function () {
+                    if ($scope.tag_list == undefined){
+                        console.log("Null found");
+                    }                        
+                    else {
+                        console.log($scope.tag_list.length);
+                        if($scope.tag_list.length > 0){
+                            $scope.tag_list.pop();
+                        }                            
+                    }
+                };
+
+                $scope.remove_search_tag = function () {
+                    if ($scope.model.tag_list_search.length > 0){
+                        $scope.model.tag_list_search.pop();
+                    }
+                };
+
+                //TODO consider combining these methods
+                $scope.add_new_search_tag = function () {
+                    if ($scope.model.tag_list_search.length == 0){
+                        console.log("Null found");
+                        $scope.model.tag_list_search = [''];
+                    }                        
+                    else {
+                        console.log($scope.model.tag_list_search.length);
+                        if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
+                            console.log("Please add the tag text!");
+                            $window.alert("Please add the tag text!");
+                        }
+                        else {
+                            $scope.model.tag_list_search.push('');
+                        }                        
+                    }
+                };
+
+               $scope.continue_sentence_api_call = function(complete){
+                   $scope.key = $scope.incomplete_sentence.data.key; 
+                   $scope.complete = complete;
+                   console.log($scope.key);
+                   console.log($scope.model.sentence_continue_text); 
+                   $http({
+                    url: 'http://127.0.0.1:5000/complete-sentence/',
+                        method: "POST",
+                        data: $.param({ sentence_addition: $scope.model.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
+                        headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                    })
+                    .then(function (data,response) {
+                        $scope.operation_type = 'ContinueAnother';
+                    },
+                    function (response) { // optional
+                        alert(response);
+                    });
+               }
+                
+               $scope.view_continue_list_panel = function(){
+                   $scope.operation_type = 'ContinueSentence'; 
+                   console.log('Continue a sentence');
+                   dataService.incompleteSentence().then(function (dataResponse){
+                        console.log(dataResponse);
+                        $scope.incomplete_sentence = dataResponse;
+                   });
+               }
+
                 console.log("Entered view controler");
                 $scope.view_start_new_sentence_panel = function () {
                     $scope.operation_type = 'StartNewSentence';
@@ -97,23 +202,32 @@
 
                 $scope.view_sentence_list_panel = function () {
                     $scope.operation_type = 'ViewSentenceList';
-
                     console.log("Entered view sentences call");
+                    console.log('test' + $scope.model.tag_list_search);
 
-                    $http({
-                        url: 'http://127.0.0.1:5000/view-sentences/',
-                        method: "GET"
-                    })
-                    .then(function (response, data) {
-                            console.log('Lexemes: ' + response.data.lexemes);
-                            $scope.sentence_list = response.data.lexemes;
-                            console.log($scope.sentence_list);
-                            $scope.greeting = "Hello!";
-                    },
-                        function (response) { // optional
-                            // failed
+                    var data = $.param({
+                        json: JSON.stringify({
+                            sentence_start: $scope.sentence_start_text
+                        })
                     });
-                }
+
+                    var tagList = $scope.model.tag_list_search.toString();
+                    dataService.viewSentence(tagList).then(function (dataResponse) {
+                        var data2 = dataResponse.data;
+                        console.log(data2);
+                        var rep = []; 
+                        for (var i = 0; i < data2.length; ++i){
+                            var tmp = '';
+                            var lexemes = data2[i].lexemes; 
+                            for (var j=0; j < lexemes.length; ++j){
+                                tmp = tmp + lexemes[j] + ' ';
+                            }
+                            rep.push(tmp);
+                        }
+                        $scope.data = rep;
+                        console.log($scope.data);
+                    })
+                    };
             });            
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
@@ -139,7 +253,6 @@
                         function (response) { // optional
                             // failed
                         });
-
                 }
             });
         </script>
