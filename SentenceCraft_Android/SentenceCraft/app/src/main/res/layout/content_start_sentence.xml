@@ -20,47 +20,73 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/colorBlack"
-        android:text="Enter word to start sentence"
+        android:gravity="center"
+        android:text="@string/app_start_directions"
         android:textSize="@dimen/large_font"/>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_width="0dp"
-            android:layout_weight="0.5"
-            android:hint="Word"
-            android:inputType="text"/>
-        <Button
-            android:layout_marginBottom="@dimen/activity_vertical_margin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_enter" />
-    </LinearLayout>
+            android:gravity="center"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <EditText
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_weight="0.5"
+                    android:hint="@string/app_lexeme_hint"
+                    android:inputType="text"/>
+                <Button
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/app_enter" />
+            </LinearLayout>
 
-    <EditText
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:hint="Tags" />
+            <TableLayout android:id="@+id/start_to_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <EditText
+                        android:layout_weight="1"
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorBlack"
+                        android:hint="@string/app_tag_hint" />
+                    <Button
+                        android:layout_marginBottom="@dimen/activity_vertical_margin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_add_tag"
+                        android:onClick="addTag"/>
+                </TableRow>
+            </TableLayout>
 
-    <TextView
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:text="  Can't think of a word?\nHere are some samples:" />
+            <TextView
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:text="  Can't think of a word?\nHere are some samples:" />
 
-    <TextView
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
-        android:text="Fish,Hi,Me,Sentence" />
+            <TextView
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:text="Fish,Hi,Me,Sentence" />
 
-
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

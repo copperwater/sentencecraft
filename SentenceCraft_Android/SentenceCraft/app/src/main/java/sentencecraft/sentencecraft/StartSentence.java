@@ -1,14 +1,17 @@
 package sentencecraft.sentencecraft;
 
+import android.content.Context;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 
 public class StartSentence extends AppCompatActivity {
 
@@ -23,7 +26,9 @@ public class StartSentence extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        ab.setDisplayHomeAsUpEnabled(true);
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     @Override
@@ -46,5 +51,24 @@ public class StartSentence extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addTag(View view) {
+        Context context= getApplicationContext();
+        TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
+        if(tl != null){
+            TableRow row = new TableRow(context);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+            EditText text= new EditText(context);
+            TableRow.LayoutParams textParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+            text.setLayoutParams(textParams);
+            text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setHintTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setHint(getString(R.string.app_tag_hint));
+            text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
+            row.addView(text);
+            tl.addView(row,tl.getChildCount());
+        }
     }
 }

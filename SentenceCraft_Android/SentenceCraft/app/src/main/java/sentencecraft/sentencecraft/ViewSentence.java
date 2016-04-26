@@ -4,17 +4,16 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-
-import java.util.Random;
+import android.widget.TableLayout;
+import android.widget.TableRow;
+import android.widget.TextView;
 
 public class ViewSentence extends AppCompatActivity {
 
@@ -29,7 +28,12 @@ public class ViewSentence extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        ab.setDisplayHomeAsUpEnabled(true);
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
+        //call updateText
+        updateText(findViewById(R.id.test));
     }
 
     @Override
@@ -54,24 +58,28 @@ public class ViewSentence extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void changetext(View view){
-        /*String me = "";
-        Random myrand = new Random();
-        for(int i = 0; i < 20; ++i){
-            me += myrand.nextInt(10);
-        }*/
-        View myview = findViewById(android.R.id.content);
+    public void updateText(View view){
+        View myView = findViewById(android.R.id.content);
 
-        Button but = (Button) findViewById(R.id.test);
-        //but.setText(me);
         String stringUrl = "http://10.0.2.2:5000/view-sentences";
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInfoTask(myview,getString(R.string.app_name),R.id.toedit).execute("GET",stringUrl);
+            new DownloadInfoTask(myView,getApplicationContext(),"View",R.id.toedit).execute("GET",stringUrl);
         } else {
-            but.setText("No network connection available.");
+            TableLayout tl = (TableLayout)findViewById(R.id.toedit);
+            Context context = getApplicationContext();
+            //remove rows in existing table
+            tl.removeAllViews();
+            TableRow row = new TableRow(context);
+            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+            row.setLayoutParams(lp);
+            TextView text= new TextView(context);
+            text.setText("No network connection available");
+            text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
+            text.setTextColor((int) ContextCompat.getColor(context,R.color.colorBlack));
+            row.addView(text);
+            tl.addView(row,0);
         }
     }
 
