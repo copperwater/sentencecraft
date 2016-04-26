@@ -4,20 +4,15 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
-
-import java.util.Random;
 
 public class ViewSentence extends AppCompatActivity {
 
@@ -32,10 +27,12 @@ public class ViewSentence extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
 
         // Enable the Up button
-        ab.setDisplayHomeAsUpEnabled(true);
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
-        //call updatetext
-        updatetext(findViewById(R.id.test));
+        //call updateText
+        updateText(findViewById(R.id.test));
     }
 
     @Override
@@ -60,15 +57,14 @@ public class ViewSentence extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void updatetext(View view){
-        View myview = findViewById(android.R.id.content);
+    public void updateText(View view){
+        View myView = findViewById(android.R.id.content);
 
         String stringUrl = "http://10.0.2.2:5000/view-sentences";
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInfoTask(myview,getApplicationContext(),"View",R.id.toedit).execute("GET",stringUrl);
+            new DownloadInfoTask(myView,getApplicationContext(),"View",R.id.toedit).execute("GET",stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
             Context context = getApplicationContext();
