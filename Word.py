@@ -13,9 +13,11 @@ class Word(Lexeme):
     def type(self):
         return "word"
 
-    # Valid words consist of only alphabetic characters.
-    # TODO: Valid words can also be all numbers and can end with a , ; :
-    # TODO2: Valid words can contain a single apostrophe
+    '''
+    Valid words usually consist of only alphabetic characters.
+    Valid words can also be all numbers.
+    Valid words can end with a , ; : and can contain a single apostrophe.
+    '''
     def is_valid(self):
         letters = 0
         numbers = 0
