@@ -18,6 +18,7 @@ class StartLexemeViewController: UIViewController {
 	@IBOutlet private var lexemeField: UITextField!
 	
 	@IBOutlet private var submitButton: UIButton!
+	var server: ServerRequest!
 	
 	func createTags() {
 		let tagLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
@@ -90,13 +91,24 @@ class StartLexemeViewController: UIViewController {
 		submitButton.layer.cornerRadius = 10
 		submitButton.layer.borderWidth = 5
 		submitButton.layer.borderColor = UIColor.blueColor().CGColor
+		submitButton.addTarget(self,
+		                       action: #selector(StartLexemeViewController.submitButtonPressed(_:)),
+		                       forControlEvents: UIControlEvents.TouchUpInside)
 		self.view.addSubview(submitButton)
 
+	}
+	
+	func submitButtonPressed(sender: UIButton!) {
+		let tags = tagOne.text!
+		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
+		navigationController?.popViewControllerAnimated(true)
+		
 	}
 
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		self.server = ServerRequest.init()
 		createTags()
 		createLexemeField()
 		createSubmitButton()

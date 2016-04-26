@@ -1,9 +1,9 @@
 ﻿<!doctype html>
 <html>
 	<head>
-	    <title>SentenceCraft</title>  
+	    <title>SentenceCraft</title>
         <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">      
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/content/styles/sentencecraft.css" />
@@ -24,7 +24,7 @@
                 </nav>
             </nav>
         </header>
-        
+
         <div ng-switch on="operation_type">
             <div ng-switch-when="StartNewSentence">
                 <main ng-controller="start_new_sentence_controller">
@@ -37,12 +37,12 @@
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
                         </section>
-                     
+
                     </section>
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
-            <div ng-switch-when="ViewSentenceList" > 
+            <div ng-switch-when="ViewSentenceList" >
                 <main>
                         <section id="tags2">
                         <button ng_click="add_new_search_tag()">Add Tag</button>
@@ -51,7 +51,7 @@
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in model.tag_list_search track by $index" ng-model="model.tag_list_search[$index]"/>
                         </section>
-                     
+
                     </section>
 
                     <ul>
@@ -66,12 +66,12 @@
                 <main>
                     <section id="continue-text">
                       <input id="entry" ng-model="model.sentence_continue_text"/>
-                    </section>  
+                    </section>
                     <button type="submit" id="continue" class="submit" ng-click="continue_sentence_api_call(false)">CONTINUE</button>
                     <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
                 </main>
             </div>
-            <div ng-switch-when="ContinueAnother"> 
+            <div ng-switch-when="ContinueAnother">
                 <main>
                     <h2>Sentence successfully modified. Complete another sentence?</h2>
                     <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
@@ -92,7 +92,7 @@
             app.service('dataService', function($http){
                 this.viewSentence = function(tag_list){
                     return $http({
-                            url: 'http://127.0.0.1:5000/view-sentences/',
+                            url: '/view-sentences/',
                             method: "POST",
                             data: $.param({ tags: tag_list}),
                             headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
@@ -100,7 +100,7 @@
                 }
                 this.incompleteSentence = function(){
                     return $http({
-                    url: 'http://127.0.0.1:5000/incomplete-sentence/',
+                    url: '/incomplete-sentence/',
                     method: "GET",
                     });
                 }
@@ -117,7 +117,7 @@
                     if ($scope.tag_list == undefined){
                         console.log("Null found");
                         $scope.tag_list = [''];
-                    }                        
+                    }
                     else {
                         console.log($scope.tag_list.length);
                         if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
@@ -126,19 +126,19 @@
                         }
                         else {
                             $scope.tag_list.push('');
-                        }                        
+                        }
                     }
                 };
 
                 $scope.remove_tag = function () {
                     if ($scope.tag_list == undefined){
                         console.log("Null found");
-                    }                        
+                    }
                     else {
                         console.log($scope.tag_list.length);
                         if($scope.tag_list.length > 0){
                             $scope.tag_list.pop();
-                        }                            
+                        }
                     }
                 };
 
@@ -153,7 +153,7 @@
                     if ($scope.model.tag_list_search.length == 0){
                         console.log("Null found");
                         $scope.model.tag_list_search = [''];
-                    }                        
+                    }
                     else {
                         console.log($scope.model.tag_list_search.length);
                         if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
@@ -162,17 +162,17 @@
                         }
                         else {
                             $scope.model.tag_list_search.push('');
-                        }                        
+                        }
                     }
                 };
 
                $scope.continue_sentence_api_call = function(complete){
-                   $scope.key = $scope.incomplete_sentence.data.key; 
+                   $scope.key = $scope.incomplete_sentence.data.key;
                    $scope.complete = complete;
                    console.log($scope.key);
-                   console.log($scope.model.sentence_continue_text); 
+                   console.log($scope.model.sentence_continue_text);
                    $http({
-                    url: 'http://127.0.0.1:5000/complete-sentence/',
+                    url: '/complete-sentence/',
                         method: "POST",
                         data: $.param({ sentence_addition: $scope.model.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
                         headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
@@ -184,9 +184,9 @@
                         alert(response);
                     });
                }
-                
+
                $scope.view_continue_list_panel = function(){
-                   $scope.operation_type = 'ContinueSentence'; 
+                   $scope.operation_type = 'ContinueSentence';
                    console.log('Continue a sentence');
                    dataService.incompleteSentence().then(function (dataResponse){
                         console.log(dataResponse);
@@ -197,7 +197,7 @@
                 console.log("Entered view controler");
                 $scope.view_start_new_sentence_panel = function () {
                     $scope.operation_type = 'StartNewSentence';
-                    console.log("Entered write sentences controler");                    
+                    console.log("Entered write sentences controler");
                 }
 
                 $scope.view_sentence_list_panel = function () {
@@ -215,10 +215,10 @@
                     dataService.viewSentence(tagList).then(function (dataResponse) {
                         var data2 = dataResponse.data;
                         console.log(data2);
-                        var rep = []; 
+                        var rep = [];
                         for (var i = 0; i < data2.length; ++i){
                             var tmp = '';
-                            var lexemes = data2[i].lexemes; 
+                            var lexemes = data2[i].lexemes;
                             for (var j=0; j < lexemes.length; ++j){
                                 tmp = tmp + lexemes[j] + ' ';
                             }
@@ -228,27 +228,27 @@
                         console.log($scope.data);
                     })
                     };
-            });            
+            });
 
             app.controller('start_new_sentence_controller', function ($scope,$http) {
                 console.log("Entered start sentences controller");
 
-                $scope.start_new_sentence_api_call = function () {                    
+                $scope.start_new_sentence_api_call = function () {
                     console.log("Entered write new sentences function");
-                    console.log($scope.tag_list);                    
+                    console.log($scope.tag_list);
                     var data = $.param({
                         json: JSON.stringify({
                             sentence_start: $scope.sentence_start_text
                         })
                     });
                     $http({
-                        url: 'http://127.0.0.1:5000/start-sentence/',
+                        url: '/start-sentence/',
                             method: "POST",
                             data: $.param({ sentence_start: $scope.sentence_start_text, tags: $scope.tag_list.toString() }),
                             headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
                         })
                         .then(function (data,response) {
-                            
+
                         },
                         function (response) { // optional
                             // failed
