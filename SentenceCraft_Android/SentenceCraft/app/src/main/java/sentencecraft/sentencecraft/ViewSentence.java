@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -76,7 +77,7 @@ public class ViewSentence extends AppCompatActivity {
             TextView text= new TextView(context);
             text.setText("No network connection available");
             text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
-            text.setTextColor((int) getResources().getColor(R.color.colorBlack));
+            text.setTextColor((int) ContextCompat.getColor(context,R.color.colorBlack));
             row.addView(text);
             tl.addView(row,0);
         }
