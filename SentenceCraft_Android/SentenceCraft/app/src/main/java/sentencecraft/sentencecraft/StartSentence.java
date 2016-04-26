@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TableLayout;
 
 public class StartSentence extends AppCompatActivity {
 
@@ -45,5 +47,10 @@ public class StartSentence extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void addTag(View view) {
+        TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
+
     }
 }
