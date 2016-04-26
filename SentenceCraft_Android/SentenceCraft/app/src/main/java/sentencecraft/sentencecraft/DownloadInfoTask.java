@@ -1,12 +1,13 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
-import android.net.ConnectivityManager;
 import android.os.AsyncTask;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -17,23 +18,28 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by zqiu on 4/24/16.
+ * Used to make requests to the backend server
  */
 public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
     private View rootView;
     private String appName;
-    private int btnId;
+    private int editId;
+    private String command;
+    private Context context;
 
-    public DownloadInfoTask (View rootView, String appName, int textId){
+    public DownloadInfoTask (View rootView, Context context, String command, int editId){
         this.rootView=rootView;
-        this.appName = appName;
-        this.btnId = textId;
+        this.appName = context.getString(R.string.app_name);
+        this.editId = editId;
+        this.command = command;
+        this.context = context;
     }
 
     @Override
@@ -49,11 +55,30 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             return "Unable to retrieve web page. URL may be invalid.";
         }
     }
+    
     // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(String result) {
-        TextView textView = (TextView)rootView.findViewById(btnId);
-        textView.setText("1." + result);
+        if(command.equals("View")){
+            ArrayList<String> data = interpretView(result);
+            TableLayout tl=(TableLayout)rootView.findViewById(editId);
+            //remove rows in existing table
+            tl.removeAllViews();
+            for(int i = 0; i < data.size(); ++i){
+                TableRow row = new TableRow(context);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(lp);
+                TextView text= new TextView(context);
+                text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
+                text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
+                text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+                row.addView(text);
+                tl.addView(row,i);
+            }
+        }else{
+            TextView textView = (TextView)rootView.findViewById(editId);
+            textView.setText(result);
+        }
     }
 
     private String downloadUrl(String method,String myurl) throws IOException {
@@ -87,37 +112,44 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
                 is.close();
             }
         }
-        return interpretView(contentAsString);
+        return contentAsString;
     }
 
     // Reads an InputStream and converts it to a String.
     private String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
-        int numread = 0;
-        String toreturn = "";
+        int numRead = 0;
+        String toReturn = "";
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         do {
-            numread = reader.read(buffer);
-            toreturn += new String(buffer);
-        }while(numread != -1);
-        return toreturn;
+            numRead = reader.read(buffer);
+            toReturn += new String(buffer);
+        }while(numRead != -1);
+        return toReturn;
     }
 
     //interprets what's read from view-sentences
-    private String interpretView(String data){
-        String toreturn = "";
+    private ArrayList<String> interpretView(String data){
+        ArrayList<String> toReturn = new ArrayList<>();
+        String temp = "";
         try{
             JSONArray reader= new JSONArray(data);
-            JSONObject firstsentence = reader.getJSONObject(0);
-            JSONArray lexemes = firstsentence.getJSONArray("lexemes");
-            for(int i = 0; i < lexemes.length(); ++i){
-                toreturn  += lexemes.getString(i) + " ";
+            for(int i = 0; i < reader.length(); ++i){
+                JSONObject firstSentence = reader.getJSONObject(i);
+                JSONArray lexemes = firstSentence.getJSONArray("lexemes");
+                temp = "";
+                for(int j = 0; j < lexemes.length(); ++j){
+                    temp  += lexemes.getString(j) + " ";
+                }
+                toReturn.add(temp);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return toreturn;
+        if(toReturn.size() == 0){
+            toReturn.add(data);
+        }
+        return toReturn;
     }
-
 }
