@@ -35,16 +35,18 @@ class Sentence(Lexeme):
 
             non_alpha = 0
             for char in word:
-                if not char.isalpha:
+                if not char.isalpha():
                     non_alpha += 1
 
             if non_alpha > 1:
                 return False
 
+        return True
+
     # There is no special validation for beginning sentences.
     def is_valid_beginning(self):
-        return is_valid(self)
+        return self.is_valid()
 
     # There is no special validation for ending sentences.
     def is_valid_end(self):
-        return is_valid(self)
+        return self.is_valid()
