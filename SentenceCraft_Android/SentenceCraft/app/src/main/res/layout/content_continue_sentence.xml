@@ -37,22 +37,32 @@
                 android:text="@string/app_loading"
                 android:gravity="center"/>
 
+            <EditText android:id="@+id/continue_lexeme"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_weight="0.5"
+                android:hint="Sentence"
+                android:inputType="text"/>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-                <EditText
-                    android:layout_marginBottom="@dimen/activity_vertical_margin"
-                    android:layout_height="wrap_content"
-                    android:layout_width="0dp"
-                    android:layout_weight="0.5"
-                    android:hint="Sentence"
-                    android:inputType="text"/>
-                <Button
+                <Button android:id="@+id/continue_btn"
                     android:layout_marginBottom="@dimen/activity_vertical_margin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_enter" />
+                    android:text="@string/app_continue"
+                    android:layout_weight="1"
+                    android:onClick="continueRespondToBtn"/>
+                <Button android:id="@+id/finish_btn"
+                    android:layout_marginBottom="@dimen/activity_vertical_margin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/app_fin"
+                    android:onClick="continueRespondToBtn"/>
             </LinearLayout>
 
             <TextView android:id="@+id/continue_tag"
