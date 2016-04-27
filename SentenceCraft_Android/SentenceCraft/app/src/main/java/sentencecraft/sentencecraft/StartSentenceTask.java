@@ -38,7 +38,6 @@ public class StartSentenceTask extends DownloadInfoTask {
 
     @Override
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException {
-        conn.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
         wr.writeBytes("start=" + lexeme);
         if(!tags.equals("")){
