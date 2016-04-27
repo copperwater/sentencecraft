@@ -1,6 +1,8 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -19,15 +21,17 @@ import java.util.ArrayList;
  */
 public class ContinueSentenceTask extends DownloadInfoTask {
 
+    Handler mainUIHandler;
     private int tagsId;
     private String key = "";
     private String operationName = "DownloadTask";
     private String lexemeToAdd = "";
     private String isComplete = "";
 
-    public ContinueSentenceTask(View rootView, Context context, int editId, int tagsId) {
+    public ContinueSentenceTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
         this.tagsId = tagsId;
+        this.mainUIHandler = mainUIHandler;
     }
 
     protected void onPostExecute(String result) {
@@ -38,6 +42,9 @@ public class ContinueSentenceTask extends DownloadInfoTask {
                 sentence.setText(context.getString(R.string.continue_lexeme_part, data.get(0)));
                 TextView tags = (TextView) rootView.findViewById(tagsId);
                 tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
+                Message msg = Message.obtain();
+                msg.obj= key;
+                mainUIHandler.sendMessage(msg);
             } else {
                 Snackbar mySnackBar;
                 mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,11 +14,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
 
 public class ContinueSentence extends AppCompatActivity {
     ContinueSentenceTask task = null;
-
+    String key = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,13 @@ public class ContinueSentence extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag);
+            Handler asyncHandler = new Handler(){
+                public void handleMessage(Message msg){
+                    super.handleMessage(msg);
+                    key = msg.obj.toString();
+                }
+            };
+            task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
             if(myView != null){
@@ -70,7 +77,8 @@ public class ContinueSentence extends AppCompatActivity {
     }
 
     public void continueRespondToBtn(View view){
-        String stringUrl = "http://10.0.2.2:5000/complete-sentence";
+        Log.d(getString(R.string.app_name),key);
+        /*String stringUrl = "http://10.0.2.2:5000/complete-sentence";
         EditText lexeme = (EditText) findViewById(R.id.continue_lexeme);
         if(lexeme == null){
             return;
@@ -91,7 +99,7 @@ public class ContinueSentence extends AppCompatActivity {
             default:
                 Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
                 return;
-        }
+        }*/
     }
 }
 
