@@ -25,6 +25,9 @@ from Sentence import Sentence
 from SentenceCollection import SentenceCollection
 import SentenceCraftConfig as config
 
+# ??? modules
+#from . import APP
+
 APP = Flask("app")
 MONGO = PyMongo(APP)
 
@@ -60,15 +63,16 @@ def poll_for_expired():
                 # remove from the map
                 del LC_MAP[key]
 
-                # remove key from the database
-                # need 2 queries because Mongo can't do this across collections
-                MONGO.db.sentences.update({'key':key}, {'$unset':{'key':''}},
-                                          upsert=False)
-                MONGO.db.paragraphs.update({'key':key}, {'$unset':{'key':''}},
-                                           upsert=False)
+                # because multithreading, we need to tell Flask that this is
+                # happening in the same context as the rest of the app
+                with APP.app_context():
+                    # remove key from the database
+                    # need 2 queries because Mongo can't do this across collections
+                    MONGO.db.sentences.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
+                    MONGO.db.paragraphs.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
 
                 print 'Key',key,'timed out'
-                
+
         time.sleep(config.polling_delay)
 
 @APP.route('/view/', methods=['GET', 'POST'], strict_slashes=False)
