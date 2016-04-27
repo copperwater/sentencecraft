@@ -11,26 +11,35 @@ import UIKit
 class ViewLexemeViewController: UIViewController {
 	
 	
-	func createLexemeInfo() {
-		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
-		tagsInfo.text = "Tags: food, happiness"
+	private var tagsInfo: UILabel = UILabel()
+	private var lexemeText: UILabel = UILabel()
+	
+	func addData(tags: String, lexeme: String) {
+		tagsInfo = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
+		tagsInfo.text = "Tags: \(tags)"
+		tagsInfo.numberOfLines = 0
+		tagsInfo.lineBreakMode = NSLineBreakMode.ByWordWrapping
 		tagsInfo.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		tagsInfo.center = CGPointMake(tagsInfo.center.x, tagsInfo.frame.width/3)
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
-		
-		let lexemeText: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
-		lexemeText.text = "Lexeme: I love to eat food all day and it makes me happy\nto eat whatever I want."
+
+		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
+		lexemeText.text = "Lexeme: \n\(lexeme)"
+		lexemeText.numberOfLines = 0
+		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
 		lexemeText.numberOfLines = 4
 		lexemeText.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(lexemeText)
+
+		
 	}
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		createLexemeInfo()
+//		createLexemeInfo()
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	

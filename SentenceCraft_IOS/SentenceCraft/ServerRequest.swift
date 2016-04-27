@@ -39,16 +39,44 @@ class ServerRequest {
 			}
 			
 			
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("response \(responseString)")
+//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+//			print("response \(responseString)")
 			
 		}
 		task.resume()
 	}
 	
+	
+	func requestIncompleteLexeme() -> [String: AnyObject]? {
+		let requestURL = NSURL(string: serverURL + "incomplete/?type=word")
+		let request = NSMutableURLRequest(URL: requestURL!)
+		request.HTTPMethod = "GET"
+		var dict: [String:AnyObject] = [:]
+		
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			if error != nil {
+				print("error=\(error)")
+				return
+			}
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			print("response \(responseString)")
+			
+			dict = self.convertDataToDictionary(data!)!
+		}
+		task.resume()
+		while(dict.count < 1) {}
+		print(dict)
+		return dict
+
+	}
+	
+	
 	func sendViewRequest() -> [[String: AnyObject]]? {
 		let requestURL = NSURL(string: serverURL + "view/?type=word&tags=")
-		let request = NSMutableURLRequest(URL:requestURL!);
+		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		request.HTTPMethod = "GET"
 		
@@ -61,7 +89,7 @@ class ServerRequest {
 				return
 			}
 			
-			dict = self.convertDataToDictionary(data!)!
+			dict = self.convertDataToDictionaryList(data!)!
 			
 		}
 		task.resume()
@@ -70,9 +98,19 @@ class ServerRequest {
 		return dict
 	}
 	
-	func convertDataToDictionary(data: NSData) -> [[String:AnyObject]]? {
+	func convertDataToDictionaryList(data: NSData) -> [[String:AnyObject]]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
+		} catch let error as NSError {
+			print(error)
+		}
+		
+		return nil
+	}
+	
+	func convertDataToDictionary(data: NSData) -> [String:AnyObject]? {
+		do {
+			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
 		} catch let error as NSError {
 			print(error)
 		}

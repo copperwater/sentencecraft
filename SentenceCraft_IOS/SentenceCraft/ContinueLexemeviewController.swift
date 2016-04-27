@@ -14,6 +14,10 @@ class ContinueLexemeViewController: UIViewController {
 	
 	@IBOutlet private var submitButton: UIButton!
 	
+	var server: ServerRequest = ServerRequest.init()
+	
+	var lexeme: [String: AnyObject] = [:]
+	
 	
 	func createLexemeInfo() {
 		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
@@ -68,6 +72,7 @@ class ContinueLexemeViewController: UIViewController {
 		createLexemeInfo()
 		createLexemeField()
 		createSubmitButton()
+		lexeme = server.requestIncompleteLexeme()!
 //		self.navigationController?.navigationBar.topItem?.title = "Continue Lexeme"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
