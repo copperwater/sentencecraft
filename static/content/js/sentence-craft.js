@@ -10,20 +10,20 @@ app.config(['$interpolateProvider', function($interpolateProvider) {
 
 // Initialze the Data service used for making API Calls
 app.service('dataService', function($http){
-    // View Sentences
+    // View Lexeme
     // Pass a POST request containing the tag list (a comma separated string)
-    // Sentences that are returned will contain all tags in the list
-    this.viewSentence = function(tag_list, lexeme){
+    // Lexemes that are returned will contain all tags in the list
+    this.view = function(tag_list, lexeme){
         return $http({
                 url: '/view/',
                 method: "GET",
                 params: {'tags': tag_list, 'type': lexeme}
         });
     }
-    // Incomplete Sentence
+    // Incomplete Lexeme
     // Pass a GET request to checkout an incomplete lexeme
     // for completion
-    this.incompleteSentence = function(lexeme){
+    this.incomplete = function(lexeme){
         return $http({
                 url: '/incomplete/',
                 method: "GET",
@@ -31,10 +31,10 @@ app.service('dataService', function($http){
         });
     }
 
-    // Start Sentence
+    // Start Lexeme
     // Pass a POST request containing the string starting_text
     // along with a comma separated string of tags
-    this.startSentence = function(start_text, tag_list, lexeme){
+    this.start = function(start_text, tag_list, lexeme){
         return $http({
                 url: '/start/',
                 method: "POST",
@@ -43,14 +43,13 @@ app.service('dataService', function($http){
         });
     }
 
-    // Continue Sentence
+    // Continue Lexeme 
     // Pass a POST request containing a string of the continuing text,
-    // a string containing the key of the checked out setence,
+    // a string containing the key of the checked out Lexeme,
     // and a boolean complete_flag.
-    //
     // complete_flag is true when lexemes are completed and false when
     // they are continued.
-    this.continueSentence = function(continue_text, key_val, complete_flag, lexeme){
+    this.continueLex = function(continue_text, key_val, complete_flag, lexeme){
        return $http({
                 url: '/append/',
                 method: "POST",
@@ -65,10 +64,10 @@ app.service('dataService', function($http){
 app.controller('view_controller', function ($scope,$http,$window, dataService) {
     // Shared node_js data model
     $scope.model = {
-        sentence_start_text: '',    // text for starting a sentence
-        sentence_continue_text: '', // text for continuing a sentence
+        start_text: '',             // text for starting a lexeme
+        continue_text: '',          // text for continuing a lexeme
         tag_list: [],               // user inputted list of tags
-        incomplete_sentence: '',    // the entire incomplete lexeme
+        incomplete_lexeme: '',      // the entire incomplete lexeme
         previous_lexeme: '',        // a portion of the previous lexeme
         mode: 'sentence'            // the default mode is sentence mode
     };
@@ -82,7 +81,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $('#sentence').addClass('active');
             $('.switchmode').removeClass('active');
             $('#start').addClass('active');
-            $scope.operation_type = 'StartNewSentence';
+            $scope.operation_type = 'StartNewLexeme';
         }
     };
 
@@ -95,7 +94,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $('#paragraph').addClass('active');
             $('.switchmode').removeClass('active');
             $('#start').addClass('active');
-            $scope.operation_type = 'StartNewSentence';
+            $scope.operation_type = 'StartNewLexeme';
         }
     };
 
@@ -138,19 +137,19 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
     // Reset the displayed fields in the data model
     $scope.clear_fields = function(){
-        $scope.model.sentence_start_text = '';
-        $scope.model.sentence_continue_text = '';
+        $scope.model.start_text = '';
+        $scope.model.continue_text = '';
         $scope.model.tag_list = [];
         $scope.model.previous_lexeme = '';
         $(".remove-tag").hide();
     }
 
     // Forward API continue sentence request to the data service
-    $scope.continue_sentence_api_call = function(complete){
-        var key = $scope.model.incomplete_sentence.key;
-        var addition = $scope.model.sentence_continue_text;
+    $scope.continue_api_call = function(complete){
+        var key = $scope.model.incomplete_lexeme.key;
+        var addition = $scope.model.continue_text;
         var lexType = $scope.get_lex_type();
-        dataService.continueSentence(addition, key, complete, lexType).then(function (dataResponse) {
+        dataService.continueLex(addition, key, complete, lexType).then(function (dataResponse) {
             $scope.clear_fields();
             // Prompt the user to continue another lexeme
             $scope.operation_type = 'ContinueAnother';
@@ -165,33 +164,31 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
         var lexType = $scope.get_lex_type();
 
-        $scope.operation_type = 'ContinueSentence';
-        dataService.incompleteSentence(lexType).then(function (dataResponse){
-            console.log(dataResponse);
-            if (dataResponse.data == "ERROR: No incomplete sentences are available."){
-                // Prompt the user that there are no more sentences to complete
-                $scope.operation_type='NoneToComplete';
-            }
-            else{
-                var to_complete = dataResponse.data;
-                $scope.model.incomplete_sentence = to_complete;
+        $scope.operation_type = 'ContinueLexeme';
+        dataService.incomplete(lexType).then(function (response){
+                console.log(response);
+                var to_complete = response.data;
+                $scope.model.incomplete_lexeme = to_complete;
                 // Get the last 3 lexemes from the lexeme collection
                 var to_complete_lexemes = to_complete.lexemecollection.lexemes;
                 var start = Math.max(to_complete_lexemes.length-3,0);
                 for(var i = start; i < to_complete_lexemes.length; ++i){
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
-            }
+            }, 
+            function (data){
+                // Prompt the user that there are no more sentences to complete
+                $scope.operation_type='NoneToComplete';
         });
     }
 
     // Prompt the user to start a new sentence
-    $scope.view_start_new_sentence_panel = function () {
+    $scope.view_start_new_lexeme_panel = function () {
         $scope.clear_fields();
         $('.switchmode').removeClass('active');
         $('#start').addClass('active');
 
-        $scope.operation_type = 'StartNewSentence';
+        $scope.operation_type = 'StartNewLexeme';
         $(".remove-tag").hide();
     }
 
@@ -208,13 +205,13 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
     // Display the 10 most recent sentences to the user
     // matching the tags list
-    $scope.view_sentence_list_panel = function () {
+    $scope.view_lexeme_list_panel = function () {
 
         $('.switchmode').removeClass('active');
         $('#view').addClass('active');
 
-        // Show the list of sentences to the user
-        $scope.operation_type = 'ViewSentenceList';
+        // Show the list of lexemes to the user
+        $scope.operation_type = 'ViewLexemeList';
 
         // Convert the tags to a string if they exist
         var tagList = '';
@@ -224,9 +221,9 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
         var lexType = $scope.get_lex_type();
 
-        // Forward API view sentence request to the data service
-        dataService.viewSentence(tagList, lexType).then(function (dataResponse) {
-            var data2 = dataResponse.data;
+        // Forward API view request to the data service
+        dataService.view(tagList, lexType).then(function (response) {
+            var data2 = response.data;
             var rep = [];
 
             if (data2.length === 0){
@@ -246,30 +243,32 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 rep.push(tmp);
             }
             $scope.data = rep;
+        }, 
+        function(data){
+            $scope.view_data = 'NoneToView';
         })
     };
 
-    // Forward API start sentence behavior to the data service
-    $scope.start_new_sentence_api_call = function () {
+    // Forward API start behavior to the data service
+    $scope.start_new_lexeme_api_call = function () {
 
         // Generate a string representation of the tags list
         var tag_list = '';
         if ($scope.model.tag_list != undefined){
             tag_list = $scope.model.tag_list.toString();
         }
-        var start_text = $scope.model.sentence_start_text;
+        var start_text = $scope.model.start_text;
 
         var lexType = $scope.get_lex_type();
 
         // Forward the API request to the data service
-        dataService.startSentence(start_text, tag_list, lexType).then(function (dataResponse) {
-            $scope.clear_fields();
-            if (dataResponse.status === 200){
+        dataService.start(start_text, tag_list, lexType).then(function (response) {
+                $scope.clear_fields();
                 $scope.operation_type = 'SuccessfulComplete';
-            }
-            else{
+            },
+            function (data){
+                console.log(data);
                 $scope.operation_type = 'FailedStart';
-            }
-        })
+            })
     }
 });
