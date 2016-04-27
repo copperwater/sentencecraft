@@ -57,8 +57,18 @@ def poll_for_expired():
     while True: #continue this indefinitely
         for key in list(LC_MAP):
             if (int(time.time()) - LC_MAP[key]) > config.lexeme_collection_active_time:
+                # remove from the map
                 del LC_MAP[key]
-                print 'Timeout'
+
+                # remove key from the database
+                # need 2 queries because Mongo can't do this across collections
+                MONGO.db.sentences.update({'key':key}, {'$unset':{'key':''}},
+                                          upsert=False)
+                MONGO.db.paragraphs.update({'key':key}, {'$unset':{'key':''}},
+                                           upsert=False)
+
+                print 'Key',key,'timed out'
+                
         time.sleep(config.polling_delay)
 
 @APP.route('/view/', methods=['GET', 'POST'], strict_slashes=False)
