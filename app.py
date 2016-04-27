@@ -261,8 +261,8 @@ def api_append_to_lexeme_collection():
     lc.import_json(LC_bson_to_be_completed)
     lc.append(new_lexeme)
 
-    # validate it
-    if not lc.validate():
+    # validate it if completing the LC
+    if try_to_complete and not lc.validate():
         # with proper validation on all API behaviors this should never happen
         # either
        return 'ERROR: The overall lexeme collection is not valid', 400
@@ -270,7 +270,7 @@ def api_append_to_lexeme_collection():
     # update the document as being complete and remove the key
     db_collection.update(
         {"_id": LC_bson_to_be_completed['_id']},
-        {'$set': {"complete":complete, "lexemes":lc.view("string")},
+        {'$set': {"complete":try_to_complete, "lexemes":lc.view("string")},
          '$unset': {"key": ""}},
         upsert=False)
 
