@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
@@ -58,7 +57,8 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             conn.setRequestMethod(method);
             conn.setDoInput(true);
             // Starts the query
-            conn.connect();
+            sendAdditionalData(conn);
+
             int response = conn.getResponseCode();
             Log.d(appName, "The response is: " + response);
             is = conn.getInputStream();
@@ -78,7 +78,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     }
 
     // Reads an InputStream and converts it to a String.
-    private String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+    private String readIt(InputStream stream, int len) throws IOException {
         int numRead = 0;
         String toReturn = "";
         Reader reader = null;
@@ -89,5 +89,9 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             toReturn += new String(buffer);
         }while(numRead != -1);
         return toReturn;
+    }
+
+    protected void sendAdditionalData(HttpURLConnection conn) throws IOException{
+        conn.connect();
     }
 }
