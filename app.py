@@ -198,10 +198,15 @@ def api_append_to_lexeme_collection():
     try:
         addition = request.form["addition"]
         key = request.form["key"]
-        complete = request.form["complete"]
         typ_param = request.form["type"]
-    except: # TODO: figure out and except the specific error here. ValueError?
-        return "ERROR: key or sentence_addition is missing", 400
+    except KeyError:
+        return "ERROR: lexeme type, key, or addition is missing", 400
+
+    # Separate try/except for complete because it is not a required parameter
+    try:
+        complete = request.form["complete"]
+    except KeyError:
+        complete = 'false'
 
     # determine whether the user is trying to continue or complete
     # defaults to continue
@@ -211,7 +216,6 @@ def api_append_to_lexeme_collection():
         try_to_complete = False
 
     # extract the type parameter (type of lexeme)
-    typ_param = request.args.get('type')
     if typ_param == 'sentence':
         typ = 'sentence'
         db_collection = MONGO.db.paragraphs
@@ -225,11 +229,14 @@ def api_append_to_lexeme_collection():
     if not key in LC_MAP:
         return "ERROR: This lexeme collection has timed out", 408
 
-    # assume addition is one lexeme
+    # assume addition is one lexeme; pull it into the appropriate class
+    # also make the LexemeCollection for later
     if typ == 'word':
         new_lexeme = Word(addition)
+        lc = WordCollection()
     elif typ == 'sentence':
         new_lexeme = Sentence(addition)
+        lc = SentenceCollection()
 
     # validate it as an ordinary or ending lexeme, depending on the complete
     # parameter
@@ -247,13 +254,12 @@ def api_append_to_lexeme_collection():
         # this should never happen
         return 'ERROR: No lexeme collection matching your key was found in the db', 500
 
-    # pull it into a WordCollection
-    wc = WordCollection()
-    wc.import_json(LC_bson_to_be_completed)
-    wc.append(new_lexeme)
+    # get data from the query result and add in the new lexeme
+    lc.import_json(LC_bson_to_be_completed)
+    lc.append(new_lexeme)
 
     # validate it
-    if not wc.validate():
+    if not lc.validate():
         # with proper validation on all API behaviors this should never happen
         # either
        return 'ERROR: The overall lexeme collection is not valid', 400
@@ -261,16 +267,15 @@ def api_append_to_lexeme_collection():
     # update the document as being complete and remove the key
     db_collection.update(
         {"_id": LC_bson_to_be_completed['_id']},
-        {'$set':
-        {"complete":complete, "lexemes":wc.view("string")}},
-        {'$unset': {"key": ""}},
-        upsert = False)
+        {'$set': {"complete":complete, "lexemes":lc.view("string")},
+         '$unset': {"key": ""}},
+        upsert=False)
 
     # remove it from the timeout list
     del LC_MAP[key]
 
     # return 200 OK
-    return "Successfully completed the sentence", 200
+    return "Successfully appended to the lexeme collection", 200
 
 @APP.route('/start/', methods=['POST'], strict_slashes=False)
 def api_start_lexeme_collection():
