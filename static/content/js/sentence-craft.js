@@ -13,32 +13,32 @@ app.service('dataService', function($http){
     // View Sentences
     // Pass a POST request containing the tag list (a comma separated string)
     // Sentences that are returned will contain all tags in the list
-    this.viewSentence = function(tag_list){
+    this.viewSentence = function(tag_list, lexeme){
         return $http({
-                url: '/view-sentences/',
-                method: "POST",
-                data: $.param({ tags: tag_list}),
-                headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                url: '/view/',
+                method: "GET",
+                params: {'tags': tag_list, 'type': lexeme} 
         });
     }
     // Incomplete Sentence
-    // Pass a GET request to checkout an incomplete sentence 
+    // Pass a GET request to checkout an incomplete lexeme
     // for completion 
-    this.incompleteSentence = function(){
+    this.incompleteSentence = function(lexeme){
         return $http({
-                url: '/incomplete-sentence/',
+                url: '/incomplete/',
                 method: "GET",
+                params: {'type': lexeme}
         });
     }
 
     // Start Sentence
     // Pass a POST request containing the string starting_text  
     // along with a comma separated string of tags  
-    this.startSentence = function(start_text, tag_list){
+    this.startSentence = function(start_text, tag_list, lexeme){
         return $http({
-                url: '/start-sentence/',
+                url: '/start/',
                 method: "POST",
-                data: $.param({ sentence_start: start_text, tags: tag_list }),
+                data: $.param({ start: start_text, tags: tag_list, type: lexeme }),
                 headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
         });
     }
@@ -50,11 +50,11 @@ app.service('dataService', function($http){
     //
     // complete_flag is true when lexemes are completed and false when
     // they are continued.
-    this.continueSentence = function(continue_text, key_val, complete_flag){
+    this.continueSentence = function(continue_text, key_val, complete_flag, lexeme){
        return $http({
-                url: '/complete-sentence/',
+                url: '/append/',
                 method: "POST",
-                data: $.param({ sentence_addition: continue_text, key: key_val, complete: complete_flag}),
+                data: $.param({ addition: continue_text, key: key_val, complete: complete_flag, type: lexeme}),
                 headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
         });
     } 
@@ -149,7 +149,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.continue_sentence_api_call = function(complete){
         var key = $scope.model.incomplete_sentence.key; 
         var addition = $scope.model.sentence_continue_text;
-        dataService.continueSentence(addition, key, complete).then(function (dataResponse) {
+        var lexType = $scope.get_lex_type();
+        dataService.continueSentence(addition, key, complete, lexType).then(function (dataResponse) {
             $scope.clear_fields();
             // Prompt the user to continue another lexeme
             $scope.operation_type = 'ContinueAnother';
@@ -162,9 +163,11 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         $('.switchmode').removeClass('active');
         $('#continue').addClass('active');
 
+        var lexType = $scope.get_lex_type();
+
         $scope.operation_type = 'ContinueSentence';
-        dataService.incompleteSentence().then(function (dataResponse){
-            //TODO replace this with the error code
+        dataService.incompleteSentence(lexType).then(function (dataResponse){
+            console.log(dataResponse);
             if (dataResponse.data == "ERROR: No incomplete sentences are available."){
                 // Prompt the user that there are no more sentences to complete
                 $scope.operation_type='NoneToComplete';
@@ -174,7 +177,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 $scope.model.incomplete_sentence = to_complete;
                 // Get the last 3 lexemes from the lexeme collection
                 var to_complete_lexemes = to_complete.lexemecollection.lexemes;
-                for(var i = to_complete_lexemes.length-3; i < to_complete_lexemes.length; ++i){
+                var start = Math.max(to_complete_lexemes.length-3,0);
+                for(var i = start; i < to_complete_lexemes.length; ++i){
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
             }
@@ -189,6 +193,17 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
         $scope.operation_type = 'StartNewSentence';
         $(".remove-tag").hide();
+    }
+
+    $scope.get_lex_type = function (){
+        var lexType = '';
+        if ($scope.model.mode ==='sentence'){
+            lexType = 'word';
+        }
+        else if ($scope.model.mode ==='paragraph'){
+            lexType = 'sentence';
+        }
+        return lexType;
     }
 
     // Display the 10 most recent sentences to the user
@@ -207,8 +222,10 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             tagList = $scope.model.tag_list.toString();
         }
 
+        var lexType = $scope.get_lex_type();
+
         // Forward API view sentence request to the data service
-        dataService.viewSentence(tagList).then(function (dataResponse) {
+        dataService.viewSentence(tagList, lexType).then(function (dataResponse) {
             var data2 = dataResponse.data;
             var rep = []; 
           
@@ -241,9 +258,11 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             tag_list = $scope.model.tag_list.toString();
         }
         var start_text = $scope.model.sentence_start_text; 
-
+       
+        var lexType = $scope.get_lex_type();
+        
         // Forward the API request to the data service
-        dataService.startSentence(start_text, tag_list).then(function (dataResponse) {
+        dataService.startSentence(start_text, tag_list, lexType).then(function (dataResponse) {
             $scope.clear_fields();
             if (dataResponse.status === 200){
                 $scope.operation_type = 'SuccessfulComplete';
