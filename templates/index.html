@@ -10,7 +10,9 @@
         <link rel="stylesheet" type="text/css" href="/static/content/styles/sentencecraft.css" />
 	</head>
 
+    <!-- Main node-js application that utilizes the MVC design pattern-->
 	<body ng-app="sentence_craft_app" ng-controller="view_controller">
+        <!-- Navigation links -->
         <header>
             <img id="pagetitle" src="../static/content/images/sentencecraft.png">
             <nav id="controls">
@@ -26,35 +28,40 @@
             </nav>
         </header>
         
+        <!-- The ng-switch changes the main panel displayed to the user based on the current operation type -->
         <div ng-switch on="operation_type">
+            
+            <!-- Main panel displayed for starting new sentences-->
             <div ng-switch-when="StartNewSentence">
-                <main>
+                <main>  
+                    <!-- Text field for starting a sentence-->
                     <section id="text">
-                        <input id="entry" value="Today's dinner " ng-model="model.sentence_start_text"/>
+                        <input id="entry" ng-model="model.sentence_start_text"/>
                     </section>
+                    <!-- Templated tags field. Here tags are created on the fly. -->
                     <section id="tags">
                         <button ng_click="add_tag()">Add Tag</button>
                         <button ng_click="remove_tag()">Remove Tag</button>
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
                         </section>
-                     
                     </section>
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
+
+            <!-- Panel displayed for viewing a list of sentences -->
             <div ng-switch-when="ViewSentenceList" > 
                 <main>
-                        <section id="tags2">
+                    <!-- Another templated tags field. Tags are created on the fly. -->
+                    <section id="tags2">
                         <button ng_click="add_tag()">Add Tag</button>
                         <button ng_click="remove_tag()">Remove Tag</button>
-
                         <section class="input-group">
                             <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
                         </section>
-                     
                     </section>
-
+                    <!-- Generates a list of the lexemes from the node-js template -->
                     <ul>
                         <li ng-repeat="sentence in data">
                             {[sentence]}
@@ -63,6 +70,8 @@
                     <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
                 </main>
             </div>
+
+            <!-- Panel display when continuing a lexeme -->
             <div ng-switch-when="ContinueSentence">
                 <main>
                     <section id="continue-text">
@@ -72,6 +81,8 @@
                     <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
                 </main>
             </div>
+
+            <!-- Panel displayed upon successful lexeme completion/continuation -->
             <div ng-switch-when="ContinueAnother"> 
                 <main>
                     <h2>Sentence successfully modified. Continue/complete another sentence?</h2>
@@ -79,24 +90,33 @@
                     <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_sentence_panel()">NO</button>
                 </main>
             </div>
+           
+
+            <!-- Panel displayed upon successful lexeme completion -->
             <div ng-switch-when="SuccessfulComplete">
                 <main>
-                    <h2>Sentence successfully completed. Start another?</h2>
+                    <h2>Sentence successfully started. Start another?</h2>
                     <button type="submit" id="start-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
                 </main>
             </div>
+            
+
+            <!-- Panel displayed upon failure to start a lexeme -->
             <div ng-switch-when="FailedStart">
                 <main>
                     <h2>Failed to start sentence. Try again?</h2>
                     <button type="submit" id="try-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
                 </main>
             </div>
+            
+            <!-- Panel displayed when there are no sentences left to complete in the database --> 
             <div ng-switch-when="NoneToComplete">
                 <main>
                     <h2>No sentences left to complete. You should consider starting one.</h2>
                     <button type="submit" id="start-new" class="submit" ng-click="view_start_new_sentence_panel()">START</button>
                 </main>
             </div>
+
         </div>
 	</body>
 </html>
