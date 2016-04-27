@@ -14,9 +14,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 public class ContinueSentence extends AppCompatActivity {
-    ContinueSentenceTask task = null;
     String key = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class ContinueSentence extends AppCompatActivity {
                     key = msg.obj.toString();
                 }
             };
-            task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
+            ContinueSentenceTask task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
             if(myView != null){
@@ -77,8 +77,7 @@ public class ContinueSentence extends AppCompatActivity {
     }
 
     public void continueRespondToBtn(View view){
-        Log.d(getString(R.string.app_name),key);
-        /*String stringUrl = "http://10.0.2.2:5000/complete-sentence";
+        Log.d(getString(R.string.app_name),"key:"+key);
         EditText lexeme = (EditText) findViewById(R.id.continue_lexeme);
         if(lexeme == null){
             return;
@@ -87,19 +86,38 @@ public class ContinueSentence extends AppCompatActivity {
         if(sLexeme.equals("")){
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
             mySnackBar.show();
+            return;
         }
-        if(task == null){
-            Log.d(getString(R.string.app_name),"task not initialized");
+
+        if(key.equals("")){
+            Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"), Snackbar.LENGTH_SHORT);
+            mySnackBar.show();
+            return;
         }
-        switch(view.getId()){
-            case R.id.continue_btn:
-                task.execute("POST",stringUrl,sLexeme,"false");
-            case R.id.finish_btn:
-                task.execute("POST",stringUrl,sLexeme,"true");
-            default:
-                Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
-                return;
-        }*/
+
+        View myView = findViewById(android.R.id.content);
+        String stringUrl = "http://10.0.2.2:5000/complete-sentence";
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            ResolveSentenceTask task = new ResolveSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, key);
+            switch(view.getId()){
+                case R.id.continue_btn:
+                    task.execute("POST",stringUrl,sLexeme,"false");
+                    break;
+                case R.id.finish_btn:
+                    task.execute("POST",stringUrl,sLexeme,"true");
+                    break;
+                default:
+                    Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
+                    return;
+            }
+        } else {
+            if(myView != null){
+                Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                mySnackBar.show();
+            }
+        }
     }
 }
 

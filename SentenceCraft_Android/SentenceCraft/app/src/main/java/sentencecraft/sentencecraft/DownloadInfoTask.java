@@ -88,6 +88,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         char[] buffer = new char[len];
         while(numRead >= 0) {
             numRead = reader.read(buffer);
+            Log.d(appName,"read"+numRead);
             if(numRead > 0){
                 toReturn += new String(buffer,0,numRead);
             }
