@@ -65,21 +65,23 @@ public class ViewSentence extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new DownloadInfoTask(myView,getApplicationContext(),"View",R.id.toedit).execute("GET",stringUrl);
+            new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit).execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
             Context context = getApplicationContext();
             //remove rows in existing table
-            tl.removeAllViews();
-            TableRow row = new TableRow(context);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-            row.setLayoutParams(lp);
-            TextView text= new TextView(context);
-            text.setText("No network connection available");
-            text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
-            text.setTextColor((int) ContextCompat.getColor(context,R.color.colorBlack));
-            row.addView(text);
-            tl.addView(row,0);
+            if(tl != null){
+                tl.removeAllViews();
+                TableRow row = new TableRow(context);
+                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
+                row.setLayoutParams(lp);
+                TextView text= new TextView(context);
+                text.setText("No network connection available");
+                text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
+                text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+                row.addView(text);
+                tl.addView(row,0);
+            }
         }
     }
 
