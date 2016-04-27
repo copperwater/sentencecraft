@@ -38,7 +38,7 @@ class ServerRequest {
 				return
 			}
 			
-			
+//			
 //			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
 //			print("response \(responseString)")
 			
@@ -68,7 +68,7 @@ class ServerRequest {
 		}
 		task.resume()
 		while(dict.count < 1) {}
-		print(dict)
+//		print(dict)
 		return dict
 
 	}

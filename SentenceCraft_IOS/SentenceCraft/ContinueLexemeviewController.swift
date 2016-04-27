@@ -18,6 +18,21 @@ class ContinueLexemeViewController: UIViewController {
 	
 	var lexeme: [String: AnyObject] = [:]
 	
+	var lexemeParts: [String] = []
+	var tags: [String] = []
+	
+	
+	func parseInfoFromDict() {
+		lexemeParts = lexeme["lexemecollection"]!["lexemes"] as! [String]
+		print(lexemeParts)
+
+		
+		if lexeme["lexemecollection"]!["tags"] != nil {
+			tags = lexeme["lexemecollection"]!["tags"] as! [String]
+		}
+		
+		print(tags)
+	}
 	
 	func createLexemeInfo() {
 		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
@@ -73,6 +88,7 @@ class ContinueLexemeViewController: UIViewController {
 		createLexemeField()
 		createSubmitButton()
 		lexeme = server.requestIncompleteLexeme()!
+		self.parseInfoFromDict()
 //		self.navigationController?.navigationBar.topItem?.title = "Continue Lexeme"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
