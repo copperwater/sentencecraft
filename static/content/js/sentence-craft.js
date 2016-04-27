@@ -78,6 +78,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_sentence_mode = function(){
         if ($scope.model.mode !== 'sentence'){
             $scope.model.mode = 'sentence';
+            $scope.operation_type = 'StartNewSentence';
         }
     };   
 
@@ -86,6 +87,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_paragraph_mode = function(){
         if ($scope.model.mode !== 'paragraph'){
             $scope.model.mode = 'paragraph';
+            $scope.operation_type = 'StartNewSentence';
         }
     };
 
