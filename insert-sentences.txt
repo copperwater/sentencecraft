@@ -1,8 +1,9 @@
 // Work in the "app" database
 use app
 
-// Clear all existing sentences
+// Clear all existing sentences and paragraphs
 db.sentences.remove({})
+db.paragraphs.remove({})
 
 // Insert complete sentences
 db.sentences.insert({"lexemes": ["Let's", "do", "this."], "complete": true})
