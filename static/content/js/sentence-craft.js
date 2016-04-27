@@ -77,23 +77,33 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.remove_tag = function () {
         if ($scope.model.tag_list.length > 0){
             $scope.model.tag_list.pop();
+            $(".add-tag").show();
+        }
+        if($scope.model.tag_list.length === 0){
+            $(".remove-tag").hide();
         }
     };
 
     // Add a tag to the list of dynamically generated tags 
     $scope.add_tag = function () {
-        // initialze if no tags alreadt exist
+        // initialze if no tags already exist
         if ($scope.model.tag_list.length == 0){
             $scope.model.tag_list = [''];
+            $(".remove-tag").show();
         }                        
         else {
             // Require that the tag fields contain text
             if ($scope.model.tag_list[($scope.model.tag_list.length-1)] == '') {
                 $window.alert("Please add the tag text!");
             }
-            else {
+            else if ($scope.model.tag_list.length < 5){
                 $scope.model.tag_list.push('');
-            }                        
+            } 
+            else{
+                $window.alert("Maximum number of tags reached");
+                $("#entry").focus();
+                $(".add-tag").hide();
+            }            
         }
     };
 
@@ -103,6 +113,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         $scope.model.sentence_continue_text = '';
         $scope.model.tag_list = [];
         $scope.model.previous_lexeme = '';
+        $(".remove-tag").hide();
     }
 
     // Forward API continue sentence request to the data service
