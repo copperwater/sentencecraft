@@ -39,6 +39,7 @@ class ServerRequest {
 	func sendStartSentenceRequest(tags: String, sentence: String) {
 		let requestURL = NSURL(string: serverURL + "start-sentence/")
 		let request = NSMutableURLRequest(URL:requestURL!);
+
 		request.HTTPMethod = "POST"
 		
 		let postString: String = "tags=\(tags)&sentence_start=\(sentence)"
@@ -58,31 +59,36 @@ class ServerRequest {
 				}
 			}
 			task.resume()
-			
+		
 	}
 	
 	
 	func handleRequestResponse(data: NSData, response: NSURLResponse) {
 		// Print out response string
-		let responseString = NSString(data: data, encoding: NSUTF8StringEncoding)
-		print("responseString = \(responseString)")
+		let responseString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
+		print(responseString)
 		
-		// Convert server json response to NSDictionary
-		do {
-			if let convertedJsonIntoDict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
-				
-				// Print out dictionary
-				print(convertedJsonIntoDict)
-				
-				// Get value by key
-				let firstNameValue = convertedJsonIntoDict["userName"] as? String
-				print(firstNameValue!)
-			}
-		} catch let error as NSError {
-			print(error.localizedDescription)
-		}
+//		let dict = self.convertStringToDictionary(responseString)
+//		let dict = self.getDictionaryFromData(data)
+//		print(dict)
 	}
 	
 	
+	func parseResponseMessage(response: String) {
+		var parsedLexemes = [ [String: String] ]()
+	}
+	
+	
+	
+	func convertStringToDictionary(text: String) -> [String:AnyObject]? {
+		if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
+			do {
+				return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
+			} catch let error as NSError {
+				print(error)
+			}
+		}
+		return nil
+	}
 	
 }
