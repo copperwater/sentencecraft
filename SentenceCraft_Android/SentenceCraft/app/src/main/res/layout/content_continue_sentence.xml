@@ -28,7 +28,7 @@
                 android:textColor="@color/colorBlack"
                 android:text="Enter word to continue sentence" />
 
-            <TextView
+            <TextView android:id="@+id/continue_sentence"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -54,7 +54,7 @@
                     android:text="@string/app_enter" />
             </LinearLayout>
 
-            <TextView
+            <TextView android:id="@+id/continue_tag"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
