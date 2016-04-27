@@ -40,7 +40,7 @@ public class StartSentenceTask extends DownloadInfoTask {
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException {
         conn.setDoOutput(true);
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-        wr.writeBytes("sentence_start=" + lexeme);
+        wr.writeBytes("start=" + lexeme);
         if(!tags.equals("")){
             wr.writeBytes("&tags=" + tags);
         }

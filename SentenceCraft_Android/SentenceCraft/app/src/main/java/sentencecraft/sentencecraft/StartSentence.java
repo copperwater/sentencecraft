@@ -109,7 +109,7 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = "http://10.0.2.2:5000/start-sentence";
+        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {

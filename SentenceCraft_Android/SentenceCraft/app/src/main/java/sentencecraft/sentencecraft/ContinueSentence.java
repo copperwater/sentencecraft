@@ -34,7 +34,7 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = "http://10.0.2.2:5000/incomplete-sentence";
+        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentenceRequest();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -96,7 +96,7 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = "http://10.0.2.2:5000/complete-sentence";
+        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentencePost();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
