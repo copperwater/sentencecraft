@@ -22,7 +22,7 @@ app.service('dataService', function($http){
         });
     }
     // Incomplete Sentence
-    // Pass a GET request to Checkout an incomplete sentence 
+    // Pass a GET request to checkout an incomplete sentence 
     // for completion 
     this.incompleteSentence = function(){
         return $http({
@@ -44,6 +44,12 @@ app.service('dataService', function($http){
     }
 
     // Continue Sentence
+    // Pass a POST request containing a string of the continuing text,
+    // a string containing the key of the checked out setence,
+    // and a boolean complete_flag.
+    //
+    // complete_flag is true when lexemes are completed and false when
+    // they are continued.
     this.continueSentence = function(continue_text, key_val, complete_flag){
        return $http({
                 url: '/complete-sentence/',
@@ -57,6 +63,7 @@ app.service('dataService', function($http){
 // The view control is responsible for handling the main functionality
 // of the web application. The controller provides dynamic operations. 
 app.controller('view_controller', function ($scope,$http,$window, dataService) {
+    // Shared node_js data model
     $scope.model = {
         sentence_start_text: '',
         sentence_continue_text: '',
@@ -64,17 +71,22 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         incomplete_sentence: ''
     };
 
+    // Remove a single tag from the list of dynamically generated tags
+    // if any are present
     $scope.remove_tag = function () {
         if ($scope.model.tag_list.length > 0){
             $scope.model.tag_list.pop();
         }
     };
 
+    // Add a tag to the list of dynamically generated tags 
     $scope.add_tag = function () {
+        // initialze if no tags alreadt exist
         if ($scope.model.tag_list.length == 0){
             $scope.model.tag_list = [''];
         }                        
         else {
+            // Require that the tag fields contain text
             if ($scope.model.tag_list[($scope.model.tag_list.length-1)] == '') {
                 $window.alert("Please add the tag text!");
             }
@@ -84,26 +96,32 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         }
     };
 
+    // Reset the displayed fields in the data model
     $scope.clear_fields = function(){
         $scope.model.sentence_start_text = '';
         $scope.model.sentence_continue_text = '';
         $scope.model.tag_list = [];
     }
 
+    // Forward API continue sentence request to the data service
     $scope.continue_sentence_api_call = function(complete){
         var key = $scope.model.incomplete_sentence.data.key; 
         var addition = $scope.model.sentence_continue_text;
         dataService.continueSentence(addition, key, complete).then(function (dataResponse) {
             $scope.clear_fields();
+            // Prompt the user to continue another lexeme
             $scope.operation_type = 'ContinueAnother';
         });
     }
     
+    // Forward API incomplete sentence request to the data service
     $scope.view_continue_list_panel = function(){
        $scope.clear_fields();
        $scope.operation_type = 'ContinueSentence'; 
        dataService.incompleteSentence().then(function (dataResponse){
+            //TODO replace this with the error code
             if (dataResponse.data == "ERROR: No incomplete sentences are available."){
+                // Prompt the user that there are no more sentences to complete
                 $scope.operation_type='NoneToComplete';
             }
             else{
@@ -111,21 +129,32 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             }
        });
     }
+
+    // Prompt the user to start a new sentence
     $scope.view_start_new_sentence_panel = function () {
         $scope.clear_fields();
         $scope.operation_type = 'StartNewSentence';
     }
 
+    // Display the 10 most recent sentences to the user
+    // matching the tags list
     $scope.view_sentence_list_panel = function () {
+        
+        // Show the list of sentences to the user
         $scope.operation_type = 'ViewSentenceList';
+        
+        // Convert the tags to a string if they exist 
         var tagList = '';
         if ($scope.model.tag_list != undefined){
             tagList = $scope.model.tag_list.toString();
         }
 
+        // Forward API view sentence request to the data service
         dataService.viewSentence(tagList).then(function (dataResponse) {
             var data2 = dataResponse.data;
             var rep = []; 
+            
+            // Generate the list of lexemes
             for (var i = 0; i < data2.length; ++i){
                 var tmp = '';
                 var lexemes = data2[i].lexemes; 
@@ -138,12 +167,17 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         })
     };
 
+    // Forward API start sentence behavior to the data service
     $scope.start_new_sentence_api_call = function () {                    
+        
+        // Generate a string representation of the tags list
         var tag_list = '';
         if ($scope.model.tag_list != undefined){
             tag_list = $scope.model.tag_list.toString();
         }
         var start_text = $scope.model.sentence_start_text; 
+
+        // Forward the API request to the data service
         dataService.startSentence(start_text, tag_list).then(function (dataResponse) {
             $scope.clear_fields();
             if (dataResponse.status === 200){
