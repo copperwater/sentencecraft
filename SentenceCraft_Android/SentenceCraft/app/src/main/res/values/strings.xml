@@ -16,4 +16,5 @@
     <string name="title_activity_continue_sentence">Continue Sentence</string>
     <string name="title_activity_view_sentence">View Sentence</string>
     <string name="view_sentence_part">%1$d. %2$s</string>
+    <string name="error_no_lexeme">please enter a Lexeme.</string>
 </resources>
