@@ -41,6 +41,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         try {
             return downloadUrl(urls[0],urls[1]);
         } catch (IOException e) {
+            e.printStackTrace();
             return "Unable to retrieve web page. URL may be invalid.";
         }
     }
@@ -63,7 +64,11 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
             responseCode = conn.getResponseCode();
             Log.d(appName, "The response is: " + responseCode);
-            is = conn.getInputStream();
+            if(responseCode == 200){
+                is = conn.getInputStream();
+            }else{
+                is = conn.getErrorStream();
+            }
 
             // Convert the InputStream into a string
             contentAsString += readIt(is, len);
@@ -88,7 +93,6 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         char[] buffer = new char[len];
         while(numRead >= 0) {
             numRead = reader.read(buffer);
-            Log.d(appName,"read"+numRead);
             if(numRead > 0){
                 toReturn += new String(buffer,0,numRead);
             }
