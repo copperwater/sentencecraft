@@ -43,7 +43,7 @@ app.service('dataService', function($http){
         });
     }
 
-    // Continue Lexeme 
+    // Continue Lexeme
     // Pass a POST request containing a string of the continuing text,
     // a string containing the key of the checked out Lexeme,
     // and a boolean complete_flag.
@@ -62,7 +62,7 @@ app.service('dataService', function($http){
 // The view control is responsible for handling the main functionality
 // of the web application. The controller provides dynamic operations.
 app.controller('view_controller', function ($scope,$http,$window, dataService) {
-    // Shared node_js data model
+    // Shared AngularJS data model
     $scope.model = {
         start_text: '',             // text for starting a lexeme
         continue_text: '',          // text for continuing a lexeme
@@ -175,7 +175,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 for(var i = start; i < to_complete_lexemes.length; ++i){
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
-            }, 
+            },
             function (data){
                 // Prompt the user that there are no more sentences to complete
                 $scope.operation_type='NoneToComplete';
@@ -189,7 +189,12 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         $('#start').addClass('active');
 
         $scope.operation_type = 'StartNewLexeme';
-        $(".remove-tag").hide();
+        // kludge because we can't figure out how to make Angular wait until the
+        // DOM is loaded before running the following code
+        setTimeout(function(){
+          $(".remove-tag").hide();
+          $("#entry").focus();
+        }, 30);
     }
 
     $scope.get_lex_type = function (){
@@ -243,7 +248,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 rep.push(tmp);
             }
             $scope.data = rep;
-        }, 
+        },
         function(data){
             $scope.view_data = 'NoneToView';
         })
