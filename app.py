@@ -21,6 +21,8 @@ from bson.json_util import dumps
 import Word
 from Word import Word
 from WordCollection import WordCollection
+from Sentence import Sentence
+from SentenceCollection import SentenceCollection
 import SentenceCraftConfig as config
 
 APP = Flask("app")
@@ -74,32 +76,53 @@ def api_view_sentences():
     returns a list of count sentences
     from a GET http request
     """
+
+    # extract the count parameter (number of LCs to display)
     count = request.args.get('count')
     if count is None:
-        count = '10'
+        count = 10
     try:
-        i_count = int(count)
+        count = int(count)
     except ValueError:
-        i_count = 10
+        count = 10
 
+    # extract the type parameter (type of lexeme)
+    typ_param = request.args.get('type')
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
+    else:
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
+
+    # extract the tag list parameter, if any
     try:
         tags=request.form['tags'].split(',')
         if(len(tags) == 1 and tags[0] == ''):
             tags = []
-    except:
+    except: # TODO: What type of exception is this?
         tags=[]
 
+    # query the database for complete lexeme collections
+    # using an AND of all provided tags
     if (len(tags) != 0):
-        sentences = MONGO.db.sentences.find({"$and": [{'complete':True},
-            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(i_count)
+        LCs = db_collection.find({"$and": [{'complete':True},
+            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(count)
     else:
-        sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+        LCs = db_collection.find({'complete':True}).sort("_id", -1).limit(count)
 
+    # Convert the database results to the appropriate LexemeCollection objects
+    # then construct a list of their JSON views
     json_list = []
-    for sentence in sentences:
-        wc = WordCollection()
-        wc.import_json(sentence)
-        json_list.append(wc.view('json'))
+    for LC_bson_object in LCs:
+        if typ == 'word':
+            lc = WordCollection()
+        elif typ == 'sentence':
+            lc = SentenceCollection()
+
+        lc.import_json(LC_bson_object)
+        json_list.append(lc.view('json'))
 
     return json.dumps(json_list), 200
 
