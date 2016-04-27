@@ -39,9 +39,10 @@ public class ResolveSentenceTask extends DownloadInfoTask{
             super.sendAdditionalData(conn);
         }else{
             DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-            wr.writeBytes("sentence_addition=" + lexemeToAdd);
+            wr.writeBytes("addition=" + lexemeToAdd);
             wr.writeBytes("&complete=" + isComplete);
             wr.writeBytes("&key=" + key);
+            wr.writeBytes("&"+GlobalMethods.getTypeExtension());
             wr.flush();
             wr.close();
         }
