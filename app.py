@@ -75,7 +75,7 @@ def poll_for_expired():
 
         time.sleep(config.polling_delay)
 
-@APP.route('/view/', methods=['GET', 'POST'], strict_slashes=False)
+@APP.route('/view/', methods=['GET'], strict_slashes=False)
 def api_view_lexeme_collections():
     """
     returns a list of JSON lexeme collection objects
