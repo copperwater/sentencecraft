@@ -153,6 +153,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.view_start_new_sentence_panel = function () {
         $scope.clear_fields();
         $scope.operation_type = 'StartNewSentence';
+        $(".remove-tag").hide();
     }
 
     // Display the 10 most recent sentences to the user
@@ -161,7 +162,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         
         // Show the list of sentences to the user
         $scope.operation_type = 'ViewSentenceList';
-        
+
         // Convert the tags to a string if they exist 
         var tagList = '';
         if ($scope.model.tag_list != undefined){
@@ -172,7 +173,14 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         dataService.viewSentence(tagList).then(function (dataResponse) {
             var data2 = dataResponse.data;
             var rep = []; 
-            
+          
+            if (data2.length === 0){
+                $scope.view_data = 'NoneToView';
+                return;
+            }
+
+            $scope.view_data = 'SomeToView';    
+
             // Generate the list of lexemes
             for (var i = 0; i < data2.length; ++i){
                 var tmp = '';

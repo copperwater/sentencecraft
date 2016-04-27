@@ -62,11 +62,18 @@
                         </section>
                     </section>
                     <!-- Generates a list of the lexemes from the node-js template -->
-                    <ul>
-                        <li ng-repeat="sentence in data">
-                            {[sentence]}
-                        </li>
-                    </ul>
+                    <div ng-switch on="view_data">
+                        <div ng-switch-when="SomeToView">
+                            <ul>
+                                <li ng-repeat="lexeme in data">
+                                    {[lexeme]}
+                                </li>
+                            </ul>
+                        </div>
+                        <div ng-switch-when="NoneToView">
+                            There are no sentences to view matching the tag criteria.
+                        </div>
+                    </div>
                     <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
                 </main>
             </div>
