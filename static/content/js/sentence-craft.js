@@ -80,6 +80,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $scope.model.mode = 'sentence';
             $('.switchlexeme').removeClass('active');
             $('#sentence').addClass('active');
+            $('.switchmode').removeClass('active');
+            $('#start').addClass('active');
             $scope.operation_type = 'StartNewSentence';
         }
     };   
@@ -91,6 +93,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $scope.model.mode = 'paragraph';
             $('.switchlexeme').removeClass('active');
             $('#paragraph').addClass('active');
+            $('.switchmode').removeClass('active');
+            $('#start').addClass('active');
             $scope.operation_type = 'StartNewSentence';
         }
     };
