@@ -43,6 +43,11 @@ public class StartSentenceTask extends DownloadInfoTask {
         if(!tags.equals("")){
             wr.writeBytes("&tags=" + tags);
         }
+        if(GlobalMethods.lexemeIsWord){
+            wr.writeBytes("&type=word");
+        }else{
+            wr.writeBytes("&type=sentence");
+        }
         wr.flush();
         wr.close();
     }
