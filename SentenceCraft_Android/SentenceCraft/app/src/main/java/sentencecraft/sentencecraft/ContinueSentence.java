@@ -34,7 +34,7 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentenceRequest();
+        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentenceRequest()+"?"+GlobalMethods.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {

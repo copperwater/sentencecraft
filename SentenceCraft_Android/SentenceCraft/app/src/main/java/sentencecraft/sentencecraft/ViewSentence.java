@@ -59,7 +59,7 @@ public class ViewSentence extends AppCompatActivity {
     public void updateText(View view){
         View myView = findViewById(android.R.id.content);
 
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getViewExtension();
+        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getViewExtension()+"?"+GlobalMethods.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {

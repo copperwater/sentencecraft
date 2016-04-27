@@ -12,18 +12,28 @@ public class GlobalMethods {
     }
 
     public static String getStartSentenceExtension() {
-        return "start";
+        return "start/";
     }
 
     public static String getContinueSentenceRequest() {
-        return "incomplete";
+        return "incomplete/";
     }
 
     public static String getContinueSentencePost() {
-        return "append";
+        return "append/";
     }
 
     public static String getViewExtension(){
-        return "view";
+        return "view/";
+    }
+
+    public static String getTypeExtension(){
+        String toReturn = "type=";
+        if(lexemeIsWord){
+            toReturn += "word";
+        }else{
+            toReturn += "sentence";
+        }
+        return toReturn;
     }
 }
