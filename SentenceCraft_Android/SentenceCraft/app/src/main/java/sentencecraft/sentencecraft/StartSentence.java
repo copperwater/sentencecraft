@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TableRow;
+import android.widget.TextView;
 
 public class StartSentence extends AppCompatActivity {
 
@@ -32,6 +33,16 @@ public class StartSentence extends AppCompatActivity {
         // Enable the Up button
         if(ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
+        }
+
+        TextView startDirections = (TextView) findViewById(R.id.start_directions);
+        if(startDirections != null){
+            startDirections.setText(getString(R.string.app_start_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+        }
+
+        EditText startLexeme = (EditText) findViewById(R.id.start_lexeme);
+        if(startLexeme != null){
+            startLexeme.setHint(GlobalMethods.getLexeme());
         }
     }
 

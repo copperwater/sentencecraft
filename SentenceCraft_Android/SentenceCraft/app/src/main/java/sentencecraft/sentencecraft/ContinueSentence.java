@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class ContinueSentence extends AppCompatActivity {
     String key = "";
@@ -31,6 +32,16 @@ public class ContinueSentence extends AppCompatActivity {
         // Enable the Up button
         if(ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
+        }
+
+        TextView continueDirections = (TextView)findViewById(R.id.continue_directions);
+        if(continueDirections != null){
+            continueDirections.setText(getString(R.string.app_continue_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+        }
+
+        EditText continueEditPrompt = (EditText)findViewById(R.id.continue_lexeme);
+        if(continueEditPrompt != null){
+            continueEditPrompt.setHint(GlobalMethods.getLexeme());
         }
 
         View myView = findViewById(android.R.id.content);
