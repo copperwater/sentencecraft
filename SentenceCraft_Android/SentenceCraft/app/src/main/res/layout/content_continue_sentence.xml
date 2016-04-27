@@ -34,7 +34,8 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/large_font"
-                android:text="@string/app_loading" />
+                android:text="@string/app_loading"
+                android:gravity="center"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
-                android:text="tags:god,halloween" />
+                android:text="@string/app_loading" />
 
             <TextView
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
