@@ -17,9 +17,9 @@
             <img id="pagetitle" src="../static/content/images/sentencecraft.png">
             <nav id="controls">
                 <nav id="modes">
-                    <button type="button" id="start" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
+                    <button type="button" id="start" class="switchmode" ng-click="view_start_new_lexeme_panel()">Start</button>
                     <button type="button" id="continue" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
-                    <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
+                    <button type="button" id="view" class="switchmode" ng-click="view_lexeme_list_panel()">View</button>
                 </nav>
                 <nav id="lexemes">
                     <button type="button" id="sentence" class="switchlexeme active" ng-click="switch_sentence_mode()">Sentence</button>
@@ -31,11 +31,11 @@
         <div ng-switch on="operation_type">
 
             <!-- Main panel displayed for starting new sentences-->
-            <div ng-switch-when="StartNewSentence">
+            <div ng-switch-when="StartNewLexeme">
                 <main>
-                    <!-- Text field for starting a sentence-->
+                    <!-- Text field for starting a lexeme-->
                     <section id="text">
-                        <input id="entry" ng-model="model.sentence_start_text"/>
+                        <input id="entry" ng-model="model.start_text"/>
                     </section>
                     <!-- Templated tags field. Here tags are created on the fly. -->
                     <section id="tags">
@@ -45,11 +45,11 @@
                             <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
                         </section>
                     </section>
-                    <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
+                    <button type="submit" id="write" class="submit" ng-click="start_new_lexeme_api_call()">WRITE</button>
                 </main>
             </div>
-            <!-- Panel displayed for viewing a list of sentences -->
-            <div ng-switch-when="ViewSentenceList" >
+            <!-- Panel displayed for viewing a list of lexemes -->
+            <div ng-switch-when="ViewLexemeList" >
                 <main>
                     <!-- Another templated tags field. Tags are created on the fly. -->
                     <section id="tags2">
@@ -72,21 +72,21 @@
                             There are no {[model.mode]}s to view matching the tag criteria.
                         </div>
                     </div>
-                    <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
+                    <button type="submit" id="search" class="submit" ng-click="view_lexeme_list_panel()">VIEW</button>
                 </main>
             </div>
 
             <!-- Panel display when continuing a lexeme -->
-            <div ng-switch-when="ContinueSentence">
+            <div ng-switch-when="ContinueLexeme">
                 <main>
                     <section id = "to-complete">
                         <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
                     </section>
                     <section id="continue-text">
-                      <input id="entry" ng-model="model.sentence_continue_text"/>
+                      <input id="entry" ng-model="model.continue_text"/>
                     </section>
-                    <button type="submit" id="continue" class="submit" ng-click="continue_sentence_api_call(false)">CONTINUE</button>
-                    <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
+                    <button type="submit" id="continue" class="submit" ng-click="continue_api_call(false)">CONTINUE</button>
+                    <button type="submit" id="complete" class="submit" ng-click="continue_api_call(true)">COMPLETE</button>
                 </main>
             </div>
             <!-- Panel displayed upon successful lexeme completion/continuation -->
@@ -94,29 +94,29 @@
                 <main>
                 <h2>Successfully modified {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
                     <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
-                    <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_sentence_panel()">NO</button>
+                    <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>
                 </main>
             </div>
             <!-- Panel displayed upon successful lexeme completion -->
             <div ng-switch-when="SuccessfulComplete">
                 <main>
                 <h2>Successfully started {[model.mode]}. Start another?</h2>
-                    <button type="submit" id="start-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
+                    <button type="submit" id="start-yes" class="submit" ng-click="view_start_new_lexeme_panel()">YES</button>
                 </main>
             </div>
             <!-- Panel displayed upon failure to start a lexeme -->
             <div ng-switch-when="FailedStart">
                 <main>
-                <h2>Failed to start {[model.mode]}. Try again?</h2>
-                    <button type="submit" id="try-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
+                <h2>Failed to start {[model.mode]}. Invalid start for {[model.mode]}. Try again?</h2>
+                    <button type="submit" id="try-yes" class="submit" ng-click="view_start_new_lexeme_panel()">YES</button>
                 </main>
             </div>
 
-            <!-- Panel displayed when there are no sentences left to complete in the database -->
+            <!-- Panel displayed when there are no lexemes left to complete in the database -->
             <div ng-switch-when="NoneToComplete">
                 <main>
                 <h2>No {[model.mode]} left to complete. You should consider starting one.</h2>
-                    <button type="submit" id="start-new" class="submit" ng-click="view_start_new_sentence_panel()">START</button>
+                    <button type="submit" id="start-new" class="submit" ng-click="view_start_new_lexeme_panel()">START</button>
                 </main>
             </div>
         </div>
