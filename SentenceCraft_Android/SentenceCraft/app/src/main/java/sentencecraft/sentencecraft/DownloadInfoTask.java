@@ -67,7 +67,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
             // Convert the InputStream into a string
             contentAsString += readIt(is, len);
-            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,len));
+            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
@@ -86,10 +86,12 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
-        do {
+        while(numRead >= 0) {
             numRead = reader.read(buffer);
-            toReturn += new String(buffer);
-        }while(numRead != -1);
+            if(numRead > 0){
+                toReturn += new String(buffer,0,numRead);
+            }
+        }
         return toReturn;
     }
 

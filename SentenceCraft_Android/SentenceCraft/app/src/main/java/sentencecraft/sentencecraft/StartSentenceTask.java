@@ -2,7 +2,6 @@ package sentencecraft.sentencecraft;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.util.Log;
 import android.view.View;
 
 import java.io.DataOutputStream;
@@ -56,7 +55,6 @@ public class StartSentenceTask extends DownloadInfoTask {
         }
         lexeme = urls[2];
         tags = urls[3];
-        Log.d(appName,"got here");
         return super.doInBackground(urls);
     }
 }
