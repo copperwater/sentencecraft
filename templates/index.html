@@ -92,10 +92,9 @@
             app.service('dataService', function($http){
                 this.viewSentence = function(tag_list){
                     return $http({
-                            url: '/view-sentences/',
-                            method: "POST",
-                            data: $.param({ tags: tag_list}),
-                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
+                            url: '/view',
+                            method: "GET",
+                            params: {'count' : 5, 'tags': tag_list},
                         });
                 }
                 this.incompleteSentence = function(){
