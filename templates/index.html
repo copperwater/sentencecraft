@@ -1,69 +1,87 @@
-﻿<!doctype html>
+﻿<!DOCTYPE html>
 <html>
 	<head>
 	    <title>SentenceCraft</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/sentence-craft.js"></script>
         <link rel="stylesheet" type="text/css" href="/static/content/styles/sentencecraft.css" />
 	</head>
 
+    <!-- Main node-js application that utilizes the MVC design pattern-->
 	<body ng-app="sentence_craft_app" ng-controller="view_controller">
+        <!-- Navigation links -->
         <header>
             <img id="pagetitle" src="../static/content/images/sentencecraft.png">
             <nav id="controls">
                 <nav id="modes">
-                    <button type="button" id="write" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
-                    <button type="button" id="start" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
+                    <button type="button" id="start" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
+                    <button type="button" id="continue" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
                     <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
                 </nav>
                 <nav id="lexemes">
-                    <button type="button" id="sentence" class="switchlexeme active">Sentence</button>
-                    <button type="button" id="paragraph" class="switchlexeme">Paragraph</button>
+                    <button type="button" id="sentence" class="switchlexeme active" ng-click="switch_sentence_mode()">Sentence</button>
+                    <button type="button" id="paragraph" class="switchlexeme" ng-click="switch_paragraph_mode()">Paragraph</button>
                 </nav>
             </nav>
         </header>
-
+        <!-- The ng-switch changes the main panel displayed to the user based on the current operation type -->
         <div ng-switch on="operation_type">
-            <div ng-switch-when="StartNewSentence">
-                <main ng-controller="start_new_sentence_controller">
-                    <section id="text">
-                        <input id="entry" value="Today's dinner " ng-model="sentence_start_text"/>
-                    </section>
-                    <section id="tags">
-                        <button ng_click="add_new_tag()">Add Tag</button>
-                        <button ng_click="remove_tag()">Remove Tag</button>
-                        <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in tag_list track by $index" ng-model="tag_list[$index]"/>
-                        </section>
 
+            <!-- Main panel displayed for starting new sentences-->
+            <div ng-switch-when="StartNewSentence">
+                <main>
+                    <!-- Text field for starting a sentence-->
+                    <section id="text">
+                        <input id="entry" ng-model="model.sentence_start_text"/>
+                    </section>
+                    <!-- Templated tags field. Here tags are created on the fly. -->
+                    <section id="tags">
+                        <button class="add-tag" ng_click="add_tag()">Add Tag</button>
+                        <button class="remove-tag" ng_click="remove_tag()">Remove Tag</button>
+                        <section class="input-group">
+                            <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
+                        </section>
                     </section>
                     <button type="submit" id="write" class="submit" ng-click="start_new_sentence_api_call()">WRITE</button>
                 </main>
             </div>
+            <!-- Panel displayed for viewing a list of sentences -->
             <div ng-switch-when="ViewSentenceList" >
                 <main>
-                        <section id="tags2">
-                        <button ng_click="add_new_search_tag()">Add Tag</button>
-                        <button ng_click="remove_search_tag()">Remove Tag</button>
-
+                    <!-- Another templated tags field. Tags are created on the fly. -->
+                    <section id="tags2">
+                        <button class="add-tag" ng_click="add_tag()">Add Tag</button>
+                        <button class="remove-tag" ng_click="remove_tag()">Remove Tag</button>
                         <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in model.tag_list_search track by $index" ng-model="model.tag_list_search[$index]"/>
+                            <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
                         </section>
-
                     </section>
-
-                    <ul>
-                        <li ng-repeat="sentence in data">
-                            {[sentence]}
-                        </li>
-                    </ul>
+                    <!-- Generates a list of the lexemes from the node-js template -->
+                    <div ng-switch on="view_data">
+                        <div ng-switch-when="SomeToView">
+                            <ol>
+                                <li ng-repeat="lexeme in data">
+                                    {[lexeme]}
+                                </li>
+                            </ol>
+                        </div>
+                        <div ng-switch-when="NoneToView">
+                            There are no {[model.mode]}s to view matching the tag criteria.
+                        </div>
+                    </div>
                     <button type="submit" id="search" class="submit" ng-click="view_sentence_list_panel()">VIEW</button>
                 </main>
             </div>
+
+            <!-- Panel display when continuing a lexeme -->
             <div ng-switch-when="ContinueSentence">
                 <main>
+                    <section id = "to-complete">
+                        <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
+                    </section>
                     <section id="continue-text">
                       <input id="entry" ng-model="model.sentence_continue_text"/>
                     </section>
@@ -71,190 +89,36 @@
                     <button type="submit" id="complete" class="submit" ng-click="continue_sentence_api_call(true)">COMPLETE</button>
                 </main>
             </div>
+            <!-- Panel displayed upon successful lexeme completion/continuation -->
             <div ng-switch-when="ContinueAnother">
                 <main>
-                    <h2>Sentence successfully modified. Complete another sentence?</h2>
+                <h2>Successfully modified {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
                     <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
                     <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_sentence_panel()">NO</button>
                 </main>
             </div>
+            <!-- Panel displayed upon successful lexeme completion -->
+            <div ng-switch-when="SuccessfulComplete">
+                <main>
+                <h2>Successfully started {[model.mode]}. Start another?</h2>
+                    <button type="submit" id="start-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
+                </main>
+            </div>
+            <!-- Panel displayed upon failure to start a lexeme -->
+            <div ng-switch-when="FailedStart">
+                <main>
+                <h2>Failed to start {[model.mode]}. Try again?</h2>
+                    <button type="submit" id="try-yes" class="submit" ng-click="view_start_new_sentence_panel()">YES</button>
+                </main>
+            </div>
+
+            <!-- Panel displayed when there are no sentences left to complete in the database -->
+            <div ng-switch-when="NoneToComplete">
+                <main>
+                <h2>No {[model.mode]} left to complete. You should consider starting one.</h2>
+                    <button type="submit" id="start-new" class="submit" ng-click="view_start_new_sentence_panel()">START</button>
+                </main>
+            </div>
         </div>
-
-        <script>
-            var app = angular.module('sentence_craft_app', []);
-
-            // Get Jinja and Angular to play nicely with each other
-            app.config(['$interpolateProvider', function($interpolateProvider) {
-                 $interpolateProvider.startSymbol('{[');
-                      $interpolateProvider.endSymbol(']}');
-            }]);
-
-            app.service('dataService', function($http){
-                this.viewSentence = function(tag_list){
-                    return $http({
-                            url: '/view-sentences/',
-                            method: "POST",
-                            data: $.param({ tags: tag_list}),
-                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
-                        });
-                }
-                this.incompleteSentence = function(){
-                    return $http({
-                    url: '/incomplete-sentence/',
-                    method: "GET",
-                    });
-                }
-            });
-
-            app.controller('view_controller', function ($scope,$http,$window, dataService) {
-                $scope.model = {
-                    sentence_continue_text : '',
-                    tag_list_search: []
-                };
-
-                $scope.add_new_tag = function () {
-                    console.log("Here!");
-                    if ($scope.tag_list == undefined){
-                        console.log("Null found");
-                        $scope.tag_list = [''];
-                    }
-                    else {
-                        console.log($scope.tag_list.length);
-                        if ($scope.tag_list[($scope.tag_list.length-1)] == '') {
-                            console.log("Please add the tag text!");
-                            $window.alert("Please add the tag text!");
-                        }
-                        else {
-                            $scope.tag_list.push('');
-                        }
-                    }
-                };
-
-                $scope.remove_tag = function () {
-                    if ($scope.tag_list == undefined){
-                        console.log("Null found");
-                    }
-                    else {
-                        console.log($scope.tag_list.length);
-                        if($scope.tag_list.length > 0){
-                            $scope.tag_list.pop();
-                        }
-                    }
-                };
-
-                $scope.remove_search_tag = function () {
-                    if ($scope.model.tag_list_search.length > 0){
-                        $scope.model.tag_list_search.pop();
-                    }
-                };
-
-                //TODO consider combining these methods
-                $scope.add_new_search_tag = function () {
-                    if ($scope.model.tag_list_search.length == 0){
-                        console.log("Null found");
-                        $scope.model.tag_list_search = [''];
-                    }
-                    else {
-                        console.log($scope.model.tag_list_search.length);
-                        if ($scope.model.tag_list_search[($scope.model.tag_list_search.length-1)] == '') {
-                            console.log("Please add the tag text!");
-                            $window.alert("Please add the tag text!");
-                        }
-                        else {
-                            $scope.model.tag_list_search.push('');
-                        }
-                    }
-                };
-
-               $scope.continue_sentence_api_call = function(complete){
-                   $scope.key = $scope.incomplete_sentence.data.key;
-                   $scope.complete = complete;
-                   console.log($scope.key);
-                   console.log($scope.model.sentence_continue_text);
-                   $http({
-                    url: '/complete-sentence/',
-                        method: "POST",
-                        data: $.param({ sentence_addition: $scope.model.sentence_continue_text, key: $scope.key, complete: $scope.complete}),
-                        headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
-                    })
-                    .then(function (data,response) {
-                        $scope.operation_type = 'ContinueAnother';
-                    },
-                    function (response) { // optional
-                        alert(response);
-                    });
-               }
-
-               $scope.view_continue_list_panel = function(){
-                   $scope.operation_type = 'ContinueSentence';
-                   console.log('Continue a sentence');
-                   dataService.incompleteSentence().then(function (dataResponse){
-                        console.log(dataResponse);
-                        $scope.incomplete_sentence = dataResponse;
-                   });
-               }
-
-                console.log("Entered view controler");
-                $scope.view_start_new_sentence_panel = function () {
-                    $scope.operation_type = 'StartNewSentence';
-                    console.log("Entered write sentences controler");
-                }
-
-                $scope.view_sentence_list_panel = function () {
-                    $scope.operation_type = 'ViewSentenceList';
-                    console.log("Entered view sentences call");
-                    console.log('test' + $scope.model.tag_list_search);
-
-                    var data = $.param({
-                        json: JSON.stringify({
-                            sentence_start: $scope.sentence_start_text
-                        })
-                    });
-
-                    var tagList = $scope.model.tag_list_search.toString();
-                    dataService.viewSentence(tagList).then(function (dataResponse) {
-                        var data2 = dataResponse.data;
-                        console.log(data2);
-                        var rep = [];
-                        for (var i = 0; i < data2.length; ++i){
-                            var tmp = '';
-                            var lexemes = data2[i].lexemes;
-                            for (var j=0; j < lexemes.length; ++j){
-                                tmp = tmp + lexemes[j] + ' ';
-                            }
-                            rep.push(tmp);
-                        }
-                        $scope.data = rep;
-                        console.log($scope.data);
-                    })
-                    };
-            });
-
-            app.controller('start_new_sentence_controller', function ($scope,$http) {
-                console.log("Entered start sentences controller");
-
-                $scope.start_new_sentence_api_call = function () {
-                    console.log("Entered write new sentences function");
-                    console.log($scope.tag_list);
-                    var data = $.param({
-                        json: JSON.stringify({
-                            sentence_start: $scope.sentence_start_text
-                        })
-                    });
-                    $http({
-                        url: '/start-sentence/',
-                            method: "POST",
-                            data: $.param({ sentence_start: $scope.sentence_start_text, tags: $scope.tag_list.toString() }),
-                            headers : { 'Content-Type' : 'application/x-www-form-urlencoded' }
-                        })
-                        .then(function (data,response) {
-
-                        },
-                        function (response) { // optional
-                            // failed
-                        });
-                }
-            });
-        </script>
 	</body>
 </html>

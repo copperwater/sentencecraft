@@ -21,7 +21,12 @@ from bson.json_util import dumps
 import Word
 from Word import Word
 from WordCollection import WordCollection
+from Sentence import Sentence
+from SentenceCollection import SentenceCollection
 import SentenceCraftConfig as config
+
+# ??? modules
+#from . import APP
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -55,61 +60,101 @@ def poll_for_expired():
     while True: #continue this indefinitely
         for key in list(LC_MAP):
             if (int(time.time()) - LC_MAP[key]) > config.lexeme_collection_active_time:
+                # remove from the map
                 del LC_MAP[key]
-                print 'Timeout'
+
+                # because multithreading, we need to tell Flask that this is
+                # happening in the same context as the rest of the app
+                with APP.app_context():
+                    # remove key from the database
+                    # need 2 queries because Mongo can't do this across collections
+                    MONGO.db.sentences.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
+                    MONGO.db.paragraphs.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
+
+                print 'Key',key,'timed out'
+
         time.sleep(config.polling_delay)
 
-# To manually insert sentences into the database
-# > mongo
-# > use app
-# > db.sentences.insert({"content": "Illuminati confirmed."
-#                "complete": true})
-
-# To insert from a file
-# > "mongo < insert-sentences.txt"
-
-@APP.route('/view-sentences/', methods=['GET', 'POST'], strict_slashes=False)
-def api_view_sentences():
+@APP.route('/view/', methods=['GET'], strict_slashes=False)
+def api_view_lexeme_collections():
     """
-    returns a list of count sentences
-    from a GET http request
+    returns a list of JSON lexeme collection objects
+    parameters: count defines the number returned, tags is a comma-separated
+    list of tags that all returned LCs must have
     """
+
+    # extract the count parameter (number of LCs to display)
     count = request.args.get('count')
     if count is None:
-        count = '10'
+        count = 10
     try:
-        i_count = int(count)
+        count = int(count)
     except ValueError:
-        i_count = 10
+        count = 10
 
-    try:
-        tags=request.form['tags'].split(',')
-        if(len(tags) == 1 and tags[0] == ''):
-            tags = []
-    except:
-        tags=[]
-
-    if (len(tags) != 0):
-        sentences = MONGO.db.sentences.find({"$and": [{'complete':True},
-            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(i_count)
+    # extract the type parameter (type of lexeme)
+    typ_param = request.args.get('type')
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
     else:
-        sentences = MONGO.db.sentences.find({'complete':True}).sort("_id", -1).limit(i_count)
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
 
+    # extract the tag list parameter, if any, and convert to a list of strings
+    tags = request.args.get('tags')
+    if len(tags) == 0:
+        tags = []
+    else:
+        tags = tags.split(',')
+
+    # query the database for complete lexeme collections
+    # using an AND of all provided tags
+    if len(tags) != 0:
+        LCs = db_collection.find({"$and": [{'complete':True},
+            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(count)
+    else:
+        LCs = db_collection.find({'complete':True}).sort("_id", -1).limit(count)
+
+    # check for no results
+    if LCs.count() < 1:
+        return 'ERROR: No complete lexeme collections could be found', 503
+
+    # Convert the database results to the appropriate LexemeCollection objects
+    # then construct a list of their JSON views
     json_list = []
-    for sentence in sentences:
-        wc = WordCollection()
-        wc.import_json(sentence)
-        json_list.append(wc.view('json'))
+    for LC_bson_object in LCs:
+        if typ == 'word':
+            lc = WordCollection()
+        elif typ == 'sentence':
+            lc = SentenceCollection()
+
+        lc.import_json(LC_bson_object)
+        json_list.append(lc.view('json'))
 
     return json.dumps(json_list), 200
 
 
-@APP.route('/incomplete-sentence/', methods=['GET'], strict_slashes=False)
-def api_get_incomplete_sentence():
+@APP.route('/incomplete/', methods=['GET'], strict_slashes=False)
+def api_get_incomplete_lexeme_collections():
     """
-    returns a single incomplete sentence from a GET http request
+    returns a single incomplete lexeme collection from a GET http request
     """
-    sentence = MONGO.db.sentences.find_one(
+
+    # extract the type parameter (type of lexeme)
+    typ_param = request.args.get('type')
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
+    else:
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
+
+    # select an incomplete sentence from the database
+    # it must either not have a key or have an empty key string
+    LC_bson = db_collection.find_one(
         {'complete':False,
          '$or': [
             {'key' : {'$exists': False}},
@@ -117,127 +162,172 @@ def api_get_incomplete_sentence():
         })
 
     # make sure there was really a sentence
-    if sentence is None:
+    if LC_bson is None:
         return 'ERROR: No incomplete sentences are available.', 503
         # 503 Service Unavailable
 
-    lc = WordCollection()
-    lc.import_json(sentence)
+    # construct the appropriate type of LexemeCollection and pull in the data
+    # from the database query
+    if typ == 'word':
+        lc = WordCollection()
+    elif typ == 'sentence':
+        lc = SentenceCollection()
+    lc.import_json(LC_bson)
 
     # check out and generate a key for this sentence
     key = check_out()
 
     # mark the sentence in the db as active (by giving it its key), so other
     # requests won't get the same sentence
-    MONGO.db.sentences.update({'_id': sentence['_id']},
-                              {'$set': {'key': key}},
-                              upsert=False)
+    db_collection.update({'_id': LC_bson['_id']},
+                         {'$set': {'key': key}},
+                         upsert=False)
 
+    # construct the object with the lexeme collection data and the key
     prejson = {
         'lexemecollection': lc.view('json'),
         'key': key
     }
-
     return json.dumps(prejson), 200
 
-@APP.route('/complete-sentence/', methods=['POST'], strict_slashes=False)
-def api_complete_sentence():
+@APP.route('/append/', methods=['POST'], strict_slashes=False)
+def api_append_to_lexeme_collection():
     """
-    endpoint for completing an incomplete sentence based on a key
+    endpoint for continuing or completing an incomplete lexeme collection
+    In order for this to work, the client must verify that it was the one who
+    originally sent the request for the incomplete LC, by passing back the key
+    that was sent with it.
     """
     try:
-        sentence_addition = request.form["sentence_addition"]
+        addition = request.form["addition"]
         key = request.form["key"]
-        complete = request.form["complete"]
-    except: # TODO: figure out and except the specific error here
-        return "ERROR: key or sentence_addition is missing", 400
+        typ_param = request.form["type"]
+    except KeyError:
+        return "ERROR: lexeme type, key, or addition is missing", 400
 
+    # Separate try/except for complete because it is not a required parameter
+    try:
+        complete = request.form["complete"]
+    except KeyError:
+        complete = 'false'
+
+    # determine whether the user is trying to continue or complete
+    # defaults to continue
     if complete == 'true':
-        complete = True
+        try_to_complete = True
     else:
-        complete = False
+        try_to_complete = False
+
+    # extract the type parameter (type of lexeme)
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
+    else:
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
 
     # check that the key is not timed out
+    # this assumes that if the key is not in LC_MAP, it has expired
     if not key in LC_MAP:
-        return "ERROR: This sentence has timed out", 408
+        return "ERROR: This lexeme collection has timed out", 408
 
-    # get the document in the database
-    to_complete = MONGO.db.sentences.find_one({"key":key})
-    if to_complete is None:
+    # assume addition is one lexeme; pull it into the appropriate class
+    # also make the LexemeCollection for later
+    if typ == 'word':
+        new_lexeme = Word(addition)
+        lc = WordCollection()
+    elif typ == 'sentence':
+        new_lexeme = Sentence(addition)
+        lc = SentenceCollection()
+
+    # validate it as an ordinary or ending lexeme, depending on the complete
+    # parameter
+    if try_to_complete:
+        if not new_lexeme.is_valid_end():
+            return 'ERROR: '+new_lexeme.get_text()+' is not a valid ending '+new_lexeme.type(),400
+    else:
+        if not new_lexeme.is_valid():
+            return 'ERROR: '+new_lexeme.get_text()+' is not a valid '+new_lexeme.type(),400
+
+    # get the document in the database by the key passed in
+    LC_bson_to_be_completed = db_collection.find_one({"key":key})
+
+    if LC_bson_to_be_completed is None:
         # this should never happen
-        return 'ERROR: No sentence matching your key was found in the db', 400
+        return 'ERROR: No lexeme collection matching your key was found in the db', 500
 
-    '''
-    TODO: This segment of code is an absolute mess.
-    It needs: limiting the lexemes to 1, validating it as a normal or ending
-    lexeme appropriately, and not just blindly slapping it on to_complete.
-    '''
+    # get data from the query result and add in the new lexeme
+    lc.import_json(LC_bson_to_be_completed)
+    lc.append(new_lexeme)
 
-    # import into a WordCollection
-
-    # get the last lexeme as a Word
-    #final_lexeme = Word(sentence_addition.split(' ')[-1])
-
-    # make sure it is a valid ending lexeme
-    #if not final_lexeme.is_valid_end():
-    #    return 'ERROR: '+final_lexeme.get_text()+' is not a valid ending '+final_lexeme.type(),400
-
-    to_complete['lexemes']= to_complete['lexemes'] + (sentence_addition.split(' '))
-
-    wc = WordCollection()
-    wc.import_json(to_complete)
-
-    # validate it
-    if not wc.validate():
-       return 'ERROR: The overall sentence is not valid', 400
+    # validate it if completing the LC
+    if try_to_complete and not lc.validate():
+        # with proper validation on all API behaviors this should never happen
+        # either
+       return 'ERROR: The overall lexeme collection is not valid', 400
 
     # update the document as being complete and remove the key
-    MONGO.db.sentences.update(
-        {"_id": to_complete['_id']},
-        {'$set':
-            {"complete":complete, "lexemes":wc.view("string"), "key":""}}, upsert = False)
+    db_collection.update(
+        {"_id": LC_bson_to_be_completed['_id']},
+        {'$set': {"complete":try_to_complete, "lexemes":lc.view("string")},
+         '$unset': {"key": ""}},
+        upsert=False)
 
     # remove it from the timeout list
     del LC_MAP[key]
 
     # return 200 OK
-    return "Successfully completed the sentence", 200
+    return "Successfully appended to the lexeme collection", 200
 
-@APP.route('/start-sentence/', methods=['POST'], strict_slashes=False)
-def api_start_incomplete_sentence():
+@APP.route('/start/', methods=['POST'], strict_slashes=False)
+def api_start_lexeme_collection():
     """
-    endpoint for inserting an incomplete sentence into the database
-    via POST http request
+    endpoint for inserting an incomplete lexeme collection into the database
+    via POST request
     """
-    print "Received new sentence api CALL"
-    # Set the tags variable correctly
-    # The assumption is that tags will not contain a ','
+
+    # Get the starting lexeme and type
+    try:
+        typ_param = request.form['type']
+        start_str = request.form['start']
+    except KeyError:
+        return 'ERROR: Missing type or starting lexeme', 400
+
+    # Get the initial tag list
+    # The assumption is that individual tags cannot contain commas
     try:
         tags = request.form["tags"].split(',')
-    except:
+    except KeyError:
         tags = []
 
-    # Get the starting list of lexemes
-    # Possible TODO: make sure this is capped at some value
-    first_lexemes = request.form['sentence_start'].split(' ')
+    # extract the type parameter (type of lexeme)
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
+    else:
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
 
-    # Construct them as Lexemes and validate them
-    curr_lex = Word(first_lexemes[0])
-    if not curr_lex.is_valid_beginning:
-        return "ERROR: "+first_lexemes[0]+" is not a valid beginning", 400
-    for lex in first_lexemes[1:]:
-        curr_lex = Word(lex)
-        if not curr_lex.is_valid():
-            return "ERROR: "+first_lexemes[0]+" is not valid", 400
+    # Construct start_str as a Lexeme
+    if typ == 'word':
+        start_lex = Word(start_str)
+    elif typ == 'sentence':
+        start_lex = Sentence(start_str)
+
+    # validate it as a beginning lexeme
+    if not start_lex.is_valid_beginning():
+        return 'ERROR: '+start_lex.get_text()+' is not a valid beginning '+start_lex.type(), 400
 
     # Insert into the database
-    MONGO.db.sentences.insert(
-        {"lexemes": first_lexemes, "complete": False, "tags":tags})
+    db_collection.insert(
+        {"lexemes": [start_lex.get_text()], "complete": False, "tags":tags})
 
     # return 200 OK
-    return "Successfully started the sentence", 200
+    return "Successfully started the lexeme collection", 200
 
-@APP.route('/view-HTML/')
+@APP.route('/')
 def view_html_sample():
     """
     endpoint for viewing sentences in the database
