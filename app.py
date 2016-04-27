@@ -102,21 +102,24 @@ def api_view_lexeme_collections():
         typ = 'word'
         db_collection = MONGO.db.sentences
 
-    # extract the tag list parameter, if any
-    try:
-        tags=request.form['tags'].split(',')
-        if(len(tags) == 1 and tags[0] == ''):
-            tags = []
-    except: # TODO: What type of exception is this?
-        tags=[]
+    # extract the tag list parameter, if any, and convert to a list of strings
+    tags = request.args.get('tags')
+    if len(tags) == 0:
+        tags = []
+    else:
+        tags = tags.split(',')
 
     # query the database for complete lexeme collections
     # using an AND of all provided tags
-    if (len(tags) != 0):
+    if len(tags) != 0:
         LCs = db_collection.find({"$and": [{'complete':True},
             {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(count)
     else:
         LCs = db_collection.find({'complete':True}).sort("_id", -1).limit(count)
+
+    # check for no results
+    if LCs.count() < 1:
+        return 'ERROR: No complete lexeme collections could be found', 503
 
     # Convert the database results to the appropriate LexemeCollection objects
     # then construct a list of their JSON views
