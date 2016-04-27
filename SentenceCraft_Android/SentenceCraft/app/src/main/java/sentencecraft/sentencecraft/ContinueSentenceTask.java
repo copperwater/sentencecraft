@@ -11,9 +11,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 
 /**
@@ -25,8 +22,6 @@ public class ContinueSentenceTask extends DownloadInfoTask {
     private int tagsId;
     private String key = "";
     private String operationName = "DownloadTask";
-    private String lexemeToAdd = "";
-    private String isComplete = "";
 
     public ContinueSentenceTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
@@ -35,24 +30,22 @@ public class ContinueSentenceTask extends DownloadInfoTask {
     }
 
     protected void onPostExecute(String result) {
-        if (key.equals("")) {
-            if (getResponseCode() == 200) {
-                ArrayList<String> data = interpretContinue(result);
-                TextView sentence = (TextView) rootView.findViewById(editId);
-                sentence.setText(context.getString(R.string.continue_lexeme_part, data.get(0)));
-                TextView tags = (TextView) rootView.findViewById(tagsId);
-                tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
-                Message msg = Message.obtain();
-                msg.obj= key;
-                mainUIHandler.sendMessage(msg);
-            } else {
-                Snackbar mySnackBar;
-                mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
-                mySnackBar.show();
-                mySnackBar.setText(result);
-                mySnackBar.show();
-            }
+        if (getResponseCode() == 200) {
+            ArrayList<String> data = interpretContinue(result);
+            TextView sentence = (TextView) rootView.findViewById(editId);
+            sentence.setText(context.getString(R.string.continue_lexeme_part, data.get(0)));
+            TextView tags = (TextView) rootView.findViewById(tagsId);
+            tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
+        } else {
+            Snackbar mySnackBar;
+            mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
+            mySnackBar.show();
+            mySnackBar.setText(result);
+            mySnackBar.show();
         }
+        Message msg = Message.obtain();
+        msg.obj= key;
+        mainUIHandler.sendMessage(msg);
     }
 
     private ArrayList<String> interpretContinue(String data) {
@@ -92,26 +85,8 @@ public class ContinueSentenceTask extends DownloadInfoTask {
             //assuming getting incomplete sentence
             key = "";
             return super.doInBackground(urls);
-        }else if(urls.length == 4){
-            lexemeToAdd = urls[2];
-            isComplete = urls[3];
-            return super.doInBackground(urls);
         }else{
             return "arguments not recognized";
-        }
-    }
-
-    @Override
-    protected void sendAdditionalData(HttpURLConnection conn) throws IOException {
-        if(key.equals("")){
-            super.sendAdditionalData(conn);
-        }else{
-            DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
-            wr.writeBytes("sentence_addition=" + lexemeToAdd);
-            wr.writeBytes("&complete=" + isComplete);
-            wr.writeBytes("&key=" + key);
-            wr.flush();
-            wr.close();
         }
     }
 }
