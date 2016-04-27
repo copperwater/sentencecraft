@@ -17,32 +17,37 @@ class ServerRequest {
 	}
 	
 	func sendStartSentenceRequest(tags: String, sentence: String) {
-		let requestURL = NSURL(string: serverURL + "start-sentence/")
+		let requestURL = NSURL(string: serverURL + "start/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "tags=\(tags)&sentence_start=\(sentence)"
-			let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
-			let postLength: String = "\(postData.length)"
-			request.setValue(postLength, forHTTPHeaderField: "Content-Length")
-			request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-			request.HTTPBody = postData
+		let postString: String = "tags=\(tags)&start=\(sentence)&type=word"
+		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
+		let postLength: String = "\(postData.length)"
+		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+		request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		request.HTTPBody = postData
 			
-			let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-				data, response, error in
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
 				
-				// Check for error
-				if error != nil {
-					print("error=\(error)")
-					return
-				}
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
 			}
-			task.resume()
+			
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			print("response \(responseString)")
+			
+		}
+		task.resume()
 	}
 	
 	func sendViewRequest() -> [[String: AnyObject]]? {
-		let requestURL = NSURL(string: serverURL + "view-sentences/")
+		let requestURL = NSURL(string: serverURL + "view/?type=word&tags=")
 		let request = NSMutableURLRequest(URL:requestURL!);
 		var dict: [[String:AnyObject]] = []
 		request.HTTPMethod = "GET"
