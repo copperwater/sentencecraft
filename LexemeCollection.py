@@ -65,16 +65,39 @@ class LexemeCollection(object):
             lst.append(lex.get_text())
         return lst
 
-    '''
-    Secondary "constructor" methods which can load it more specifically.
-    '''
-    @abc.abstractmethod
-    def import_json(self, jsonobj):
-        raise NotImplementedError('Unimplemented abstract method!')
-
-    @abc.abstractmethod # define this as an abstract method
     def view(self, format):
         """
         Render in various data formats according to the parameter.
         """
+        if format.lower() == 'json':
+            '''
+            Expected to return a Python dictonary that can be readily converted
+            to json using json.dumps, but it should NOT be a JSON object.
+            '''
+            strlist=[]
+            for lex in self.lexemes:
+                strlist.append(lex.get_text())
+            prejson = {'lexemes' : strlist,
+                        'complete' : self.complete }
+            if len(self.tags) > 0:
+                prejson['tags'] = self.tags
+            return prejson
+
+        elif format.lower() == 'string':
+            '''
+            Return as a list of the lexemes rendered as strings with get_text.
+            '''
+            rlist = []
+            for lex in self.lexemes:
+                rlist.append(lex.get_text())
+            return rlist
+            
+        else:
+            raise ValueError('Must specify a valid format!')
+
+    '''
+    Secondary "constructor" methods which can load it more specifically.
+    '''
+    @abc.abstractmethod # define this as an abstract method
+    def import_json(self, jsonobj):
         raise NotImplementedError('Unimplemented abstract method!')
