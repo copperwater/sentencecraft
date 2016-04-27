@@ -2,25 +2,15 @@ package sentencecraft.sentencecraft;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
-import android.widget.TableLayout;
-import android.widget.TableRow;
-import android.widget.TextView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 /**
  * Created by zqiu on 4/24/16.
@@ -28,23 +18,22 @@ import java.util.ArrayList;
  */
 public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
-    private View rootView;
-    private String appName;
-    private int editId;
-    private String command;
-    private Context context;
+    protected View rootView;
+    protected String appName;
+    protected int editId;
+    protected Context context;
+    private int responseCode;
 
-    public DownloadInfoTask (View rootView, Context context, String command, int editId){
+    protected DownloadInfoTask (View rootView, Context context, int editId){
         this.rootView=rootView;
         this.appName = context.getString(R.string.app_name);
         this.editId = editId;
-        this.command = command;
         this.context = context;
+        this.responseCode = -1;
     }
 
     @Override
     protected String doInBackground(String... urls) {
-
         // params comes from the execute() call: params[0] is the url.
         if(urls.length < 2){
             return "Sorry don't know url to connect to.";
@@ -56,33 +45,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         }
     }
 
-    // onPostExecute displays the results of the AsyncTask.
-    @Override
-    protected void onPostExecute(String result) {
-        if(command.equals("View")){
-            ArrayList<String> data = interpretView(result);
-            TableLayout tl=(TableLayout)rootView.findViewById(editId);
-            //remove rows in existing table
-            tl.removeAllViews();
-            for(int i = 0; i < data.size(); ++i){
-                TableRow row = new TableRow(context);
-                TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
-                row.setLayoutParams(lp);
-                TextView text= new TextView(context);
-                text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
-                text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
-                text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
-                row.addView(text);
-                tl.addView(row,i);
-            }
-        }else{
-            TextView textView = (TextView)rootView.findViewById(editId);
-            textView.setText(result);
-        }
-    }
-
     private String downloadUrl(String method,String myurl) throws IOException {
-
         String contentAsString = "";
         InputStream is = null;
         // Read in 500 characters at a time
@@ -96,14 +59,15 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             conn.setRequestMethod(method);
             conn.setDoInput(true);
             // Starts the query
-            conn.connect();
-            int response = conn.getResponseCode();
-            Log.d(appName, "The response is: " + response);
+            sendAdditionalData(conn);
+
+            responseCode = conn.getResponseCode();
+            Log.d(appName, "The response is: " + responseCode);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
             contentAsString += readIt(is, len);
-            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,len));
+            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
@@ -116,40 +80,26 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     }
 
     // Reads an InputStream and converts it to a String.
-    private String readIt(InputStream stream, int len) throws IOException, UnsupportedEncodingException {
+    private String readIt(InputStream stream, int len) throws IOException {
         int numRead = 0;
         String toReturn = "";
         Reader reader = null;
         reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
-        do {
+        while(numRead >= 0) {
             numRead = reader.read(buffer);
-            toReturn += new String(buffer);
-        }while(numRead != -1);
+            if(numRead > 0){
+                toReturn += new String(buffer,0,numRead);
+            }
+        }
         return toReturn;
     }
 
-    //interprets what's read from view-sentences
-    private ArrayList<String> interpretView(String data){
-        ArrayList<String> toReturn = new ArrayList<>();
-        String temp = "";
-        try{
-            JSONArray reader= new JSONArray(data);
-            for(int i = 0; i < reader.length(); ++i){
-                JSONObject firstSentence = reader.getJSONObject(i);
-                JSONArray lexemes = firstSentence.getJSONArray("lexemes");
-                temp = "";
-                for(int j = 0; j < lexemes.length(); ++j){
-                    temp  += lexemes.getString(j) + " ";
-                }
-                toReturn.add(temp);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        if(toReturn.size() == 0){
-            toReturn.add(data);
-        }
-        return toReturn;
+    protected void sendAdditionalData(HttpURLConnection conn) throws IOException{
+        conn.connect();
+    }
+
+    public int getResponseCode(){
+        return responseCode;
     }
 }

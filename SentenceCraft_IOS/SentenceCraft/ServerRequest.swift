@@ -1,5 +1,5 @@
 //
-//  RequestObject.swift
+//  ServerRequest.swift
 //  SentenceCraft
 //
 //  Created by Tausif Ahmed on 4/22/16.
@@ -9,32 +9,17 @@
 import Foundation
 
 class ServerRequest {
-
-	init() {}
 	
-	func sendViewRequest() {
-		let requestURL = NSURL(string: "http://127.0.0.1:5000/view-sentences/")
-		let request = NSMutableURLRequest(URL:requestURL!);
-		request.HTTPMethod = "GET"
-		
-		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-			data, response, error in
-			
-			// Check for error
-			if error != nil {
-				print("error=\(error)")
-				return
-			}
-			
-			self.handleRequestResponse(data!, response: response!)
+	private var serverURL: String
 
-		}
-		task.resume()
+	init() {
+		serverURL = "http://127.0.0.1:5000/"
 	}
 	
 	func sendStartSentenceRequest(tags: String, sentence: String) {
-		let requestURL = NSURL(string: "http://127.0.0.1:5000/start-sentence/")
+		let requestURL = NSURL(string: serverURL + "start-sentence/")
 		let request = NSMutableURLRequest(URL:requestURL!);
+
 		request.HTTPMethod = "POST"
 		
 		let postString: String = "tags=\(tags)&sentence_start=\(sentence)"
@@ -54,31 +39,40 @@ class ServerRequest {
 				}
 			}
 			task.resume()
-			
 	}
 	
-	
-	func handleRequestResponse(data: NSData, response: NSURLResponse) {
-		// Print out response string
-		let responseString = NSString(data: data, encoding: NSUTF8StringEncoding)
-		print("responseString = \(responseString)")
+	func sendViewRequest() -> [[String: AnyObject]]? {
+		let requestURL = NSURL(string: serverURL + "view-sentences/")
+		let request = NSMutableURLRequest(URL:requestURL!);
+		var dict: [[String:AnyObject]] = []
+		request.HTTPMethod = "GET"
 		
-		// Convert server json response to NSDictionary
-		do {
-			if let convertedJsonIntoDict = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? NSDictionary {
-				
-				// Print out dictionary
-				print(convertedJsonIntoDict)
-				
-				// Get value by key
-				let firstNameValue = convertedJsonIntoDict["userName"] as? String
-				print(firstNameValue!)
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
 			}
-		} catch let error as NSError {
-			print(error.localizedDescription)
+			
+			dict = self.convertDataToDictionary(data!)!
+			
 		}
+		task.resume()
+		while(dict.count < 1) {}
+//		print("HOHOHOHO \(dict)")
+		return dict
 	}
 	
-	
+	func convertDataToDictionary(data: NSData) -> [[String:AnyObject]]? {
+		do {
+			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
+		} catch let error as NSError {
+			print(error)
+		}
+		
+		return nil
+	}
 	
 }
