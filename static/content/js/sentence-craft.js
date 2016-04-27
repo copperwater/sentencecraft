@@ -68,7 +68,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         sentence_start_text: '',
         sentence_continue_text: '',
         tag_list: [],
-        incomplete_sentence: ''
+        incomplete_sentence: '',
+        previous_lexeme: ''
     };
 
     // Remove a single tag from the list of dynamically generated tags
@@ -101,11 +102,12 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         $scope.model.sentence_start_text = '';
         $scope.model.sentence_continue_text = '';
         $scope.model.tag_list = [];
+        $scope.model.previous_lexeme = '';
     }
 
     // Forward API continue sentence request to the data service
     $scope.continue_sentence_api_call = function(complete){
-        var key = $scope.model.incomplete_sentence.data.key; 
+        var key = $scope.model.incomplete_sentence.key; 
         var addition = $scope.model.sentence_continue_text;
         dataService.continueSentence(addition, key, complete).then(function (dataResponse) {
             $scope.clear_fields();
@@ -125,7 +127,13 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 $scope.operation_type='NoneToComplete';
             }
             else{
-                $scope.model.incomplete_sentence = dataResponse;
+                var to_complete = dataResponse.data;
+                $scope.model.incomplete_sentence = to_complete;
+                // Get the last 3 lexemes from the lexeme collection
+                var to_complete_lexemes = to_complete.lexemecollection.lexemes;
+                for(var i = to_complete_lexemes.length-3; i < to_complete_lexemes.length; ++i){
+                    $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
+                }
             }
        });
     }

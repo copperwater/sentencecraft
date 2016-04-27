@@ -74,6 +74,9 @@
             <!-- Panel display when continuing a lexeme -->
             <div ng-switch-when="ContinueSentence">
                 <main>
+                    <section id = "to-complete">
+                        <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2> 
+                    </section>
                     <section id="continue-text">
                       <input id="entry" ng-model="model.sentence_continue_text"/>
                     </section>  
