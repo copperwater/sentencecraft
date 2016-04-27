@@ -149,10 +149,18 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         var key = $scope.model.incomplete_lexeme.key;
         var addition = $scope.model.continue_text;
         var lexType = $scope.get_lex_type();
-        dataService.continueLex(addition, key, complete, lexType).then(function (dataResponse) {
+        dataService.continueLex(addition, key, complete, lexType).then(function (data) {
             $scope.clear_fields();
             // Prompt the user to continue another lexeme
             $scope.operation_type = 'ContinueAnother';
+        },
+        function (response){
+            if(response.status === 400){
+                $scope.operation_type='InvalidContinue';
+            }
+            else if (response.status === 408){
+                $scope.operation_type = 'TimeOut';
+            } 
         });
     }
 
