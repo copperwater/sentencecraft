@@ -78,6 +78,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_sentence_mode = function(){
         if ($scope.model.mode !== 'sentence'){
             $scope.model.mode = 'sentence';
+            $('.switchlexeme').removeClass('active');
+            $('#sentence').addClass('active');
             $scope.operation_type = 'StartNewSentence';
         }
     };   
@@ -87,6 +89,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_paragraph_mode = function(){
         if ($scope.model.mode !== 'paragraph'){
             $scope.model.mode = 'paragraph';
+            $('.switchlexeme').removeClass('active');
+            $('#paragraph').addClass('active');
             $scope.operation_type = 'StartNewSentence';
         }
     };
@@ -150,9 +154,12 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     
     // Forward API incomplete sentence request to the data service
     $scope.view_continue_list_panel = function(){
-       $scope.clear_fields();
-       $scope.operation_type = 'ContinueSentence'; 
-       dataService.incompleteSentence().then(function (dataResponse){
+        $scope.clear_fields();
+        $('.switchmode').removeClass('active');
+        $('#continue').addClass('active');
+
+        $scope.operation_type = 'ContinueSentence';
+        dataService.incompleteSentence().then(function (dataResponse){
             //TODO replace this with the error code
             if (dataResponse.data == "ERROR: No incomplete sentences are available."){
                 // Prompt the user that there are no more sentences to complete
@@ -167,12 +174,15 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
             }
-       });
+        });
     }
 
     // Prompt the user to start a new sentence
     $scope.view_start_new_sentence_panel = function () {
         $scope.clear_fields();
+        $('.switchmode').removeClass('active');
+        $('#start').addClass('active');
+
         $scope.operation_type = 'StartNewSentence';
         $(".remove-tag").hide();
     }
@@ -180,7 +190,10 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     // Display the 10 most recent sentences to the user
     // matching the tags list
     $scope.view_sentence_list_panel = function () {
-        
+       
+        $('.switchmode').removeClass('active');
+        $('#view').addClass('active');
+ 
         // Show the list of sentences to the user
         $scope.operation_type = 'ViewSentenceList';
 

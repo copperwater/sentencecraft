@@ -17,8 +17,8 @@
             <img id="pagetitle" src="../static/content/images/sentencecraft.png">
             <nav id="controls">
                 <nav id="modes">
-                    <button type="button" id="write" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
-                    <button type="button" id="start" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
+                    <button type="button" id="start" class="switchmode" ng-click="view_start_new_sentence_panel()">Start</button>
+                    <button type="button" id="continue" class="switchmode" ng-click="view_continue_list_panel()">Continue</button>
                     <button type="button" id="view" class="switchmode" ng-click="view_sentence_list_panel()">View</button>
                 </nav>
                 <nav id="lexemes">
@@ -64,11 +64,11 @@
                     <!-- Generates a list of the lexemes from the node-js template -->
                     <div ng-switch on="view_data">
                         <div ng-switch-when="SomeToView">
-                            <ul>
+                            <ol>
                                 <li ng-repeat="lexeme in data">
                                     {[lexeme]}
                                 </li>
-                            </ul>
+                            </ol>
                         </div>
                         <div ng-switch-when="NoneToView">
                             There are no {[model.mode]}s to view matching the tag criteria.
