@@ -21,12 +21,12 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="center">
-            <TextView
+            <TextView android:id="@+id/continue_directions"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
-                android:text="Enter word to continue sentence" />
+                android:text="@string/app_loading" />
 
             <TextView android:id="@+id/continue_sentence"
                 android:layout_marginBottom="@dimen/activity_vertical_margin"
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorBlack"
                 android:textSize="@dimen/large_font"
-                android:text="@string/app_loading"
+                android:text="@string/app_no_sentence"
                 android:gravity="center"/>
 
             <EditText android:id="@+id/continue_lexeme"
@@ -42,7 +42,6 @@
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:layout_weight="0.5"
-                android:hint="Sentence"
                 android:inputType="text"/>
 
             <LinearLayout
