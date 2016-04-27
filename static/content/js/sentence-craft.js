@@ -65,11 +65,28 @@ app.service('dataService', function($http){
 app.controller('view_controller', function ($scope,$http,$window, dataService) {
     // Shared node_js data model
     $scope.model = {
-        sentence_start_text: '',
-        sentence_continue_text: '',
-        tag_list: [],
-        incomplete_sentence: '',
-        previous_lexeme: ''
+        sentence_start_text: '',    // text for starting a sentence
+        sentence_continue_text: '', // text for continuing a sentence
+        tag_list: [],               // user inputted list of tags
+        incomplete_sentence: '',    // the entire incomplete lexeme
+        previous_lexeme: '',        // a portion of the previous lexeme 
+        mode: 'sentence'            // the default mode is sentence mode
+    };
+
+    // Switches the active mode to sentence mode if the application
+    // is not already running in sentence mode
+    $scope.switch_sentence_mode = function(){
+        if ($scope.model.mode !== 'sentence'){
+            $scope.model.mode = 'sentence';
+        }
+    };   
+
+    // Switch the active mode to paragraph mode if the application
+    // is not already running in paragraph mode
+    $scope.switch_paragraph_mode = function(){
+        if ($scope.model.mode !== 'paragraph'){
+            $scope.model.mode = 'paragraph';
+        }
     };
 
     // Remove a single tag from the list of dynamically generated tags
@@ -96,9 +113,11 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             if ($scope.model.tag_list[($scope.model.tag_list.length-1)] == '') {
                 $window.alert("Please add the tag text!");
             }
+            // Check that no more than 5 tags have been entered
             else if ($scope.model.tag_list.length < 5){
                 $scope.model.tag_list.push('');
-            } 
+            }
+            // Prevent the user from adding more tags 
             else{
                 $window.alert("Maximum number of tags reached");
                 $("#entry").focus();
