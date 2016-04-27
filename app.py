@@ -283,32 +283,46 @@ def api_start_lexeme_collection():
     endpoint for inserting an incomplete lexeme collection into the database
     via POST request
     """
-    # Set the tags variable correctly
-    # The assumption is that tags will not contain a ','
+
+    # Get the starting lexeme and type
+    try:
+        typ_param = request.form['type']
+        start_str = request.form['start']
+    except KeyError:
+        return 'ERROR: Missing type or starting lexeme', 400
+
+    # Get the initial tag list
+    # The assumption is that individual tags cannot contain commas
     try:
         tags = request.form["tags"].split(',')
-    except:
+    except KeyError:
         tags = []
 
-    # Get the starting list of lexemes
-    # Possible TODO: make sure this is capped at some value
-    first_lexemes = request.form['start'].split(' ')
+    # extract the type parameter (type of lexeme)
+    if typ_param == 'sentence':
+        typ = 'sentence'
+        db_collection = MONGO.db.paragraphs
+    else:
+        #default is Word
+        typ = 'word'
+        db_collection = MONGO.db.sentences
 
-    # Construct them as Lexemes and validate them
-    curr_lex = Word(first_lexemes[0])
-    if not curr_lex.is_valid_beginning:
-        return "ERROR: "+first_lexemes[0]+" is not a valid beginning", 400
-    for lex in first_lexemes[1:]:
-        curr_lex = Word(lex)
-        if not curr_lex.is_valid():
-            return "ERROR: "+first_lexemes[0]+" is not valid", 400
+    # Construct start_str as a Lexeme
+    if typ == 'word':
+        start_lex = Word(start_str)
+    elif typ == 'sentence':
+        start_lex = Sentence(start_str)
+
+    # validate it as a beginning lexeme
+    if not start_lex.is_valid_beginning():
+        return 'ERROR: '+start_lex.get_text()+' is not a valid beginning '+start_lex.type(), 400
 
     # Insert into the database
-    MONGO.db.sentences.insert(
-        {"lexemes": first_lexemes, "complete": False, "tags":tags})
+    db_collection.insert(
+        {"lexemes": [start_lex.get_text()], "complete": False, "tags":tags})
 
     # return 200 OK
-    return "Successfully started the sentence", 200
+    return "Successfully started the lexeme collection", 200
 
 @APP.route('/')
 def view_html_sample():
