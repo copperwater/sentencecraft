@@ -12,10 +12,12 @@
     <string name="app_start_directions">Enter word to start sentence</string>
     <string name="app_lexeme_hint">Lexeme</string>
     <string name="app_tag_hint">Tag</string>
+    <string name="app_loading">Loading...</string>
     <string name="title_activity_start_sentence">Start Sentence</string>
     <string name="title_activity_continue_sentence">Continue Sentence</string>
     <string name="title_activity_view_sentence">View Sentence</string>
     <string name="view_sentence_part">%1$d. %2$s</string>
+    <string name="continue_sentence_part">Tags:%1$s</string>
     <string name="error_no_lexeme">please enter a Lexeme.</string>
     <string name="error_no_internet">no internet connection.</string>
     <string name="error_operation_not_complete">could not complete operation:%1$s.</string>
