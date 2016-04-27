@@ -16,26 +16,6 @@ class ServerRequest {
 		serverURL = "http://127.0.0.1:5000/"
 	}
 	
-	func sendViewRequest() {
-		let requestURL = NSURL(string: serverURL + "view-sentences/")
-		let request = NSMutableURLRequest(URL:requestURL!);
-		request.HTTPMethod = "GET"
-		
-		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-			data, response, error in
-			
-			// Check for error
-			if error != nil {
-				print("error=\(error)")
-				return
-			}
-			
-			self.handleRequestResponse(data!, response: response!)
-
-		}
-		task.resume()
-	}
-	
 	func sendStartSentenceRequest(tags: String, sentence: String) {
 		let requestURL = NSURL(string: serverURL + "start-sentence/")
 		let request = NSMutableURLRequest(URL:requestURL!);
@@ -59,35 +39,39 @@ class ServerRequest {
 				}
 			}
 			task.resume()
+	}
+	
+	func sendViewRequest() -> [[String: AnyObject]]? {
+		let requestURL = NSURL(string: serverURL + "view-sentences/")
+		let request = NSMutableURLRequest(URL:requestURL!);
+		var dict: [[String:AnyObject]] = []
+		request.HTTPMethod = "GET"
 		
-	}
-	
-	
-	func handleRequestResponse(data: NSData, response: NSURLResponse) {
-		// Print out response string
-		let responseString = NSString(data: data, encoding: NSUTF8StringEncoding) as! String
-		print(responseString)
-		
-//		let dict = self.convertStringToDictionary(responseString)
-//		let dict = self.getDictionaryFromData(data)
-//		print(dict)
-	}
-	
-	
-	func parseResponseMessage(response: String) {
-		var parsedLexemes = [ [String: String] ]()
-	}
-	
-	
-	
-	func convertStringToDictionary(text: String) -> [String:AnyObject]? {
-		if let data = text.dataUsingEncoding(NSUTF8StringEncoding) {
-			do {
-				return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
-			} catch let error as NSError {
-				print(error)
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
 			}
+			
+			dict = self.convertDataToDictionary(data!)!
+			
 		}
+		task.resume()
+		while(dict.count < 1) {}
+//		print("HOHOHOHO \(dict)")
+		return dict
+	}
+	
+	func convertDataToDictionary(data: NSData) -> [[String:AnyObject]]? {
+		do {
+			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
+		} catch let error as NSError {
+			print(error)
+		}
+		
 		return nil
 	}
 	

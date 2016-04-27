@@ -87,13 +87,16 @@ class HomeScreenViewController: UIViewController {
 	
 	func viewLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("ViewLexemesSegue", sender: self)
-		server.sendViewRequest()
 	}
 	
 //	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
-//		if segue!.identifier == "StartLexemeSegue" {
-//			let startLexemeController: StartLexemeViewController =
-//				segue!.destinationViewController as! StartLexemeViewController
+//		if segue!.identifier == "ViewLexemesSegue" {
+//			let viewLexemesTableViewController : ViewLexemesTableViewController =
+//				segue!.destinationViewController as! ViewLexemesTableViewController
+//			let dict = server.sendViewRequest()
+//			viewLexemesTableViewController.getLexemes(dict!)
+//			print("WTFWTFWTFWTF\(dict)")
+//
 //		}
 //	}
 	
