@@ -17,4 +17,7 @@
     <string name="title_activity_view_sentence">View Sentence</string>
     <string name="view_sentence_part">%1$d. %2$s</string>
     <string name="error_no_lexeme">please enter a Lexeme.</string>
+    <string name="error_no_internet">no internet connection.</string>
+    <string name="error_operation_not_complete">could not complete operation:%1$s.</string>
+    <string name="sucess_operation">successfully completed operation:%1$s</string>
 </resources>

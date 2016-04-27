@@ -1,6 +1,8 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
@@ -74,30 +76,48 @@ public class StartSentence extends AppCompatActivity {
         }
     }
 
-    public void sendStart(View view){
-        EditText mLexeme = (EditText)findViewById(R.id.start_lexeme);
-        if(mLexeme == null){
-            Log.d(getString(R.string.app_name),"bad start_lexeme");
+    public void sendStart(View view) {
+        EditText mLexeme = (EditText) findViewById(R.id.start_lexeme);
+        if (mLexeme == null) {
+            Log.d(getString(R.string.app_name), "bad start_lexeme");
             return;
         }
         String sLexeme = mLexeme.getText().toString();
-        Log.d(getString(R.string.app_name),sLexeme);
-        if(sLexeme.equals("")){
+        Log.d(getString(R.string.app_name), sLexeme);
+        if (sLexeme.equals("")) {
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
             mySnackBar.show();
             return;
         }
-        TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
-        if(tl == null){
-            Log.d(getString(R.string.app_name),"no existing start_to_edit?");
+        TableLayout tl = (TableLayout) findViewById(R.id.start_to_edit);
+        if (tl == null) {
+            Log.d(getString(R.string.app_name), "no existing start_to_edit?");
             return;
         }
-        for(int i = 0; i < tl.getChildCount(); ++i){
-            TableRow row = (TableRow)tl.getChildAt(i);
-            EditText mText = (EditText)row.getChildAt(0);
+        String sTags = "";
+        for (int i = 0; i < tl.getChildCount(); ++i) {
+            TableRow row = (TableRow) tl.getChildAt(i);
+            EditText mText = (EditText) row.getChildAt(0);
             String sText = mText.getText().toString();
-            Log.d(getString(R.string.app_name),sText);
+            if (!sText.equals("")) {
+                if (!sTags.equals("")) {
+                    sTags += ",";
+                }
+                sTags += sText;
+            }
         }
+        Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
+        View myView = findViewById(android.R.id.content);
+        String stringUrl = "http://10.0.2.2:5000/start-sentence";
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            new StartSentenceTask(myView, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
+        } else {
+            Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+            mySnackBar.show();
+        }
     }
 }
+

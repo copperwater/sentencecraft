@@ -22,12 +22,14 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     protected String appName;
     protected int editId;
     protected Context context;
+    private int responseCode;
 
     protected DownloadInfoTask (View rootView, Context context, int editId){
         this.rootView=rootView;
         this.appName = context.getString(R.string.app_name);
         this.editId = editId;
         this.context = context;
+        this.responseCode = -1;
     }
 
     @Override
@@ -59,8 +61,8 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             // Starts the query
             sendAdditionalData(conn);
 
-            int response = conn.getResponseCode();
-            Log.d(appName, "The response is: " + response);
+            responseCode = conn.getResponseCode();
+            Log.d(appName, "The response is: " + responseCode);
             is = conn.getInputStream();
 
             // Convert the InputStream into a string
@@ -93,5 +95,9 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException{
         conn.connect();
+    }
+
+    public int getResponseCode(){
+        return responseCode;
     }
 }
