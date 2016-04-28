@@ -4,10 +4,8 @@ SentenceCraft API
 
 # Standard modules
 import uuid
-import sched
 import threading
 import time
-import sys
 import json
 
 # Tech stack modules
@@ -15,7 +13,6 @@ from flask import Flask
 from flask import request
 from flask import render_template
 from flask.ext.pymongo import PyMongo
-from bson.json_util import dumps
 
 # Local SentenceCraft modules
 import Word
@@ -71,7 +68,7 @@ def poll_for_expired():
                     MONGO.db.sentences.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
                     MONGO.db.paragraphs.update({'key':key}, {'$unset':{'key':''}}, upsert=False)
 
-                print 'Key',key,'timed out'
+                print 'Key', key, 'timed out'
 
         time.sleep(config.polling_delay)
 
@@ -80,10 +77,10 @@ def api_view_lexeme_collections():
     """
     returns a list of JSON lexeme collection objects
     parameters: count defines the number returned, tags is a comma-separated
-    list of tags that all returned LCs must have
+    list of tags that all returned lcs must have
     """
 
-    # extract the count parameter (number of LCs to display)
+    # extract the count parameter (number of lcs to display)
     count = request.args.get('count')
     if count is None:
         count = 10
@@ -112,32 +109,32 @@ def api_view_lexeme_collections():
     # query the database for complete lexeme collections
     # using an AND of all provided tags
     if len(tags) != 0:
-        LCs = db_collection.find({"$and": [{'complete':True},
-            {'tags': {"$all" :tags} }]}).sort("_id", -1).limit(count)
+        lcs = db_collection.find({"$and": [{'complete':True},
+                                           {'tags': {"$all" :tags}}]}).sort("_id", -1).limit(count)
     else:
-        LCs = db_collection.find({'complete':True}).sort("_id", -1).limit(count)
+        lcs = db_collection.find({'complete':True}).sort("_id", -1).limit(count)
 
     # check for no results
-    if LCs.count() < 1:
+    if lcs.count() < 1:
         return 'ERROR: No complete lexeme collections could be found', 503
 
     # Convert the database results to the appropriate LexemeCollection objects
     # then construct a list of their JSON views
     json_list = []
-    for LC_bson_object in LCs:
+    for lc_bson_object in lcs:
         if typ == 'word':
-            lc = WordCollection()
+            lexc = WordCollection()
         elif typ == 'sentence':
-            lc = SentenceCollection()
+            lexc = SentenceCollection()
 
-        lc.import_json(LC_bson_object)
-        json_list.append(lc.view('json'))
+        lexc.import_json(lc_bson_object)
+        json_list.append(lexc.view('json'))
 
     return json.dumps(json_list), 200
 
 
 @APP.route('/incomplete/', methods=['GET'], strict_slashes=False)
-def api_get_incomplete_lexeme_collections():
+def get_inc_lex_collections():
     """
     returns a single incomplete lexeme collection from a GET http request
     """
@@ -154,38 +151,38 @@ def api_get_incomplete_lexeme_collections():
 
     # select an incomplete sentence from the database
     # it must either not have a key or have an empty key string
-    LC_bson = db_collection.find_one(
+    lc_bson = db_collection.find_one(
         {'complete':False,
          '$or': [
-            {'key' : {'$exists': False}},
-            {'key' : ""}]
+             {'key' : {'$exists': False}},
+             {'key' : ""}]
         })
 
     # make sure there was really a sentence
-    if LC_bson is None:
+    if lc_bson is None:
         return 'ERROR: No incomplete sentences are available.', 503
         # 503 Service Unavailable
 
     # construct the appropriate type of LexemeCollection and pull in the data
     # from the database query
     if typ == 'word':
-        lc = WordCollection()
+        lexc = WordCollection()
     elif typ == 'sentence':
-        lc = SentenceCollection()
-    lc.import_json(LC_bson)
+        lexc = SentenceCollection()
+    lexc.import_json(lc_bson)
 
     # check out and generate a key for this sentence
     key = check_out()
 
     # mark the sentence in the db as active (by giving it its key), so other
     # requests won't get the same sentence
-    db_collection.update({'_id': LC_bson['_id']},
+    db_collection.update({'_id': lc_bson['_id']},
                          {'$set': {'key': key}},
                          upsert=False)
 
     # construct the object with the lexeme collection data and the key
     prejson = {
-        'lexemecollection': lc.view('json'),
+        'lexemecollection': lexc.view('json'),
         'key': key
     }
     return json.dumps(prejson), 200
@@ -236,41 +233,41 @@ def api_append_to_lexeme_collection():
     # also make the LexemeCollection for later
     if typ == 'word':
         new_lexeme = Word(addition)
-        lc = WordCollection()
+        lexc = WordCollection()
     elif typ == 'sentence':
         new_lexeme = Sentence(addition)
-        lc = SentenceCollection()
+        lexc = SentenceCollection()
 
     # validate it as an ordinary or ending lexeme, depending on the complete
     # parameter
     if try_to_complete:
         if not new_lexeme.is_valid_end():
-            return 'ERROR: '+new_lexeme.get_text()+' is not a valid ending '+new_lexeme.type(),400
+            return 'ERROR: '+new_lexeme.get_text()+' is not a valid ending '+new_lexeme.type(), 400
     else:
         if not new_lexeme.is_valid():
-            return 'ERROR: '+new_lexeme.get_text()+' is not a valid '+new_lexeme.type(),400
+            return 'ERROR: '+new_lexeme.get_text()+' is not a valid '+new_lexeme.type(), 400
 
     # get the document in the database by the key passed in
-    LC_bson_to_be_completed = db_collection.find_one({"key":key})
+    lc_bson_to_be_completed = db_collection.find_one({"key":key})
 
-    if LC_bson_to_be_completed is None:
+    if lc_bson_to_be_completed is None:
         # this should never happen
         return 'ERROR: No lexeme collection matching your key was found in the db', 500
 
     # get data from the query result and add in the new lexeme
-    lc.import_json(LC_bson_to_be_completed)
-    lc.append(new_lexeme)
+    lexc.import_json(lc_bson_to_be_completed)
+    lexc.append(new_lexeme)
 
     # validate it if completing the LC
-    if try_to_complete and not lc.validate():
+    if try_to_complete and not lexc.validate():
         # with proper validation on all API behaviors this should never happen
         # either
-       return 'ERROR: The overall lexeme collection is not valid', 400
+        return 'ERROR: The overall lexeme collection is not valid', 400
 
     # update the document as being complete and remove the key
     db_collection.update(
-        {"_id": LC_bson_to_be_completed['_id']},
-        {'$set': {"complete":try_to_complete, "lexemes":lc.view("string")},
+        {"_id": lc_bson_to_be_completed['_id']},
+        {'$set': {"complete":try_to_complete, "lexemes":lexc.view("string")},
          '$unset': {"key": ""}},
         upsert=False)
 
@@ -328,18 +325,19 @@ def api_start_lexeme_collection():
     return "Successfully started the lexeme collection", 200
 
 @APP.route('/')
-def view_html_sample():
+def view_html():
     """
     endpoint for viewing sentences in the database
     """
-    print "view html"
-    sentences = MONGO.db.sentences.find()
     return render_template('index.html')
 
-# Run this once and only in one thread. Note that it will not run until the
-# first request comes in; it will not run automatically at startup.
+
 @APP.before_first_request
 def single_thread_setup():
+    """
+    Run this once and only in one thread. Note that it will not run until the
+    first request comes in; it will not run automatically at startup.
+    """
     # Start a new thread for polling
     threading.Thread(None, poll_for_expired).start()
 
