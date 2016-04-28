@@ -12,9 +12,9 @@ class ServerRequest {
 	
 	private var serverURL: String
 
-
 	init() {
 		serverURL = "http://127.0.0.1:5000/"
+//		serverURL =  "http://128.113.151.26:5000/"
 	}
 	
 	func sendStartSentenceRequest(tags: String, sentence: String, type: String) {
@@ -89,8 +89,8 @@ class ServerRequest {
 			}
 			
 			
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("response \(responseString)")
+//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+//			print("response \(responseString)")
 			
 		}
 		task.resume()
@@ -99,10 +99,13 @@ class ServerRequest {
 	
 	
 	func sendViewRequest(type: String, tags: String) -> [[String: AnyObject]]? {
-		print(tags)
+//		print(tags)
+//		let urlString = serverURL + "view/?type=\(type)&tags=\(tags)"
 		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
+//		let requestURL = NSURL(string: urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
+		var isDictionary: Bool = true
 		request.HTTPMethod = "GET"
 		
 		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -114,13 +117,22 @@ class ServerRequest {
 				return
 			}
 			
-//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
 //			print("response \(responseString)")
-			
-			dict = self.convertDataToDictionaryList(data!)!
+//			for i in responseString.characters {
+//				print(i)
+//			}
+//			print(responseString[responseString.startIndex])
+			if responseString[responseString.startIndex] != "[" {
+				isDictionary = false
+			} else {
+				dict = self.convertDataToDictionaryList(data!)!
+			}
+
 		}
 		task.resume()
-		while(dict.count < 1) {}
+//		print (isDictionary)
+		while(dict.count < 1) { if isDictionary == false {break} }
 		return dict
 	}
 	
