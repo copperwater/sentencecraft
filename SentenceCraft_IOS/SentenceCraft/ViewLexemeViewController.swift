@@ -24,7 +24,7 @@ class ViewLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 
-		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
+		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width - 40, 150))
 		lexemeText.text = "Lexeme: \n\(lexeme)"
 		lexemeText.numberOfLines = 0
 		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
