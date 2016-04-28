@@ -24,18 +24,27 @@
         <activity
             android:name=".StartSentence"
             android:label="@string/title_activity_start_sentence"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainMenu"/>
+            android:parentActivityName=".MainMenu"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ContinueSentence"
             android:label="@string/title_activity_continue_sentence"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainMenu"/>
+            android:parentActivityName=".MainMenu"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ViewSentence"
             android:label="@string/title_activity_view_sentence"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".MainMenu"/>
+            android:parentActivityName=".MainMenu"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Settings"
+            android:label="@string/title_activity_settings"
+            android:parentActivityName=".MainMenu"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sentencecraft.sentencecraft.MainMenu" />
+        </activity>
     </application>
 
 </manifest>

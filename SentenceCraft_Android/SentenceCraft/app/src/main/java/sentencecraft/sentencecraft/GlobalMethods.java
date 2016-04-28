@@ -5,10 +5,17 @@ package sentencecraft.sentencecraft;
  */
 public class GlobalMethods {
 
-    public static boolean lexemeIsWord = false;
+    public static boolean lexemeIsWord = true;
+    public static boolean networkIsLocalhost = true;
 
     public static String getBaseURL() {
-        return "http://10.0.2.2:5000/";
+        String base;
+        if(networkIsLocalhost){
+            base = "10.0.2.2";
+        }else{
+            base = "128.113.151.26";
+        }
+        return "http://"+base+":5000/";
     }
 
     public static String getStartSentenceExtension() {

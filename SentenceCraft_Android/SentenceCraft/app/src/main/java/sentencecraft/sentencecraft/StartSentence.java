@@ -1,6 +1,7 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -58,14 +59,14 @@ public class StartSentence extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void addTag(View view) {
@@ -78,8 +79,8 @@ public class StartSentence extends AppCompatActivity {
             EditText text= new EditText(context);
             TableRow.LayoutParams textParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
             text.setLayoutParams(textParams);
-            text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
-            text.setHintTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
+            text.setHintTextColor(ContextCompat.getColor(context, R.color.colorBlack));
             text.setHint(getString(R.string.app_tag_hint));
             text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
             row.addView(text);
