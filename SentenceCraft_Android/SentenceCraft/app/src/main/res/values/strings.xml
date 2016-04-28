@@ -16,6 +16,7 @@
     <string name="app_loading">Loading…</string>
     <string name="app_fin">Finish</string>
     <string name="app_no_sentence">No Sentences currently…</string>
+    <string name="app_search_for">Search For</string>
     <string name="title_activity_start_sentence">Start Sentence</string>
     <string name="title_activity_continue_sentence">Continue Sentence</string>
     <string name="title_activity_view_sentence">View Sentence</string>

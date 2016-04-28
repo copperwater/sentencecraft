@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TableLayout;
 
 public class ViewSentence extends AppCompatActivity {
@@ -61,6 +62,14 @@ public class ViewSentence extends AppCompatActivity {
         View myView = findViewById(android.R.id.content);
 
         String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getViewExtension()+"?"+GlobalMethods.getTypeExtension();
+        EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
+        String tags = "";
+        if(viewTags != null){
+            tags = viewTags.getText().toString();
+        }
+        if(!tags.equals("")){
+            stringUrl += "&tags=" + tags;
+        }
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
