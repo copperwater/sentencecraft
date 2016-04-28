@@ -24,13 +24,12 @@ class ViewLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 
-		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width - 40, 150))
+		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width - 40, 400))
 		lexemeText.text = "Lexeme: \n\(lexeme)"
 		lexemeText.numberOfLines = 0
 		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
-		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
-		lexemeText.numberOfLines = 4
+		lexemeText.center = CGPointMake(lexemeText.center.x, self.view.center.y)
 		lexemeText.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(lexemeText)
 

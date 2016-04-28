@@ -8,24 +8,20 @@
 
 import UIKit
 
-class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate {
+class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate, UITextFieldDelegate {
 	
 	let navBar: UINavigationBar = UINavigationBar.init()
 	var searchBar: UISearchBar = UISearchBar()
 	
 	var lexemesDictionary: [[String:AnyObject]] = []
-	
 	var lexemesArray: [String] = []
 	var tagsArray: [String] = []
+	var selectedLexeme: String = String()
+	var selectedTags: String = String()
 	
 	var server : ServerRequest = ServerRequest.init()
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
-	
-	var selectedLexeme: String = String()
-	var selectedTags: String = String()
-
-	
 	
 	func setupTableView() {
 		self.tableView = UITableView.init(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
@@ -49,15 +45,11 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		tagsArray.removeAll()
 		lexemesDictionary.removeAll()
 		
-		print(searchBar.text!)
-		
 		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
 		                                                       tags: searchBar.text!)!
 		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}
-	
-	
 	
 	func printLexemes() {
 		for entry in lexemesDictionary {
@@ -113,7 +105,6 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 	}
 	
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-		
 		let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "LexemeCell")
 		cell.textLabel!.text = lexemesArray [indexPath.row]
 		cell.accessoryType = UITableViewCellAccessoryType.DisclosureIndicator;
@@ -140,9 +131,6 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		super.viewDidLoad()
 		setupTableView()
 		self.setupSearchBar()
-
-//		self.navigationController?.navigationBar.topItem?.title = "Lexemes"
-		// Do any additional setup after loading the view, typically from a nib.
 	}
 	
 	override func didReceiveMemoryWarning() {
