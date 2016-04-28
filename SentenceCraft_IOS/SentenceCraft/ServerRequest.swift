@@ -17,33 +17,97 @@ class ServerRequest {
 	}
 	
 	func sendStartSentenceRequest(tags: String, sentence: String) {
-		let requestURL = NSURL(string: serverURL + "start-sentence/")
+		let requestURL = NSURL(string: serverURL + "start/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "tags=\(tags)&sentence_start=\(sentence)"
-			let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
-			let postLength: String = "\(postData.length)"
-			request.setValue(postLength, forHTTPHeaderField: "Content-Length")
-			request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-			request.HTTPBody = postData
+		let postString: String = "tags=\(tags)&start=\(sentence)&type=word"
+		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
+		let postLength: String = "\(postData.length)"
+		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+		request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		request.HTTPBody = postData
 			
-			let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
-				data, response, error in
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
 				
-				// Check for error
-				if error != nil {
-					print("error=\(error)")
-					return
-				}
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
 			}
-			task.resume()
+			
+//			
+//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+//			print("response \(responseString)")
+			
+		}
+		task.resume()
 	}
 	
-	func sendViewRequest() -> [[String: AnyObject]]? {
-		let requestURL = NSURL(string: serverURL + "view-sentences/")
+	
+	func requestIncompleteLexeme() -> [String: AnyObject]? {
+		let requestURL = NSURL(string: serverURL + "incomplete/?type=word")
+		let request = NSMutableURLRequest(URL: requestURL!)
+		request.HTTPMethod = "GET"
+		var dict: [String:AnyObject] = [:]
+		
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			if error != nil {
+				print("error=\(error)")
+				return
+			}
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			print("response \(responseString)")
+			
+			dict = self.convertDataToDictionary(data!)!
+		}
+		task.resume()
+		while(dict.count < 1) {}
+//		print(dict)
+		return dict
+	}
+	
+	
+	func sendAppendRequest(appendage: String, key: String, action: String) {
+		let requestURL = NSURL(string: serverURL + "append/")
 		let request = NSMutableURLRequest(URL:requestURL!);
+		
+		request.HTTPMethod = "POST"
+		
+		let postString: String = "key=\(key)&addition=\(appendage)&type=word&complete=\(action)"
+		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
+		let postLength: String = "\(postData.length)"
+		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+		request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		request.HTTPBody = postData
+		
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
+			}
+			
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			print("response \(responseString)")
+			
+		}
+		task.resume()
+
+	}
+	
+	
+	func sendViewRequest() -> [[String: AnyObject]]? {
+		let requestURL = NSURL(string: serverURL + "view/?type=word&tags=")
+		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		request.HTTPMethod = "GET"
 		
@@ -56,7 +120,7 @@ class ServerRequest {
 				return
 			}
 			
-			dict = self.convertDataToDictionary(data!)!
+			dict = self.convertDataToDictionaryList(data!)!
 			
 		}
 		task.resume()
@@ -65,9 +129,19 @@ class ServerRequest {
 		return dict
 	}
 	
-	func convertDataToDictionary(data: NSData) -> [[String:AnyObject]]? {
+	func convertDataToDictionaryList(data: NSData) -> [[String:AnyObject]]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
+		} catch let error as NSError {
+			print(error)
+		}
+		
+		return nil
+	}
+	
+	func convertDataToDictionary(data: NSData) -> [String:AnyObject]? {
+		do {
+			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
 		} catch let error as NSError {
 			print(error)
 		}
