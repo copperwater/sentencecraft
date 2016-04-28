@@ -18,7 +18,9 @@ class StartLexemeViewController: UIViewController {
 	@IBOutlet private var lexemeField: UITextField!
 	
 	@IBOutlet private var submitButton: UIButton!
-	var server: ServerRequest!
+	var server: ServerRequest = ServerRequest.init()
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
 	
 	func createTags() {
 		let tagLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
@@ -35,6 +37,7 @@ class StartLexemeViewController: UIViewController {
 		tagOne.borderStyle = UITextBorderStyle.RoundedRect
 		tagOne.keyboardType = UIKeyboardType.Default
 		tagOne.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagOne.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagOne)
 		
 		tagTwo = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -43,6 +46,7 @@ class StartLexemeViewController: UIViewController {
 		tagTwo.borderStyle = UITextBorderStyle.RoundedRect
 		tagTwo.keyboardType = UIKeyboardType.Default
 		tagTwo.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagTwo.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagTwo)
 		
 		tagThree = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -51,6 +55,7 @@ class StartLexemeViewController: UIViewController {
 		tagThree.borderStyle = UITextBorderStyle.RoundedRect
 		tagThree.keyboardType = UIKeyboardType.Default
 		tagThree.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagThree.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagThree)
 		
 		tagFour = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -59,6 +64,7 @@ class StartLexemeViewController: UIViewController {
 		tagFour.borderStyle = UITextBorderStyle.RoundedRect
 		tagFour.keyboardType = UIKeyboardType.Default
 		tagFour.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagFour.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagFour)
 
 	}
@@ -100,7 +106,8 @@ class StartLexemeViewController: UIViewController {
 	
 	func submitButtonPressed(sender: UIButton!) {
 		let tags = tagOne.text!
-		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
+		appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
+		                                            type: appDelegate.sentence_or_word_lexeme)
 		navigationController?.popViewControllerAnimated(true)
 		
 	}
@@ -108,13 +115,9 @@ class StartLexemeViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.server = ServerRequest.init()
 		createTags()
 		createLexemeField()
 		createSubmitButton()
-//		self.navigationController?.navigationBar.topItem?.title = "Create Lexeme"
-//		self.navigationController?.setNavigationBarHidden(false, animated: true)
-//		self.navigationController?.navigationBar.backgroundColor = UIColor.blackColor()
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	
