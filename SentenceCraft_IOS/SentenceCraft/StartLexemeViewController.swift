@@ -18,7 +18,9 @@ class StartLexemeViewController: UIViewController {
 	@IBOutlet private var lexemeField: UITextField!
 	
 	@IBOutlet private var submitButton: UIButton!
-	var server: ServerRequest!
+	var server: ServerRequest = ServerRequest.init()
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
 	
 	func createTags() {
 		let tagLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
@@ -100,7 +102,9 @@ class StartLexemeViewController: UIViewController {
 	
 	func submitButtonPressed(sender: UIButton!) {
 		let tags = tagOne.text!
-		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
+		appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
+		                                            type: appDelegate.sentence_or_word_lexeme)
+//		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
 		navigationController?.popViewControllerAnimated(true)
 		
 	}
@@ -108,7 +112,6 @@ class StartLexemeViewController: UIViewController {
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.server = ServerRequest.init()
 		createTags()
 		createLexemeField()
 		createSubmitButton()

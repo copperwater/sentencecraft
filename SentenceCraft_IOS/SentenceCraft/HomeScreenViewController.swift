@@ -13,7 +13,8 @@ class HomeScreenViewController: UIViewController {
 	@IBOutlet private var startLexemeButton: UIButton!
 	@IBOutlet private var continueLexemeButton: UIButton!
 	@IBOutlet private var viewLexemesButton: UIButton!
-	var server : ServerRequest!
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+	private var hasViewed: Bool = false
 	
 	func addSentenceCraftLabel() {
 		let sentenceCraftLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 500, 200))
@@ -89,24 +90,24 @@ class HomeScreenViewController: UIViewController {
 		self.performSegueWithIdentifier("ViewLexemesSegue", sender: self)
 	}
 	
-//	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
-//		if segue!.identifier == "ViewLexemesSegue" {
-//			let viewLexemesTableViewController : ViewLexemesTableViewController =
-//				segue!.destinationViewController as! ViewLexemesTableViewController
-//			let dict = server.sendViewRequest()
-//			viewLexemesTableViewController.getLexemes(dict!)
-//			print("WTFWTFWTFWTF\(dict)")
-//
-//		}
-//	}
+	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
+		if segue!.identifier == "ViewLexemesSegue" {
+			let viewLexemesTableViewController : ViewLexemesTableViewController =
+				segue!.destinationViewController as! ViewLexemesTableViewController
+			viewLexemesTableViewController.reloadData()
+		}
+	}
+	
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.server = ServerRequest.init()
 		self.addSentenceCraftLabel()
 		self.createStartLexemeButton()
 		self.createContinueLexemeButton()
 		self.createViewLexemeButton()
+		print(appDelegate.sentence_or_word_lexeme)
+//		appDelegate.sentence_or_word_lexeme = "sentence"
+//		print(appDelegate.sentence_or_word_lexeme)
 		self.navigationController?.navigationBar.topItem?.title = "Home Screen"
 	}
 	

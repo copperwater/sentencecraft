@@ -12,14 +12,14 @@ class ViewLexemesTableViewController: UITableViewController {
 	
 	let navBar: UINavigationBar = UINavigationBar.init()
 	
-	let exampleLexemes: [String] = ["Lexeme 1", "Lexeme 2", "Lexeme 3"]
-	
 	var lexemesDictionary: [[String:AnyObject]] = []
 	
 	var lexemesArray: [String] = []
 	var tagsArray: [String] = []
 	
-	var server : ServerRequest!
+	var server : ServerRequest = ServerRequest.init()
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
 	
 	var selectedLexeme: String = String()
 	var selectedTags: String = String()
@@ -30,6 +30,8 @@ class ViewLexemesTableViewController: UITableViewController {
 		self.tableView = UITableView.init(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
 		self.tableView.dataSource = self
 		self.tableView.delegate = self
+		self.tableView.tableFooterView = UIView()
+		self.tableView.rowHeight = self.view.frame.height/10
 		self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "LexemeCell")
 	}
 	
@@ -38,6 +40,16 @@ class ViewLexemesTableViewController: UITableViewController {
 			print(entry["lexemes"])
 			print("*******")
 		}
+	}
+	
+	func reloadData() {
+		lexemesArray.removeAll()
+		tagsArray.removeAll()
+		lexemesDictionary.removeAll()
+		
+		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme)!
+		self .getLexemeStrings()
+		self.tableView.reloadData()
 	}
 	
 	func getLexemeStrings() {
@@ -99,9 +111,6 @@ class ViewLexemesTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupTableView()
-		server = ServerRequest.init()
-		lexemesDictionary = server.sendViewRequest()!
-		self.getLexemeStrings()
 //		self.navigationController?.navigationBar.topItem?.title = "Lexemes"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
