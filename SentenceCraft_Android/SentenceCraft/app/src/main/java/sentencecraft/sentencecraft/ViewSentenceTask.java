@@ -1,6 +1,8 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TableLayout;
@@ -19,8 +21,15 @@ import java.util.ArrayList;
  */
 public class ViewSentenceTask extends DownloadInfoTask{
 
-    public ViewSentenceTask(View rootView, Context context, int editId){
+    ArrayList<String> myTags;
+    Handler mainUIHandler;
+    View.OnClickListener listener;
+
+    public ViewSentenceTask(View rootView, Context context, int editId,Handler mainUIHandler, View.OnClickListener listener){
         super(rootView,context,editId);
+        this.mainUIHandler = mainUIHandler;
+        this.listener = listener;
+        myTags = new ArrayList<>();
     }
 
     // onPostExecute displays the results of the AsyncTask.
@@ -38,9 +47,13 @@ public class ViewSentenceTask extends DownloadInfoTask{
             text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
             text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
             text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setOnClickListener(listener);
             row.addView(text);
             tl.addView(row,i);
         }
+        Message msg = Message.obtain();
+        msg.obj= myTags;
+        mainUIHandler.sendMessage(msg);
     }
 
     //interprets what's read from view-sentences
@@ -57,6 +70,19 @@ public class ViewSentenceTask extends DownloadInfoTask{
                     temp  += lexemes.getString(j) + " ";
                 }
                 toReturn.add(temp);
+                temp = "";
+                try{
+                    JSONArray tags = firstSentence.getJSONArray("tags");
+                    for(int j = 0; j < tags.length(); ++j){
+                        if(j != 0){
+                            temp += ",";
+                        }
+                        temp += tags.getString(j);
+                    }
+                }catch (JSONException e){
+                    //e.printStackTrace();
+                }
+                myTags.add(temp);
             }
         } catch (JSONException e) {
             e.printStackTrace();

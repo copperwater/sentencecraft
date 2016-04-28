@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TableLayout;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class ViewSentence extends AppCompatActivity {
+
+    private ArrayList<String> myTags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,7 +80,14 @@ public class ViewSentence extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit).execute("GET", stringUrl);
+            Handler asyncHandler = new Handler(){
+                public void handleMessage(Message msg){
+                    super.handleMessage(msg);
+                    myTags = (ArrayList<String>)msg.obj;
+                }
+            };
+            ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
+            task.execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
             Context context = getApplicationContext();
@@ -86,4 +100,19 @@ public class ViewSentence extends AppCompatActivity {
         }
     }
 
+    public class myListener implements View.OnClickListener{
+        @Override
+        public void onClick(View v) {
+            TextView selected = (TextView)v;
+            if(selected != null){
+                String data = selected.getText().toString();
+                String sTag = myTags.get((data.charAt(0) - '0'));
+
+                Intent intent = new Intent(getBaseContext(), MoreSentenceInfo.class);
+                intent.putExtra("LEXEMES", data);
+                intent.putExtra("TAGS",sTag);
+                startActivity(intent);
+            }
+        }
+    }
 }

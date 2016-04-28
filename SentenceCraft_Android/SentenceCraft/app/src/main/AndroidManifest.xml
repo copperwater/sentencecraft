@@ -45,6 +45,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="sentencecraft.sentencecraft.MainMenu" />
         </activity>
+        <activity
+            android:name=".MoreSentenceInfo"
+            android:label="@string/title_activity_more_sentence_info"
+            android:parentActivityName=".ViewSentence"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="sentencecraft.sentencecraft.ViewSentence" />
+        </activity>
     </application>
 
 </manifest>
