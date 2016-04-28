@@ -5,7 +5,7 @@ package sentencecraft.sentencecraft;
  */
 public class GlobalMethods {
 
-    public static boolean lexemeIsWord = true;
+    public static boolean lexemeIsWord = false;
 
     public static String getBaseURL() {
         return "http://10.0.2.2:5000/";
@@ -28,12 +28,22 @@ public class GlobalMethods {
     }
 
     public static String getTypeExtension(){
-        String toReturn = "type=";
+        return "type=" + getLexeme();
+    }
+
+    public static String getLexeme(){
         if(lexemeIsWord){
-            toReturn += "word";
+            return "word";
         }else{
-            toReturn += "sentence";
+            return "sentence";
         }
-        return toReturn;
+    }
+
+    public static String getLexemeCollection(){
+        if(lexemeIsWord){
+            return "sentence";
+        }else{
+            return "paragraph";
+        }
     }
 }
