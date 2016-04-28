@@ -11,10 +11,12 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -98,6 +100,10 @@ public class ViewSentence extends AppCompatActivity {
                 tl.removeAllViews();
             }
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+            View mView = mySnackBar.getView();
+            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
+            params.gravity = Gravity.TOP;
+            mView.setLayoutParams(params);
             mySnackBar.show();
         }
     }
