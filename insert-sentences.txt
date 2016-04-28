@@ -28,6 +28,10 @@ db.sentences.insert({"lexemes": ["There", "I", "was,", "at", "the"], "complete":
 db.sentences.insert({"lexemes": ["Shark", "populations", "are", "in", "decline"], "tags": ["ocean", "sharks"], "complete":false})
 db.sentences.insert({"lexemes": ["Fish", "are", "friends,"], "tags": ["fish", "friends"], "complete": false})
 db.sentences.insert({"lexemes": ["Don't", "finish", "what", "you"], "tags":["procrastination"], "complete": false})
+db.sentences.insert({"lexemes": ["I", "saw", "a", "video", "of", "a", "guy"], "tags": ["rowboat"], "complete": false})
+db.sentences.insert({"lexemes": ["The", "snow", "has"], "tags": ["ice", "drift"], "complete": false})
+db.sentences.insert({"lexemes": ["I", "got", "hit", "in", "the", "face", "by"], "complete": false})
+db.sentences.insert({"lexemes": ["I", "think,", "therefore", "I"], "tags": ["philosophy"]})
 
 // Insert complete paragraphs
 db.paragraphs.insert({"lexemes": ["I crept to their doors and listened; they was snoring.", "So I tiptoed along, and got downstairs all right.", "There warn't a sound anywheres.", "I peeped through a crack of the dining-room door, and see the men that was watching the corpse all sound asleep on their chairs.", "The door was open into the parlor, where the corpse was laying, and there was a candle in both rooms.", "I passed along, and the parlor door was open; but I see there warn't nobody in there but the remainders of Peter; so I shoved on by; but the front door was locked, and the key wasn't there.", "Just then I heard somebody coming down the stairs, back behind me.", "I run in the parlor and took a swift look around, and the only place I see to hide the bag was in the coffin.", "The lid was shoved along about a foot, showing the dead man's face down in there, with a wet cloth over it, and his shroud on.", "I tucked the money-bag in under the lid, just down beyond where his hands was crossed, which made me creep, they was so cold, and then I run back across the room and in behind the door."], "complete": true, "tags":["huckleberry finn", "corpse"]})
@@ -36,3 +40,6 @@ db.paragraphs.insert({"lexemes": ["I was scared, now, I tell you.", "But there w
 
 // Insert incomplete paragraphs
 db.paragraphs.insert({"lexemes": ["I didn't have none, so he left.", "I went to the raft, and set down in the wigwam to think.", "But I couldn't come to nothing."], "complete": false, "tags": ["huckleberry finn"]})
+db.paragraphs.insert({"lexemes": ["It rained a lot this afternoon.", "The ground got very mushy and soft.", "A man walked by and fell in the mud."], "complete":false, "tags":["mud"]})
+db.paragraphs.insert({"lexemes": ["Today I made pizza for lunch.", "I mixed up tomato sauce and tomato paste to make a delicious sauce.", "I mixed up flour and water and rolled out the dough.", "I covered it with sauce and cheese, then I threw it in the oven."], "complete": false, "tags": ["pizza", "sauce", "mozzarella"]})
+db.paragraphs.insert({"lexemes": ["This is surrealism.", "Surrealism is expected.", "The electricity bounded across the starry mountain.", "Three velociraptors came screaming out of the sun.", "Mathematics students looked westwards towards the pyramids.", "A glimmer of darkness shone out of the router and rebounded from the fir cone."], "complete": false})
