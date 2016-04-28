@@ -17,8 +17,12 @@ class ViewLexemesTableViewController: UITableViewController {
 	var lexemesDictionary: [[String:AnyObject]] = []
 	
 	var lexemesArray: [String] = []
+	var tagsArray: [String] = []
 	
 	var server : ServerRequest!
+	
+	var selectedLexeme: String = String()
+	var selectedTags: String = String()
 
 	
 	
@@ -39,12 +43,28 @@ class ViewLexemesTableViewController: UITableViewController {
 	func getLexemeStrings() {
 		for entry in lexemesDictionary {
 			var lexeme: String = String()
+			var tags: String = String()
+			let emptyCharacterSet = NSCharacterSet.whitespaceAndNewlineCharacterSet()
+			
 			for word in (entry["lexemes"] as! [String]) {
 				lexeme += word
 				lexeme += " "
 			}
-			print(lexeme)
+			if entry["tags"] == nil {
+				tags = ""
+			} else {
+				for tag in (entry["tags"] as! [String]) {
+					if tag.stringByTrimmingCharactersInSet(emptyCharacterSet) == "" {
+						continue
+					}
+					tags += tag
+					tags += " , "
+				}
+			}
+//			print(lexeme)
+//			print(tags)
 			lexemesArray.append(lexeme)
+			tagsArray.append(tags)
 		}
 	}
 	
@@ -62,8 +82,18 @@ class ViewLexemesTableViewController: UITableViewController {
 	
 
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+		selectedLexeme = self.lexemesArray[indexPath.row]
+		selectedTags = self.tagsArray[indexPath.row]
 		self.performSegueWithIdentifier("LexemeSegue", sender: self)
-//		print(example_lexemes[indexPath.row])
+	}
+	
+	
+	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
+		if segue!.identifier == "LexemeSegue" {
+			let viewLexemeViewController : ViewLexemeViewController =
+							segue!.destinationViewController as! ViewLexemeViewController
+			viewLexemeViewController.addData(selectedTags, lexeme: selectedLexeme)
+		}
 	}
 	
 	override func viewDidLoad() {

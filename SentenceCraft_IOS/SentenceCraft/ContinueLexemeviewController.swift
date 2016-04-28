@@ -12,22 +12,61 @@ class ContinueLexemeViewController: UIViewController {
 	
 	@IBOutlet private var lexemeField: UITextField!
 	
-	@IBOutlet private var submitButton: UIButton!
+	@IBOutlet private var completeButton: UIButton!
 	
+	@IBOutlet private var continueButton: UIButton!
+	
+	var server: ServerRequest = ServerRequest.init()
+	
+	var lexeme: [String: AnyObject] = [:]
+	
+	var lexemeParts: [String] = []
+	var tags: String = String()
+	
+	
+	func parseInfoFromDict() {
+		lexemeParts = lexeme["lexemecollection"]!["lexemes"] as! [String]
+		print(lexemeParts)
+
+		
+		print(lexeme["lexemecollection"]!["tags"])
+		if lexeme["lexemecollection"]!["tags"] === nil {
+			return
+		}
+		for tag in (lexeme["lexemecollection"]!["tags"] as! [String]) {
+			tags += tag
+			tags += ", "
+		}
+		print(tags)
+	}
+	
+	func lastThreeLexemeParts() -> String {
+		var ret: String = String()
+		var i: Int = max(lexemeParts.endIndex - 4, 0)
+		while i < lexemeParts.endIndex {
+			ret += lexemeParts[i]
+			ret += " "
+			i += 1
+		}
+//		print ret
+		return ret
+	}
 	
 	func createLexemeInfo() {
 		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
-		tagsInfo.text = "Tags: food, happiness"
+		tagsInfo.text = "Tags: \(tags)"
 		tagsInfo.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		tagsInfo.center = CGPointMake(tagsInfo.center.x, tagsInfo.frame.width/3)
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 		
 		let lexemeText: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
-		lexemeText.text = "So far: ...I love to eat"
+		lexemeText.text = "So far: ... \(lastThreeLexemeParts())"
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
-		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + tagsInfo.frame.height)
+		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
 		lexemeText.textAlignment = NSTextAlignment.Center
+		lexemeText.numberOfLines = 0
+		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
 		self.view.addSubview(lexemeText)
 	}
 	
@@ -49,25 +88,56 @@ class ContinueLexemeViewController: UIViewController {
 	}
 	
 	
-	func createSubmitButton() {
-		submitButton = UIButton.init(type: UIButtonType.RoundedRect)
-		submitButton.setTitle("Submit", forState: UIControlState.Normal)
-		submitButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-		submitButton.frame = CGRectMake(0, 0, 200, 50)
-		submitButton.center = CGPointMake(self.view.frame.width - submitButton.frame.width/2 - 20,
-		                                  self.view.frame.height - submitButton.frame.height/2 - 20)
-		submitButton.layer.cornerRadius = 10
-		submitButton.layer.borderWidth = 5
-		submitButton.layer.borderColor = UIColor.blueColor().CGColor
-		self.view.addSubview(submitButton)
-		
+	func createContinueButton() {
+		continueButton = UIButton.init(type: UIButtonType.RoundedRect)
+		continueButton.setTitle("Continue", forState: UIControlState.Normal)
+		continueButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		continueButton.frame = CGRectMake(0, 0, 200, 50)
+		continueButton.center = CGPointMake(continueButton.frame.width/2 + 20,
+		                                    self.view.frame.height - continueButton.frame.height/2 - 20)
+		continueButton.layer.cornerRadius = 10
+		continueButton.layer.borderWidth = 5
+		continueButton.layer.borderColor = UIColor.blueColor().CGColor
+		continueButton.addTarget(self,
+		                         action: #selector(ContinueLexemeViewController.continueButtonPressed(_:)),
+		                         forControlEvents: UIControlEvents.TouchUpInside)
+		self.view.addSubview(continueButton)
+	}
+	
+	func createCompleteButton() {
+		completeButton = UIButton.init(type: UIButtonType.RoundedRect)
+		completeButton.setTitle("Complete", forState: UIControlState.Normal)
+		completeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		completeButton.frame = CGRectMake(0, 0, 200, 50)
+		completeButton.center = CGPointMake(self.view.frame.width - completeButton.frame.width/2 - 20,
+		                                  self.view.frame.height - completeButton.frame.height/2 - 20)
+		completeButton.layer.cornerRadius = 10
+		completeButton.layer.borderWidth = 5
+		completeButton.layer.borderColor = UIColor.blueColor().CGColor
+		completeButton.addTarget(self,
+		                       action: #selector(ContinueLexemeViewController.completeButtonPressed(_:)),
+		                       forControlEvents: UIControlEvents.TouchUpInside)
+		self.view.addSubview(completeButton)
+	}
+	
+	func continueButtonPressed(sender: UIButton!) {
+		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "false")
+		navigationController?.popViewControllerAnimated(true)
+	}
+	
+	func completeButtonPressed(sender: UIButton!) {
+		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "true")
+		navigationController?.popViewControllerAnimated(true)
 	}
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
+		createCompleteButton()
+		createContinueButton()
+		lexeme = server.requestIncompleteLexeme()!
+		self.parseInfoFromDict()
 		createLexemeInfo()
 		createLexemeField()
-		createSubmitButton()
 //		self.navigationController?.navigationBar.topItem?.title = "Continue Lexeme"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
