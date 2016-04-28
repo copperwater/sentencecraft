@@ -127,7 +127,6 @@ class ContinueLexemeViewController: UIViewController {
 		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
 		                                     action: "false", type: appDelegate.sentence_or_word_lexeme)
 
-//		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "false")
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
@@ -136,7 +135,6 @@ class ContinueLexemeViewController: UIViewController {
 		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
 		                                     action: "true", type: appDelegate.sentence_or_word_lexeme)
 
-//		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "true")
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
@@ -148,7 +146,6 @@ class ContinueLexemeViewController: UIViewController {
 		self.parseInfoFromDict()
 		createLexemeInfo()
 		createLexemeField()
-//		self.navigationController?.navigationBar.topItem?.title = "Continue Lexeme"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	
