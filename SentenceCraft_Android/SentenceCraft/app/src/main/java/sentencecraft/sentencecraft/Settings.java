@@ -24,22 +24,22 @@ public class Settings extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        //make switch conform to settings in GlobalMethods
+        //make switch conform to settings in GlobalValues
         Switch networkSwitch = (Switch) findViewById(R.id.networkSwitch);
         Switch lexemeSwitch = (Switch) findViewById(R.id.lexemeswitch);
 
         //set switches
-        networkSwitch.setChecked(GlobalMethods.networkIsLocalhost);
-        lexemeSwitch.setChecked(GlobalMethods.lexemeIsWord);
+        networkSwitch.setChecked(GlobalValues.networkIsLocalhost);
+        lexemeSwitch.setChecked(GlobalValues.lexemeIsWord);
 
         //set listener for network switch
         networkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    GlobalMethods.networkIsLocalhost = true;
+                    GlobalValues.networkIsLocalhost = true;
                 }else{
-                    GlobalMethods.networkIsLocalhost = false;
+                    GlobalValues.networkIsLocalhost = false;
                 }
             }
         });
@@ -49,9 +49,9 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if(isChecked){
-                    GlobalMethods.lexemeIsWord = true;
+                    GlobalValues.lexemeIsWord = true;
                 }else{
-                    GlobalMethods.lexemeIsWord= false;
+                    GlobalValues.lexemeIsWord= false;
                 }
             }
         });

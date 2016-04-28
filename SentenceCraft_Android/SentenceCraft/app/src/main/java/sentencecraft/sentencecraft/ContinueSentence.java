@@ -37,16 +37,16 @@ public class ContinueSentence extends AppCompatActivity {
 
         TextView continueDirections = (TextView)findViewById(R.id.continue_directions);
         if(continueDirections != null){
-            continueDirections.setText(getString(R.string.app_continue_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+            continueDirections.setText(getString(R.string.app_continue_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
 
         EditText continueEditPrompt = (EditText)findViewById(R.id.continue_lexeme);
         if(continueEditPrompt != null){
-            continueEditPrompt.setHint(GlobalMethods.getLexeme());
+            continueEditPrompt.setHint(GlobalValues.getLexeme());
         }
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentenceRequest()+"?"+GlobalMethods.getTypeExtension();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentenceRequest()+"?"+ GlobalValues.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -56,7 +56,7 @@ public class ContinueSentence extends AppCompatActivity {
                     key = msg.obj.toString();
                 }
             };
-            ContinueSentenceTask task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
+            ContinueSentenceGetTask task = new ContinueSentenceGetTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
             if(myView != null){
@@ -108,11 +108,11 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentencePost();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentencePost();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            ResolveSentenceTask task = new ResolveSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, key);
+            ContinueSentencePostTask task = new ContinueSentencePostTask(myView, getApplicationContext(), R.id.continue_sentence, key);
             switch(view.getId()){
                 case R.id.continue_btn:
                     task.execute("POST",stringUrl,sLexeme,"false");

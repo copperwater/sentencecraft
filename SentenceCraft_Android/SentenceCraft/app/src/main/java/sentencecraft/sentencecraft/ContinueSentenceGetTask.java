@@ -16,14 +16,14 @@ import java.util.ArrayList;
 /**
  * Created by zqiu on 4/27/16.
  */
-public class ContinueSentenceTask extends DownloadInfoTask {
+public class ContinueSentenceGetTask extends DownloadInfoTask {
 
     Handler mainUIHandler;
     private int tagsId;
     private String key = "";
     private String operationName = "DownloadTask";
 
-    public ContinueSentenceTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
+    public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
         this.tagsId = tagsId;
         this.mainUIHandler = mainUIHandler;

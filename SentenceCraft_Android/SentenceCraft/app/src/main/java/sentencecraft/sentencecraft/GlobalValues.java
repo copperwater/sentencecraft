@@ -3,7 +3,7 @@ package sentencecraft.sentencecraft;
 /**
  * Created by zqiu on 4/27/16.
  */
-public class GlobalMethods {
+public class GlobalValues {
 
     public static boolean lexemeIsWord = true;
     public static boolean networkIsLocalhost = true;

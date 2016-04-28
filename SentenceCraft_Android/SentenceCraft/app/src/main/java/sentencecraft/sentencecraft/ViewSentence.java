@@ -68,7 +68,7 @@ public class ViewSentence extends AppCompatActivity {
     public void updateText(View view){
         View myView = findViewById(android.R.id.content);
 
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getViewExtension()+"?"+GlobalMethods.getTypeExtension();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getViewExtension()+"?"+ GlobalValues.getTypeExtension();
         EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
         String tags = "";
         if(viewTags != null){

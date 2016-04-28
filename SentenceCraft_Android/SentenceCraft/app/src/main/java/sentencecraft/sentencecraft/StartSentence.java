@@ -38,12 +38,12 @@ public class StartSentence extends AppCompatActivity {
 
         TextView startDirections = (TextView) findViewById(R.id.start_directions);
         if(startDirections != null){
-            startDirections.setText(getString(R.string.app_start_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+            startDirections.setText(getString(R.string.app_start_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
 
         EditText startLexeme = (EditText) findViewById(R.id.start_lexeme);
         if(startLexeme != null){
-            startLexeme.setHint(GlobalMethods.getLexeme());
+            startLexeme.setHint(GlobalValues.getLexeme());
         }
     }
 
@@ -121,7 +121,7 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getStartSentenceExtension();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {

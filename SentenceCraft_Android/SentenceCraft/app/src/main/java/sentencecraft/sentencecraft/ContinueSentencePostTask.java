@@ -11,14 +11,14 @@ import java.net.HttpURLConnection;
 /**
  * Created by zqiu on 4/27/16.
  */
-public class ResolveSentenceTask extends DownloadInfoTask{
+public class ContinueSentencePostTask extends DownloadInfoTask{
 
     private String lexemeToAdd = "";
     private String isComplete = "";
     private String key;
     private String operationName = "continue sentence";
 
-    public ResolveSentenceTask(View rootView, Context context, int editId, String key) {
+    public ContinueSentencePostTask(View rootView, Context context, int editId, String key) {
         super(rootView, context, editId);
         this.key = key;
     }
@@ -42,7 +42,7 @@ public class ResolveSentenceTask extends DownloadInfoTask{
             wr.writeBytes("addition=" + lexemeToAdd);
             wr.writeBytes("&complete=" + isComplete);
             wr.writeBytes("&key=" + key);
-            wr.writeBytes("&"+GlobalMethods.getTypeExtension());
+            wr.writeBytes("&"+ GlobalValues.getTypeExtension());
             wr.flush();
             wr.close();
         }

@@ -43,7 +43,7 @@ public class StartSentenceTask extends DownloadInfoTask {
         if(!tags.equals("")){
             wr.writeBytes("&tags=" + tags);
         }
-        wr.writeBytes("&"+GlobalMethods.getTypeExtension());
+        wr.writeBytes("&"+ GlobalValues.getTypeExtension());
         wr.flush();
         wr.close();
     }
