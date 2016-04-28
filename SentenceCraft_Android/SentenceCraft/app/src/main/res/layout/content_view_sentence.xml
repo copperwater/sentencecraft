@@ -15,6 +15,7 @@
     tools:context="sentencecraft.sentencecraft.ViewSentence"
     tools:showIn="@layout/activity_view_sentence">
 
+    <!--
     <TextView
         android:layout_marginBottom="@dimen/activity_vertical_margin"
         android:layout_width="wrap_content"
@@ -27,7 +28,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -41,13 +43,25 @@
             android:layout_height="wrap_content"
             android:text="length" />
     </LinearLayout>
+    -->
 
-    <Button android:id="@+id/test"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/app_reload"
-        android:onClick="updateText"/>
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_marginBottom="@dimen/activity_vertical_margin">
+        <EditText android:id="@+id/viewSearchTags"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="@string/app_search_for"/>
+        <Button android:id="@+id/test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_reload"
+            android:onClick="updateText"/>
+    </LinearLayout>
 
     <ScrollView
         android:layout_width="fill_parent"

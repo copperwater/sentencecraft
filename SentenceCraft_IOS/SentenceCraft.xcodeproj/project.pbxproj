@@ -19,6 +19,7 @@
 		43737BF01CB6D18600198D34 /* HomeScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43737BEF1CB6D18600198D34 /* HomeScreenViewController.swift */; };
 		43737BF21CB6E2C700198D34 /* StartLexemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43737BF11CB6E2C700198D34 /* StartLexemeViewController.swift */; };
 		437BF8321CCD49CD00F66E4B /* ServerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437BF8311CCD49CD00F66E4B /* ServerRequest.swift */; };
+		437BF8361CD1892B00F66E4B /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 437BF8351CD1892B00F66E4B /* Settings.bundle */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +58,7 @@
 		43737BEF1CB6D18600198D34 /* HomeScreenViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeScreenViewController.swift; sourceTree = "<group>"; };
 		43737BF11CB6E2C700198D34 /* StartLexemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartLexemeViewController.swift; sourceTree = "<group>"; };
 		437BF8311CCD49CD00F66E4B /* ServerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerRequest.swift; sourceTree = "<group>"; };
+		437BF8351CD1892B00F66E4B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				43737BC81CB6BDE700198D34 /* Assets.xcassets */,
 				43737BCA1CB6BDE700198D34 /* LaunchScreen.storyboard */,
 				43737BCD1CB6BDE700198D34 /* Info.plist */,
+				437BF8351CD1892B00F66E4B /* Settings.bundle */,
 			);
 			path = SentenceCraft;
 			sourceTree = "<group>";
@@ -244,6 +247,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				437BF8361CD1892B00F66E4B /* Settings.bundle in Resources */,
 				43737BCC1CB6BDE700198D34 /* LaunchScreen.storyboard in Resources */,
 				43737BC91CB6BDE700198D34 /* Assets.xcassets in Resources */,
 				43737BC71CB6BDE700198D34 /* Main.storyboard in Resources */,
@@ -369,7 +373,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -409,7 +413,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";

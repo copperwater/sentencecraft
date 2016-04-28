@@ -19,11 +19,12 @@ import java.net.URL;
 public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
     protected View rootView;
+    protected Context context;
     protected String appName;
     protected int editId;
-    protected Context context;
     private int responseCode;
 
+    //constructor. sets values appropriately
     protected DownloadInfoTask (View rootView, Context context, int editId){
         this.rootView=rootView;
         this.appName = context.getString(R.string.app_name);
@@ -35,6 +36,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     @Override
     protected String doInBackground(String... urls) {
         // params comes from the execute() call: params[0] is the url.
+        //always need at least two:form method and URL
         if(urls.length < 2){
             return "Sorry don't know url to connect to.";
         }
@@ -46,22 +48,24 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         }
     }
 
-    private String downloadUrl(String method,String myurl) throws IOException {
+    private String downloadUrl(String method,String myUrl) throws IOException {
         String contentAsString = "";
         InputStream is = null;
-        // Read in 500 characters at a time
-        int len = 500;
+        int len = 500; // Read in 500 characters at a time
 
         try {
-            URL url = new URL(myurl);
+            //set up URL request
+            URL url = new URL(myUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
             conn.setRequestMethod(method);
             conn.setDoInput(true);
+
             // Starts the query
             sendAdditionalData(conn);
 
+            //deal with response code from server
             responseCode = conn.getResponseCode();
             Log.d(appName, "The response is: " + responseCode);
             if(responseCode == 200){
@@ -70,13 +74,11 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
                 is = conn.getErrorStream();
             }
 
-            // Convert the InputStream into a string
+            // Convert the InputStream into a string and store in contentAsString
             contentAsString += readIt(is, len);
-            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
-
-            // Makes sure that the InputStream is closed after the app is
-            // finished using it.
+            Log.d(appName, "received:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
         } finally {
+            // Makes sure that the InputStream is closed after the app is finished using it.
             if (is != null) {
                 is.close();
             }
@@ -88,8 +90,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     private String readIt(InputStream stream, int len) throws IOException {
         int numRead = 0;
         String toReturn = "";
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
+        Reader reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         while(numRead >= 0) {
             numRead = reader.read(buffer);
@@ -100,10 +101,12 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         return toReturn;
     }
 
+    //can be overwritten to provide additional form data
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException{
         conn.connect();
     }
 
+    //others can call to see what the response from the server was
     public int getResponseCode(){
         return responseCode;
     }

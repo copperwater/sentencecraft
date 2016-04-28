@@ -1,6 +1,7 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -18,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class ContinueSentence extends AppCompatActivity {
+
     String key = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,18 +37,19 @@ public class ContinueSentence extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        //edit what's on the screen based off the lexeme received
         TextView continueDirections = (TextView)findViewById(R.id.continue_directions);
         if(continueDirections != null){
-            continueDirections.setText(getString(R.string.app_continue_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+            continueDirections.setText(getString(R.string.app_continue_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
-
         EditText continueEditPrompt = (EditText)findViewById(R.id.continue_lexeme);
         if(continueEditPrompt != null){
-            continueEditPrompt.setHint(GlobalMethods.getLexeme());
+            continueEditPrompt.setHint(GlobalValues.getLexeme());
         }
 
+        //call ContinueSentenceGetTask and register it with a handler so that we receive a key upon completion
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentenceRequest()+"?"+GlobalMethods.getTypeExtension();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentenceRequest()+"?"+ GlobalValues.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -55,9 +59,10 @@ public class ContinueSentence extends AppCompatActivity {
                     key = msg.obj.toString();
                 }
             };
-            ContinueSentenceTask task = new ContinueSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
+            ContinueSentenceGetTask task = new ContinueSentenceGetTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
+            //notify user if no internet
             if(myView != null){
                 Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
@@ -77,17 +82,18 @@ public class ContinueSentence extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     public void continueRespondToBtn(View view){
+        //error checking to see if lexeme was entered and if a key was received
         Log.d(getString(R.string.app_name),"key:"+key);
         EditText lexeme = (EditText) findViewById(R.id.continue_lexeme);
         if(lexeme == null){
@@ -99,19 +105,19 @@ public class ContinueSentence extends AppCompatActivity {
             mySnackBar.show();
             return;
         }
-
         if(key.equals("")){
             Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
             return;
         }
 
+        //call ContinueSentencePostTask with different arguments depending on the id of the button clicked
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getContinueSentencePost();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentencePost();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            ResolveSentenceTask task = new ResolveSentenceTask(myView, getApplicationContext(), R.id.continue_sentence, key);
+            ContinueSentencePostTask task = new ContinueSentencePostTask(myView, getApplicationContext(), R.id.continue_sentence, key);
             switch(view.getId()){
                 case R.id.continue_btn:
                     task.execute("POST",stringUrl,sLexeme,"false");
@@ -121,14 +127,13 @@ public class ContinueSentence extends AppCompatActivity {
                     break;
                 default:
                     Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
-                    return;
             }
         } else {
             if(myView != null){
+                //notify user if no internet
                 Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
             }
         }
     }
 }
-

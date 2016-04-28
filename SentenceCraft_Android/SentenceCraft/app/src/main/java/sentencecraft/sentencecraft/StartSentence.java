@@ -1,6 +1,7 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -35,14 +36,14 @@ public class StartSentence extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        //edit screen according to the current lexeme appropriately
         TextView startDirections = (TextView) findViewById(R.id.start_directions);
         if(startDirections != null){
-            startDirections.setText(getString(R.string.app_start_directions,GlobalMethods.getLexeme(),GlobalMethods.getLexemeCollection()));
+            startDirections.setText(getString(R.string.app_start_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
-
         EditText startLexeme = (EditText) findViewById(R.id.start_lexeme);
         if(startLexeme != null){
-            startLexeme.setHint(GlobalMethods.getLexeme());
+            startLexeme.setHint(GlobalValues.getLexeme());
         }
     }
 
@@ -58,16 +59,17 @@ public class StartSentence extends AppCompatActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.action_settings:
+                Intent intent = new Intent(this, Settings.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
+    //method to handle adding another EditText field for more tags
     public void addTag(View view) {
         Context context= getApplicationContext();
         TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
@@ -78,8 +80,8 @@ public class StartSentence extends AppCompatActivity {
             EditText text= new EditText(context);
             TableRow.LayoutParams textParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
             text.setLayoutParams(textParams);
-            text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
-            text.setHintTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
+            text.setHintTextColor(ContextCompat.getColor(context, R.color.colorBlack));
             text.setHint(getString(R.string.app_tag_hint));
             text.setPadding(0, 0, 0, (int) getResources().getDimension(R.dimen.activity_vertical_margin));
             row.addView(text);
@@ -88,6 +90,7 @@ public class StartSentence extends AppCompatActivity {
     }
 
     public void sendStart(View view) {
+        //error checking
         EditText mLexeme = (EditText) findViewById(R.id.start_lexeme);
         if (mLexeme == null) {
             Log.d(getString(R.string.app_name), "bad start_lexeme");
@@ -105,6 +108,8 @@ public class StartSentence extends AppCompatActivity {
             Log.d(getString(R.string.app_name), "no existing start_to_edit?");
             return;
         }
+
+        //find all EditText representing tags and add them together
         String sTags = "";
         for (int i = 0; i < tl.getChildCount(); ++i) {
             TableRow row = (TableRow) tl.getChildAt(i);
@@ -119,16 +124,17 @@ public class StartSentence extends AppCompatActivity {
         }
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
+        //make a StartSentenceTask and communicate with the server
         View myView = findViewById(android.R.id.content);
-        String stringUrl = GlobalMethods.getBaseURL()+GlobalMethods.getStartSentenceExtension();
+        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
             new StartSentenceTask(myView, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
         } else {
+            //no internet
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }
     }
 }
-

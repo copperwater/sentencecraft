@@ -1,6 +1,8 @@
 package sentencecraft.sentencecraft;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TableLayout;
@@ -19,8 +21,16 @@ import java.util.ArrayList;
  */
 public class ViewSentenceTask extends DownloadInfoTask{
 
-    public ViewSentenceTask(View rootView, Context context, int editId){
+    ArrayList<String> myTags;
+    Handler mainUIHandler;
+    View.OnClickListener listener;
+
+    //constructor. Also sets the call back Handler and a OnClickListener for each of the completed sentences
+    public ViewSentenceTask(View rootView, Context context, int editId,Handler mainUIHandler, View.OnClickListener listener){
         super(rootView,context,editId);
+        this.mainUIHandler = mainUIHandler;
+        this.listener = listener;
+        myTags = new ArrayList<>();
     }
 
     // onPostExecute displays the results of the AsyncTask.
@@ -37,32 +47,55 @@ public class ViewSentenceTask extends DownloadInfoTask{
             TextView text= new TextView(context);
             text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
             text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
-            text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
+            //makes the text clickable with the listener function
+            text.setOnClickListener(listener);
             row.addView(text);
             tl.addView(row,i);
         }
+        //send tags back to ViewSentence
+        Message msg = Message.obtain();
+        msg.obj= myTags;
+        mainUIHandler.sendMessage(msg);
     }
 
     //interprets what's read from view-sentences
     private ArrayList<String> interpretView(String data){
         ArrayList<String> toReturn = new ArrayList<>();
-        String temp = "";
+        String temp;
         try{
             JSONArray reader= new JSONArray(data);
             for(int i = 0; i < reader.length(); ++i){
                 JSONObject firstSentence = reader.getJSONObject(i);
+                //gets lexemes and adds them together
                 JSONArray lexemes = firstSentence.getJSONArray("lexemes");
                 temp = "";
                 for(int j = 0; j < lexemes.length(); ++j){
                     temp  += lexemes.getString(j) + " ";
                 }
                 toReturn.add(temp);
+                temp = "";
+                try{
+                    //gets tags and also adds them together
+                    JSONArray tags = firstSentence.getJSONArray("tags");
+                    for(int j = 0; j < tags.length(); ++j){
+                        if(j != 0){
+                            temp += ",";
+                        }
+                        temp += tags.getString(j);
+                    }
+                }catch (JSONException e){
+                    //e.printStackTrace();
+                }
+                myTags.add(temp);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
+        //if there were no completed sentences
         if(toReturn.size() == 0){
             toReturn.add(data);
+            myTags.add("None");
         }
         return toReturn;
     }

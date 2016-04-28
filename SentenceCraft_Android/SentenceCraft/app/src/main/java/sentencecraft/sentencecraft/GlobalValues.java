@@ -2,13 +2,21 @@ package sentencecraft.sentencecraft;
 
 /**
  * Created by zqiu on 4/27/16.
+ * Class meant to store globally accessible data accessible by others
  */
-public class GlobalMethods {
+public class GlobalValues {
 
-    public static boolean lexemeIsWord = false;
+    public static boolean lexemeIsWord = true;
+    public static boolean networkIsLocalhost = true;
 
     public static String getBaseURL() {
-        return "http://10.0.2.2:5000/";
+        String base;
+        if(networkIsLocalhost){
+            base = "10.0.2.2";
+        }else{
+            base = "128.113.151.26";
+        }
+        return "http://"+base+":5000/";
     }
 
     public static String getStartSentenceExtension() {

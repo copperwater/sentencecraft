@@ -14,22 +14,26 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by zqiu on 4/27/16.
+ * Created by zqiu on 4/27/16
+ * Used to asynchronously get incomplete sentences for the ContinueSentence Activity
  */
-public class ContinueSentenceTask extends DownloadInfoTask {
+
+public class ContinueSentenceGetTask extends DownloadInfoTask {
 
     Handler mainUIHandler;
     private int tagsId;
     private String key = "";
-    private String operationName = "DownloadTask";
 
-    public ContinueSentenceTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
+    //constructor. Also sets internal handler and tagsId appropriately
+    public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
         this.tagsId = tagsId;
         this.mainUIHandler = mainUIHandler;
     }
 
+    //updates tagsId and editId with the appropriate result
     protected void onPostExecute(String result) {
+        String operationName = "DownloadTask";
         if (getResponseCode() == 200) {
             ArrayList<String> data = interpretContinue(result);
             TextView sentence = (TextView) rootView.findViewById(editId);
@@ -37,52 +41,60 @@ public class ContinueSentenceTask extends DownloadInfoTask {
             TextView tags = (TextView) rootView.findViewById(tagsId);
             tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
         } else {
+            //got bad response from server. Let user know
             Snackbar mySnackBar;
             mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();
         }
+        //notify ContinueSentence and send it the key received from the server.
         Message msg = Message.obtain();
         msg.obj= key;
         mainUIHandler.sendMessage(msg);
     }
 
+    //interprets JSON data received from the server
     private ArrayList<String> interpretContinue(String data) {
         ArrayList<String> toReturn = new ArrayList<>();
-        String userdata = "";
-        String tagdata = "";
+        String userData = "";
+        String tagData = "";
         try {
+            //gets key from JSON data
             JSONObject reader = new JSONObject(data);
             key = reader.getString("key");
+
+            //gets lexemes and appends to userData
             JSONObject lexemeCollection = reader.getJSONObject("lexemecollection");
             JSONArray lexemes = lexemeCollection.getJSONArray("lexemes");
             for (int i = 0; i < lexemes.length(); ++i) {
-                userdata += lexemes.getString(i) + " ";
+                userData += lexemes.getString(i) + " ";
             }
             try {
+                //get tag data and appends to tagData
                 JSONArray tags = lexemeCollection.getJSONArray("tags");
                 for (int i = 0; i < tags.length(); ++i) {
-                    if (!tagdata.equals("")) {
-                        tagdata += ",";
+                    if (!tagData.equals("")) {
+                        tagData += ",";
                     }
-                    tagdata += tags.getString(i);
+                    tagData += tags.getString(i);
                 }
             } catch (JSONException e) {
-                tagdata = "none";
+                //set to none if there was not tags field in JSON data
+                tagData = "none";
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        toReturn.add(userdata);
-        toReturn.add(tagdata);
+        toReturn.add(userData);
+        toReturn.add(tagData);
         return toReturn;
     }
 
     @Override
     protected String doInBackground(String... urls) {
+        //error checking and then passing to parent class
         if(urls.length == 2){
-            //assuming getting incomplete sentence
             key = "";
             return super.doInBackground(urls);
         }else{

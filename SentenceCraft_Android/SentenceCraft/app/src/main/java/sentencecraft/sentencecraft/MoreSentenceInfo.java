@@ -2,21 +2,48 @@ package sentencecraft.sentencecraft;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
+import android.widget.TextView;
 
-public class MainMenu extends AppCompatActivity {
+public class MoreSentenceInfo extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_menu);
+        setContentView(R.layout.activity_more_sentence_info);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // Get a support ActionBar corresponding to this toolbar
+        ActionBar ab = getSupportActionBar();
+
+        // Enable the Up button
+        if(ab != null){
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
+
+        //receive extras passed to this intent. Edit associated TextViews appropriately
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("LEXEMES");
+            TextView textLexeme = (TextView) findViewById(R.id.more_info_lexeme);
+            if(textLexeme != null && value != null){
+                //don't display the index of the lexeme
+                textLexeme.setText(value.substring(2));
+            }
+            value = extras.getString("TAGS");
+            TextView textTags = (TextView) findViewById(R.id.more_info_tag);
+            if(textTags != null && value != null){
+                if(value.equals("")){
+                    value = "none";
+                }
+                textTags.setText(getString(R.string.continue_tags_part,value));
+            }
+        }
     }
 
     @Override
@@ -39,25 +66,5 @@ public class MainMenu extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /*called on button click. Will check for the button and create appropriate intent*/
-    public void buttonResponse(View view){
-        Intent intent;
-        switch(view.getId()){
-            case R.id.main_start:
-                intent = new Intent(this, StartSentence.class);
-                break;
-            case R.id.main_continue:
-                intent = new Intent(this, ContinueSentence.class);
-                break;
-            case R.id.main_view:
-                intent = new Intent(this, ViewSentence.class);
-                break;
-            default:
-                Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
-                return;
-        }
-        startActivity(intent);
     }
 }
