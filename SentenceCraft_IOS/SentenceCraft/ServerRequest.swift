@@ -70,6 +70,37 @@ class ServerRequest {
 		while(dict.count < 1) {}
 //		print(dict)
 		return dict
+	}
+	
+	
+	func sendAppendRequest(appendage: String, key: String, action: String) {
+		let requestURL = NSURL(string: serverURL + "append/")
+		let request = NSMutableURLRequest(URL:requestURL!);
+		
+		request.HTTPMethod = "POST"
+		
+		let postString: String = "key=\(key)&addition=\(appendage)&type=word&complete=\(action)"
+		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
+		let postLength: String = "\(postData.length)"
+		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
+		request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+		request.HTTPBody = postData
+		
+		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
+			data, response, error in
+			
+			// Check for error
+			if error != nil {
+				print("error=\(error)")
+				return
+			}
+			
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+			print("response \(responseString)")
+			
+		}
+		task.resume()
 
 	}
 	
