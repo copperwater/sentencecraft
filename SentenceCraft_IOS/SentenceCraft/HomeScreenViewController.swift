@@ -129,8 +129,7 @@ class HomeScreenViewController: UIViewController {
 		self.createContinueLexemeButton()
 		self.createViewLexemeButton()
 		self.createSettingButton()
-		print(appDelegate.sentence_or_word_lexeme)
-		self.navigationController?.navigationBar.topItem?.title = "Home Screen"
+//		print(appDelegate.sentence_or_word_lexeme)
 	}
 	
 	override func didReceiveMemoryWarning() {

@@ -37,6 +37,7 @@ class StartLexemeViewController: UIViewController {
 		tagOne.borderStyle = UITextBorderStyle.RoundedRect
 		tagOne.keyboardType = UIKeyboardType.Default
 		tagOne.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagOne.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagOne)
 		
 		tagTwo = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -45,6 +46,7 @@ class StartLexemeViewController: UIViewController {
 		tagTwo.borderStyle = UITextBorderStyle.RoundedRect
 		tagTwo.keyboardType = UIKeyboardType.Default
 		tagTwo.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagTwo.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagTwo)
 		
 		tagThree = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -53,6 +55,7 @@ class StartLexemeViewController: UIViewController {
 		tagThree.borderStyle = UITextBorderStyle.RoundedRect
 		tagThree.keyboardType = UIKeyboardType.Default
 		tagThree.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagThree.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagThree)
 		
 		tagFour = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
@@ -61,6 +64,7 @@ class StartLexemeViewController: UIViewController {
 		tagFour.borderStyle = UITextBorderStyle.RoundedRect
 		tagFour.keyboardType = UIKeyboardType.Default
 		tagFour.contentVerticalAlignment = UIControlContentVerticalAlignment.Center
+		tagFour.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagFour)
 
 	}
