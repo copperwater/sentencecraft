@@ -12,17 +12,18 @@ class ServerRequest {
 	
 	private var serverURL: String
 
+
 	init() {
 		serverURL = "http://127.0.0.1:5000/"
 	}
 	
-	func sendStartSentenceRequest(tags: String, sentence: String) {
+	func sendStartSentenceRequest(tags: String, sentence: String, type: String) {
 		let requestURL = NSURL(string: serverURL + "start/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "tags=\(tags)&start=\(sentence)&type=word"
+		let postString: String = "tags=\(tags)&start=\(sentence)&type=\(type)"
 		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
 		let postLength: String = "\(postData.length)"
 		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
@@ -47,8 +48,8 @@ class ServerRequest {
 	}
 	
 	
-	func requestIncompleteLexeme() -> [String: AnyObject]? {
-		let requestURL = NSURL(string: serverURL + "incomplete/?type=word")
+	func requestIncompleteLexeme(type: String) -> [String: AnyObject]? {
+		let requestURL = NSURL(string: serverURL + "incomplete/?type=\(type)")
 		let request = NSMutableURLRequest(URL: requestURL!)
 		request.HTTPMethod = "GET"
 		var dict: [String:AnyObject] = [:]
@@ -73,13 +74,13 @@ class ServerRequest {
 	}
 	
 	
-	func sendAppendRequest(appendage: String, key: String, action: String) {
+	func sendAppendRequest(appendage: String, key: String, action: String, type: String) {
 		let requestURL = NSURL(string: serverURL + "append/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 		
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "key=\(key)&addition=\(appendage)&type=word&complete=\(action)"
+		let postString: String = "key=\(key)&addition=\(appendage)&type=\(type)&complete=\(action)"
 		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
 		let postLength: String = "\(postData.length)"
 		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
@@ -105,8 +106,8 @@ class ServerRequest {
 	}
 	
 	
-	func sendViewRequest() -> [[String: AnyObject]]? {
-		let requestURL = NSURL(string: serverURL + "view/?type=word&tags=")
+	func sendViewRequest(type: String) -> [[String: AnyObject]]? {
+		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=")
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		request.HTTPMethod = "GET"
