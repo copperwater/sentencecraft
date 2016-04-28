@@ -73,20 +73,6 @@
                 </TableRow>
             </TableLayout>
 
-            <TextView
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:text="  Can't think of a word?\nHere are some samples:" />
-
-            <TextView
-                android:layout_marginBottom="@dimen/activity_vertical_margin"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorBlack"
-                android:text="Fish,Hi,Me,Sentence" />
-
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
