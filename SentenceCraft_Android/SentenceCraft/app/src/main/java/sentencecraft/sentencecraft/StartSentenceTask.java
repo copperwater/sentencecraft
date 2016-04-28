@@ -17,6 +17,7 @@ public class StartSentenceTask extends DownloadInfoTask {
     private String lexeme;
     private String tags;
 
+    //default constructor
     public StartSentenceTask(View rootView, Context context, int editId) {
         super(rootView, context, editId);
     }
@@ -30,6 +31,7 @@ public class StartSentenceTask extends DownloadInfoTask {
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }else{
+            //error code. Let user know
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
@@ -39,6 +41,7 @@ public class StartSentenceTask extends DownloadInfoTask {
 
     @Override
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException {
+        //send additional form data
         DataOutputStream wr = new DataOutputStream(conn.getOutputStream());
         wr.writeBytes("start=" + lexeme);
         if(!tags.equals("")){
@@ -51,7 +54,8 @@ public class StartSentenceTask extends DownloadInfoTask {
 
     @Override
     protected String doInBackground(String... urls) {
-        if(urls.length < 4){
+        //error check
+        if(urls.length != 4){
             return "bad start sentence";
         }
         lexeme = urls[2];

@@ -19,7 +19,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class ContinueSentence extends AppCompatActivity {
+
     String key = "";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,16 +37,17 @@ public class ContinueSentence extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        //edit what's on the screen based off the lexeme received
         TextView continueDirections = (TextView)findViewById(R.id.continue_directions);
         if(continueDirections != null){
             continueDirections.setText(getString(R.string.app_continue_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
-
         EditText continueEditPrompt = (EditText)findViewById(R.id.continue_lexeme);
         if(continueEditPrompt != null){
             continueEditPrompt.setHint(GlobalValues.getLexeme());
         }
 
+        //call ContinueSentenceGetTask and register it with a handler so that we receive a key upon completion
         View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentenceRequest()+"?"+ GlobalValues.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -59,6 +62,7 @@ public class ContinueSentence extends AppCompatActivity {
             ContinueSentenceGetTask task = new ContinueSentenceGetTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
+            //notify user if no internet
             if(myView != null){
                 Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
@@ -89,6 +93,7 @@ public class ContinueSentence extends AppCompatActivity {
     }
 
     public void continueRespondToBtn(View view){
+        //error checking to see if lexeme was entered and if a key was received
         Log.d(getString(R.string.app_name),"key:"+key);
         EditText lexeme = (EditText) findViewById(R.id.continue_lexeme);
         if(lexeme == null){
@@ -100,13 +105,13 @@ public class ContinueSentence extends AppCompatActivity {
             mySnackBar.show();
             return;
         }
-
         if(key.equals("")){
             Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
             return;
         }
 
+        //call ContinueSentencePostTask with different arguments depending on the id of the button clicked
         View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentencePost();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -125,10 +130,10 @@ public class ContinueSentence extends AppCompatActivity {
             }
         } else {
             if(myView != null){
+                //notify user if no internet
                 Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
             }
         }
     }
 }
-

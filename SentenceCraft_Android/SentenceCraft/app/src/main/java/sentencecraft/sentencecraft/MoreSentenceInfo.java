@@ -26,11 +26,13 @@ public class MoreSentenceInfo extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        //receive extras passed to this intent. Edit associated TextViews appropriately
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             String value = extras.getString("LEXEMES");
             TextView textLexeme = (TextView) findViewById(R.id.more_info_lexeme);
             if(textLexeme != null && value != null){
+                //don't display the index of the lexeme
                 textLexeme.setText(value.substring(2));
             }
             value = extras.getString("TAGS");

@@ -36,5 +36,4 @@
                 android:text="@string/app_loading" />
         </LinearLayout>
     </ScrollView>
-
 </RelativeLayout>

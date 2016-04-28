@@ -39,7 +39,7 @@ public class ViewSentence extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        //call updateText
+        //call updateText to fill table with completed sentences
         updateText(findViewById(R.id.test));
     }
 
@@ -67,16 +67,19 @@ public class ViewSentence extends AppCompatActivity {
 
     public void updateText(View view){
         View myView = findViewById(android.R.id.content);
-
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getViewExtension()+"?"+ GlobalValues.getTypeExtension();
         EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
         String tags = "";
+
+        //get tags and submit as part of the URL
         if(viewTags != null){
             tags = viewTags.getText().toString();
         }
         if(!tags.equals("")){
             stringUrl += "&tags=" + tags;
         }
+
+        //call ViewSentenceTask and set up a Handler to set myTags upon async task completion
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -99,14 +102,16 @@ public class ViewSentence extends AppCompatActivity {
         }
     }
 
+    //listener class to respond to clicks on the completed sentences
     public class myListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {
             TextView selected = (TextView)v;
             if(selected != null){
+                //get associated lexeme and tag
                 String data = selected.getText().toString();
                 String sTag = myTags.get((data.charAt(0) - '0'));
-
+                //create MoreSentenceInfo intent and pack with above data
                 Intent intent = new Intent(getBaseContext(), MoreSentenceInfo.class);
                 intent.putExtra("LEXEMES", data);
                 intent.putExtra("TAGS",sTag);

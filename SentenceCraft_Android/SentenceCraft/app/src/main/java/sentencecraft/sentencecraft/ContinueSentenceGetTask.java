@@ -24,12 +24,14 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
     private int tagsId;
     private String key = "";
 
+    //constructor. Also sets internal handler and tagsId appropriately
     public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
         this.tagsId = tagsId;
         this.mainUIHandler = mainUIHandler;
     }
 
+    //updates tagsId and editId with the appropriate result
     protected void onPostExecute(String result) {
         String operationName = "DownloadTask";
         if (getResponseCode() == 200) {
@@ -39,30 +41,37 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
             TextView tags = (TextView) rootView.findViewById(tagsId);
             tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
         } else {
+            //got bad response from server. Let user know
             Snackbar mySnackBar;
             mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();
         }
+        //notify ContinueSentence and send it the key received from the server.
         Message msg = Message.obtain();
         msg.obj= key;
         mainUIHandler.sendMessage(msg);
     }
 
+    //interprets JSON data received from the server
     private ArrayList<String> interpretContinue(String data) {
         ArrayList<String> toReturn = new ArrayList<>();
         String userData = "";
         String tagData = "";
         try {
+            //gets key from JSON data
             JSONObject reader = new JSONObject(data);
             key = reader.getString("key");
+
+            //gets lexemes and appends to userData
             JSONObject lexemeCollection = reader.getJSONObject("lexemecollection");
             JSONArray lexemes = lexemeCollection.getJSONArray("lexemes");
             for (int i = 0; i < lexemes.length(); ++i) {
                 userData += lexemes.getString(i) + " ";
             }
             try {
+                //get tag data and appends to tagData
                 JSONArray tags = lexemeCollection.getJSONArray("tags");
                 for (int i = 0; i < tags.length(); ++i) {
                     if (!tagData.equals("")) {
@@ -71,6 +80,7 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
                     tagData += tags.getString(i);
                 }
             } catch (JSONException e) {
+                //set to none if there was not tags field in JSON data
                 tagData = "none";
             }
         } catch (JSONException e) {
@@ -83,8 +93,8 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
 
     @Override
     protected String doInBackground(String... urls) {
+        //error checking and then passing to parent class
         if(urls.length == 2){
-            //assuming getting incomplete sentence
             key = "";
             return super.doInBackground(urls);
         }else{

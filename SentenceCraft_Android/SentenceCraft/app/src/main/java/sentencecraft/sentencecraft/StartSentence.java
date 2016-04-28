@@ -36,11 +36,11 @@ public class StartSentence extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        //edit screen according to the current lexeme appropriately
         TextView startDirections = (TextView) findViewById(R.id.start_directions);
         if(startDirections != null){
             startDirections.setText(getString(R.string.app_start_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
-
         EditText startLexeme = (EditText) findViewById(R.id.start_lexeme);
         if(startLexeme != null){
             startLexeme.setHint(GlobalValues.getLexeme());
@@ -69,6 +69,7 @@ public class StartSentence extends AppCompatActivity {
         }
     }
 
+    //method to handle adding another EditText field for more tags
     public void addTag(View view) {
         Context context= getApplicationContext();
         TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
@@ -89,6 +90,7 @@ public class StartSentence extends AppCompatActivity {
     }
 
     public void sendStart(View view) {
+        //error checking
         EditText mLexeme = (EditText) findViewById(R.id.start_lexeme);
         if (mLexeme == null) {
             Log.d(getString(R.string.app_name), "bad start_lexeme");
@@ -106,6 +108,8 @@ public class StartSentence extends AppCompatActivity {
             Log.d(getString(R.string.app_name), "no existing start_to_edit?");
             return;
         }
+
+        //find all EditText representing tags and add them together
         String sTags = "";
         for (int i = 0; i < tl.getChildCount(); ++i) {
             TableRow row = (TableRow) tl.getChildAt(i);
@@ -120,6 +124,7 @@ public class StartSentence extends AppCompatActivity {
         }
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
+        //make a StartSentenceTask and communicate with the server
         View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -127,9 +132,9 @@ public class StartSentence extends AppCompatActivity {
         if (networkInfo != null && networkInfo.isConnected()) {
             new StartSentenceTask(myView, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
         } else {
+            //no internet
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }
     }
 }
-

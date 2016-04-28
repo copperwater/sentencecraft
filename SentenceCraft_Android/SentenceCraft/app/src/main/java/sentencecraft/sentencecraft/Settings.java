@@ -24,11 +24,8 @@ public class Settings extends AppCompatActivity {
             ab.setDisplayHomeAsUpEnabled(true);
         }
 
-        //make switch conform to settings in GlobalValues
-        Switch networkSwitch = (Switch) findViewById(R.id.networkSwitch);
-        Switch lexemeSwitch = (Switch) findViewById(R.id.lexemeswitch);
-
         //set switch and listener for network switch
+        Switch networkSwitch = (Switch) findViewById(R.id.networkSwitch);
         if(networkSwitch != null){
             networkSwitch.setChecked(GlobalValues.networkIsLocalhost);
             networkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -40,6 +37,7 @@ public class Settings extends AppCompatActivity {
         }
 
         //set switch and listener for lexeme switch
+        Switch lexemeSwitch = (Switch) findViewById(R.id.lexemeswitch);
         if(lexemeSwitch != null){
             lexemeSwitch.setChecked(GlobalValues.lexemeIsWord);
             lexemeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
