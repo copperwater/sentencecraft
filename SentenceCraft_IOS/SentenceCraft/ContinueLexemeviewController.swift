@@ -50,7 +50,6 @@ class ContinueLexemeViewController: UIViewController {
 			ret += " "
 			i += 1
 		}
-//		print ret
 		return ret
 	}
 	

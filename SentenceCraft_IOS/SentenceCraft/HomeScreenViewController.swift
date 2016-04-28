@@ -13,6 +13,8 @@ class HomeScreenViewController: UIViewController {
 	@IBOutlet private var startLexemeButton: UIButton!
 	@IBOutlet private var continueLexemeButton: UIButton!
 	@IBOutlet private var viewLexemesButton: UIButton!
+	@IBOutlet private var settingButton: UIButton!
+
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 	private var hasViewed: Bool = false
 	
@@ -32,7 +34,7 @@ class HomeScreenViewController: UIViewController {
 		startLexemeButton.titleLabel!.font = UIFont(name: startLexemeButton.titleLabel!.font!.fontName,
 		                                            size: 25)
 		startLexemeButton.frame = CGRectMake(0, 0, 200, 50)
-		startLexemeButton.center = CGPointMake(self.view.center.x, 4 * self.view.center.y/5)
+		startLexemeButton.center = CGPointMake(self.view.center.x, 3 * self.view.center.y/5)
 		startLexemeButton.layer.cornerRadius = 10
 		startLexemeButton.layer.borderWidth = 5
 		startLexemeButton.layer.borderColor = UIColor.blueColor().CGColor
@@ -50,7 +52,7 @@ class HomeScreenViewController: UIViewController {
 											UIFont(name: continueLexemeButton.titleLabel!.font!.fontName,
 											       size: 25)
 		continueLexemeButton.frame = CGRectMake(0, 0, 300, 50)
-		continueLexemeButton.center = CGPointMake(self.view.center.x, 6 * self.view.center.y/5)
+		continueLexemeButton.center = CGPointMake(self.view.center.x, 5 * self.view.center.y/5)
 		continueLexemeButton.layer.cornerRadius = 10
 		continueLexemeButton.layer.borderWidth = 5
 		continueLexemeButton.layer.borderColor = UIColor.blueColor().CGColor
@@ -67,7 +69,7 @@ class HomeScreenViewController: UIViewController {
 		viewLexemesButton.titleLabel!.font = UIFont(name: viewLexemesButton.titleLabel!.font!.fontName,
 		                                            size: 25)
 		viewLexemesButton.frame = CGRectMake(0, 0, 350, 50)
-		viewLexemesButton.center = CGPointMake(self.view.center.x, 8 * self.view.center.y/5)
+		viewLexemesButton.center = CGPointMake(self.view.center.x, 7 * self.view.center.y/5)
 		viewLexemesButton.layer.cornerRadius = 10
 		viewLexemesButton.layer.borderWidth = 5
 		viewLexemesButton.layer.borderColor = UIColor.blueColor().CGColor
@@ -75,6 +77,23 @@ class HomeScreenViewController: UIViewController {
 		                            action: #selector(HomeScreenViewController.viewLexemeButtonPressed(_:)),
 		                            forControlEvents: UIControlEvents.TouchUpInside)
 		self.view.addSubview(viewLexemesButton)
+	}
+	
+	func createSettingButton() {
+		settingButton = UIButton.init(type: UIButtonType.RoundedRect)
+		settingButton.setTitle("Settings", forState: UIControlState.Normal)
+		settingButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		settingButton.titleLabel!.font = UIFont(name: settingButton.titleLabel!.font!.fontName,
+		                                            size: 25)
+		settingButton.frame = CGRectMake(0, 0, 200, 50)
+		settingButton.center = CGPointMake(self.view.center.x, 9 * self.view.center.y/5)
+		settingButton.layer.cornerRadius = 10
+		settingButton.layer.borderWidth = 5
+		settingButton.layer.borderColor = UIColor.blueColor().CGColor
+		settingButton.addTarget(self,
+		                            action: #selector(HomeScreenViewController.settingButtonPressed(_:)),
+		                            forControlEvents: UIControlEvents.TouchUpInside)
+		self.view.addSubview(settingButton)
 	}
 	
 	
@@ -88,6 +107,10 @@ class HomeScreenViewController: UIViewController {
 	
 	func viewLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("ViewLexemesSegue", sender: self)
+	}
+	
+	func settingButtonPressed(sender: UIButton!) {
+		self.performSegueWithIdentifier("SettingSegue", sender: self)
 	}
 	
 	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
@@ -105,9 +128,8 @@ class HomeScreenViewController: UIViewController {
 		self.createStartLexemeButton()
 		self.createContinueLexemeButton()
 		self.createViewLexemeButton()
+		self.createSettingButton()
 		print(appDelegate.sentence_or_word_lexeme)
-//		appDelegate.sentence_or_word_lexeme = "sentence"
-//		print(appDelegate.sentence_or_word_lexeme)
 		self.navigationController?.navigationBar.topItem?.title = "Home Screen"
 	}
 	

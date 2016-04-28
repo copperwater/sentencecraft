@@ -38,11 +38,6 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
-//			
-//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-//			print("response \(responseString)")
-			
 		}
 		task.resume()
 	}
@@ -62,14 +57,11 @@ class ServerRequest {
 				return
 			}
 			
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("response \(responseString)")
-			
 			dict = self.convertDataToDictionary(data!)!
+
 		}
 		task.resume()
 		while(dict.count < 1) {}
-//		print(dict)
 		return dict
 	}
 	
@@ -106,8 +98,9 @@ class ServerRequest {
 	}
 	
 	
-	func sendViewRequest(type: String) -> [[String: AnyObject]]? {
-		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=")
+	func sendViewRequest(type: String, tags: String) -> [[String: AnyObject]]? {
+		print(tags)
+		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		request.HTTPMethod = "GET"
@@ -121,33 +114,30 @@ class ServerRequest {
 				return
 			}
 			
-			dict = self.convertDataToDictionaryList(data!)!
+//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
+//			print("response \(responseString)")
 			
+			dict = self.convertDataToDictionaryList(data!)!
 		}
 		task.resume()
 		while(dict.count < 1) {}
-//		print("HOHOHOHO \(dict)")
 		return dict
 	}
 	
 	func convertDataToDictionaryList(data: NSData) -> [[String:AnyObject]]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
-		} catch let error as NSError {
-			print(error)
-		}
+		} catch _ {}
 		
-		return nil
+		return []
 	}
 	
 	func convertDataToDictionary(data: NSData) -> [String:AnyObject]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
-		} catch let error as NSError {
-			print(error)
-		}
+		} catch _ {}
 		
-		return nil
+		return [:]
 	}
 	
 }

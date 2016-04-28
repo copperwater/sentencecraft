@@ -8,9 +8,10 @@
 
 import UIKit
 
-class ViewLexemesTableViewController: UITableViewController {
+class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate {
 	
 	let navBar: UINavigationBar = UINavigationBar.init()
+	var searchBar: UISearchBar = UISearchBar()
 	
 	var lexemesDictionary: [[String:AnyObject]] = []
 	
@@ -35,6 +36,29 @@ class ViewLexemesTableViewController: UITableViewController {
 		self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "LexemeCell")
 	}
 	
+	func setupSearchBar() {
+		searchBar.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/10)
+		searchBar.showsScopeBar = true
+		searchBar.delegate = self
+		searchBar.autocapitalizationType = UITextAutocapitalizationType.None
+		self.view.addSubview(searchBar)
+	}
+	
+	func searchBarSearchButtonClicked( searchBar: UISearchBar) {
+		lexemesArray.removeAll()
+		tagsArray.removeAll()
+		lexemesDictionary.removeAll()
+		
+		print(searchBar.text!)
+		
+		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
+		                                                       tags: searchBar.text!)!
+		self.getLexemeStrings()
+		self.tableView.reloadData()
+	}
+	
+	
+	
 	func printLexemes() {
 		for entry in lexemesDictionary {
 			print(entry["lexemes"])
@@ -47,12 +71,17 @@ class ViewLexemesTableViewController: UITableViewController {
 		tagsArray.removeAll()
 		lexemesDictionary.removeAll()
 		
-		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme)!
-		self .getLexemeStrings()
+		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
+		                                                       tags: "")!
+		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}
 	
 	func getLexemeStrings() {
+		
+		lexemesArray.append("")
+		tagsArray.append("")
+		
 		for entry in lexemesDictionary {
 			var lexeme: String = String()
 			var tags: String = String()
@@ -73,8 +102,7 @@ class ViewLexemesTableViewController: UITableViewController {
 					tags += " , "
 				}
 			}
-//			print(lexeme)
-//			print(tags)
+
 			lexemesArray.append(lexeme)
 			tagsArray.append(tags)
 		}
@@ -111,6 +139,8 @@ class ViewLexemesTableViewController: UITableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupTableView()
+		self.setupSearchBar()
+
 //		self.navigationController?.navigationBar.topItem?.title = "Lexemes"
 		// Do any additional setup after loading the view, typically from a nib.
 	}

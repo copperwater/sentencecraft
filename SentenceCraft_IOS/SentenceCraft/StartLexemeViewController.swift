@@ -104,7 +104,6 @@ class StartLexemeViewController: UIViewController {
 		let tags = tagOne.text!
 		appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
 		                                            type: appDelegate.sentence_or_word_lexeme)
-//		server.sendStartSentenceRequest(tags, sentence: lexemeField.text!)
 		navigationController?.popViewControllerAnimated(true)
 		
 	}
@@ -115,9 +114,6 @@ class StartLexemeViewController: UIViewController {
 		createTags()
 		createLexemeField()
 		createSubmitButton()
-//		self.navigationController?.navigationBar.topItem?.title = "Create Lexeme"
-//		self.navigationController?.setNavigationBarHidden(false, animated: true)
-//		self.navigationController?.navigationBar.backgroundColor = UIColor.blackColor()
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	
