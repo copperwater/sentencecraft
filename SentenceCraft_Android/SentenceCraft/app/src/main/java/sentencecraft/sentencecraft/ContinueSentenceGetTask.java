@@ -14,14 +14,15 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 /**
- * Created by zqiu on 4/27/16.
+ * Created by zqiu on 4/27/16
+ * Used to asynchronously get incomplete sentences for the ContinueSentence Activity
  */
+
 public class ContinueSentenceGetTask extends DownloadInfoTask {
 
     Handler mainUIHandler;
     private int tagsId;
     private String key = "";
-    private String operationName = "DownloadTask";
 
     public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
@@ -30,6 +31,7 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
     }
 
     protected void onPostExecute(String result) {
+        String operationName = "DownloadTask";
         if (getResponseCode() == 200) {
             ArrayList<String> data = interpretContinue(result);
             TextView sentence = (TextView) rootView.findViewById(editId);
@@ -50,32 +52,32 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
 
     private ArrayList<String> interpretContinue(String data) {
         ArrayList<String> toReturn = new ArrayList<>();
-        String userdata = "";
-        String tagdata = "";
+        String userData = "";
+        String tagData = "";
         try {
             JSONObject reader = new JSONObject(data);
             key = reader.getString("key");
             JSONObject lexemeCollection = reader.getJSONObject("lexemecollection");
             JSONArray lexemes = lexemeCollection.getJSONArray("lexemes");
             for (int i = 0; i < lexemes.length(); ++i) {
-                userdata += lexemes.getString(i) + " ";
+                userData += lexemes.getString(i) + " ";
             }
             try {
                 JSONArray tags = lexemeCollection.getJSONArray("tags");
                 for (int i = 0; i < tags.length(); ++i) {
-                    if (!tagdata.equals("")) {
-                        tagdata += ",";
+                    if (!tagData.equals("")) {
+                        tagData += ",";
                     }
-                    tagdata += tags.getString(i);
+                    tagData += tags.getString(i);
                 }
             } catch (JSONException e) {
-                tagdata = "none";
+                tagData = "none";
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        toReturn.add(userdata);
-        toReturn.add(tagdata);
+        toReturn.add(userData);
+        toReturn.add(tagData);
         return toReturn;
     }
 

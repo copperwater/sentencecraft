@@ -46,14 +46,14 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         }
     }
 
-    private String downloadUrl(String method,String myurl) throws IOException {
+    private String downloadUrl(String method,String myUrl) throws IOException {
         String contentAsString = "";
         InputStream is = null;
         // Read in 500 characters at a time
         int len = 500;
 
         try {
-            URL url = new URL(myurl);
+            URL url = new URL(myUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
             conn.setConnectTimeout(15000 /* milliseconds */);
@@ -72,7 +72,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
             // Convert the InputStream into a string
             contentAsString += readIt(is, len);
-            Log.d(appName, "recieved:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
+            Log.d(appName, "received:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
 
             // Makes sure that the InputStream is closed after the app is
             // finished using it.
@@ -88,8 +88,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     private String readIt(InputStream stream, int len) throws IOException {
         int numRead = 0;
         String toReturn = "";
-        Reader reader = null;
-        reader = new InputStreamReader(stream, "UTF-8");
+        Reader reader = new InputStreamReader(stream, "UTF-8");
         char[] buffer = new char[len];
         while(numRead >= 0) {
             numRead = reader.read(buffer);

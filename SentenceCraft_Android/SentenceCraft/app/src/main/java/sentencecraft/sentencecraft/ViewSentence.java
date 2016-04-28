@@ -90,7 +90,6 @@ public class ViewSentence extends AppCompatActivity {
             task.execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
-            Context context = getApplicationContext();
             //remove rows in existing table
             if(tl != null){
                 tl.removeAllViews();

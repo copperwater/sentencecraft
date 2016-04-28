@@ -25,16 +25,12 @@
                 android:layout_height="wrap_content"
                 android:text="@string/setting_network"
                 android:id="@+id/networkSwitch"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
                 android:layout_marginBottom="@dimen/activity_vertical_margin" />
             <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/setting_lexeme"
-                android:id="@+id/lexemeswitch"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
+                android:id="@+id/lexemeswitch"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

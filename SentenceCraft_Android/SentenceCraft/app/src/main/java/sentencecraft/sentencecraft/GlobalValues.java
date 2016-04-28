@@ -2,6 +2,7 @@ package sentencecraft.sentencecraft;
 
 /**
  * Created by zqiu on 4/27/16.
+ * Class meant to store globally accessible data accessible by others
  */
 public class GlobalValues {
 

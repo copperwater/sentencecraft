@@ -10,12 +10,12 @@ import java.net.HttpURLConnection;
 
 /**
  * Created by zqiu on 4/27/16.
+ * Used to asynchronously start sentences for StartSentence
  */
 public class StartSentenceTask extends DownloadInfoTask {
 
     private String lexeme;
     private String tags;
-    private String operationName = "start";
 
     public StartSentenceTask(View rootView, Context context, int editId) {
         super(rootView, context, editId);
@@ -24,9 +24,10 @@ public class StartSentenceTask extends DownloadInfoTask {
     // onPostExecute displays the results of the AsyncTask.
     @Override
     protected void onPostExecute(String result) {
+        String operationName = "start";
         Snackbar mySnackBar;
         if(getResponseCode() == 200){
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.sucess_operation,operationName), Snackbar.LENGTH_SHORT);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }else{
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);

@@ -122,7 +122,6 @@ public class ContinueSentence extends AppCompatActivity {
                     break;
                 default:
                     Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
-                    return;
             }
         } else {
             if(myView != null){

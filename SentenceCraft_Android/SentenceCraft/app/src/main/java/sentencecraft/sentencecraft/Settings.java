@@ -28,32 +28,26 @@ public class Settings extends AppCompatActivity {
         Switch networkSwitch = (Switch) findViewById(R.id.networkSwitch);
         Switch lexemeSwitch = (Switch) findViewById(R.id.lexemeswitch);
 
-        //set switches
-        networkSwitch.setChecked(GlobalValues.networkIsLocalhost);
-        lexemeSwitch.setChecked(GlobalValues.lexemeIsWord);
-
-        //set listener for network switch
-        networkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    GlobalValues.networkIsLocalhost = true;
-                }else{
-                    GlobalValues.networkIsLocalhost = false;
+        //set switch and listener for network switch
+        if(networkSwitch != null){
+            networkSwitch.setChecked(GlobalValues.networkIsLocalhost);
+            networkSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    GlobalValues.networkIsLocalhost = isChecked;
                 }
-            }
-        });
+            });
+        }
 
-        //set listener for lexemeSwitch
-        lexemeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    GlobalValues.lexemeIsWord = true;
-                }else{
-                    GlobalValues.lexemeIsWord= false;
+        //set switch and listener for lexeme switch
+        if(lexemeSwitch != null){
+            lexemeSwitch.setChecked(GlobalValues.lexemeIsWord);
+            lexemeSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    GlobalValues.lexemeIsWord = isChecked;
                 }
-            }
-        });
+            });
+        }
     }
 }

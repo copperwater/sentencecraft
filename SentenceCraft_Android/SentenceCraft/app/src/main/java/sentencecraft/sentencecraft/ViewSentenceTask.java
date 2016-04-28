@@ -46,7 +46,7 @@ public class ViewSentenceTask extends DownloadInfoTask{
             TextView text= new TextView(context);
             text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
             text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
-            text.setTextColor((int) ContextCompat.getColor(context, R.color.colorBlack));
+            text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
             text.setOnClickListener(listener);
             row.addView(text);
             tl.addView(row,i);
@@ -59,7 +59,7 @@ public class ViewSentenceTask extends DownloadInfoTask{
     //interprets what's read from view-sentences
     private ArrayList<String> interpretView(String data){
         ArrayList<String> toReturn = new ArrayList<>();
-        String temp = "";
+        String temp;
         try{
             JSONArray reader= new JSONArray(data);
             for(int i = 0; i < reader.length(); ++i){

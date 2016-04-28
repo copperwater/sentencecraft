@@ -1,6 +1,5 @@
 <resources>
     <string name="action_settings">Settings</string>
-    <string name="action_back">Back</string>
     <string name="app_name">SentenceCraft</string>
     <string name="app_slogan">Don\'t Finish What You Start.</string>
     <string name="app_enter">Go.</string>
@@ -9,26 +8,30 @@
     <string name="app_view">View.</string>
     <string name="app_reload">Refresh.</string>
     <string name="app_add_tag">Add Tag.</string>
-    <string name="app_start_directions">Enter %1$s to start %2$s</string>
-    <string name="app_continue_directions">Enter %1$s to continue %2$s</string>
+    <string name="app_start_directions">Enter %1$s to start %2$s.</string>
+    <string name="app_continue_directions">Enter %1$s to continue %2$s.</string>
     <string name="app_lexeme_hint">Lexeme</string>
     <string name="app_tag_hint">Tag</string>
     <string name="app_loading">Loading…</string>
-    <string name="app_fin">Finish</string>
+    <string name="app_finish">Finish</string>
     <string name="app_no_sentence">No Sentences currently…</string>
     <string name="app_search_for">Search For</string>
-    <string name="title_activity_start_sentence">Start Sentence</string>
-    <string name="title_activity_continue_sentence">Continue Sentence</string>
-    <string name="title_activity_view_sentence">View Sentence</string>
+
     <string name="view_sentence_part">%1$d. %2$s</string>
     <string name="continue_tags_part">Tags:%1$s</string>
     <string name="continue_lexeme_part">%1$s…</string>
+
     <string name="error_no_lexeme">please enter a Lexeme.</string>
     <string name="error_no_internet">no internet connection.</string>
     <string name="error_operation_not_complete">could not complete operation:%1$s.</string>
-    <string name="sucess_operation">successfully completed operation:%1$s</string>
+    <string name="success_operation">successfully completed operation:%1$s</string>
+
+    <string name="title_activity_start_sentence">Start Sentence</string>
+    <string name="title_activity_continue_sentence">Continue Sentence</string>
+    <string name="title_activity_view_sentence">View Sentence</string>
     <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_more_sentence_info">MoreSentenceInfo</string>
+
     <string name="setting_network">use localhost? no/yes?</string>
     <string name="setting_lexeme">sentence/word as lexeme</string>
-    <string name="title_activity_more_sentence_info">MoreSentenceInfo</string>
 </resources>

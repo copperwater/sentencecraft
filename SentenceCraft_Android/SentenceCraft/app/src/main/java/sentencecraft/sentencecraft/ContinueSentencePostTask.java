@@ -10,13 +10,13 @@ import java.net.HttpURLConnection;
 
 /**
  * Created by zqiu on 4/27/16.
+ * Used to asynchronously post to incomplete sentences for the ContinueSentence Activity
  */
 public class ContinueSentencePostTask extends DownloadInfoTask{
 
     private String lexemeToAdd = "";
     private String isComplete = "";
     private String key;
-    private String operationName = "continue sentence";
 
     public ContinueSentencePostTask(View rootView, Context context, int editId, String key) {
         super(rootView, context, editId);
@@ -50,9 +50,10 @@ public class ContinueSentencePostTask extends DownloadInfoTask{
 
     @Override
     protected void onPostExecute(String result) {
+        String operationName = "continue sentence";
         Snackbar mySnackBar;
         if(getResponseCode() == 200){
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.sucess_operation,operationName), Snackbar.LENGTH_SHORT);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }else{
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);
