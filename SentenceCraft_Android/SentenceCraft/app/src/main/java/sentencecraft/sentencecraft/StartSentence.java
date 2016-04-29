@@ -11,12 +11,10 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -102,10 +100,6 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name), sLexeme);
         if (sLexeme.equals("")) {
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
             return;
         }
@@ -131,19 +125,14 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
         //make a StartSentenceTask and communicate with the server
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new StartSentenceTask(myView, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
+            new StartSentenceTask(view, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
         } else {
             //no internet
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
         }
     }

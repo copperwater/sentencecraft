@@ -11,12 +11,10 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -68,7 +66,6 @@ public class ViewSentence extends AppCompatActivity {
     }
 
     public void updateText(View view){
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getViewExtension()+"?"+ GlobalValues.getTypeExtension();
         EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
         String tags = "";
@@ -91,7 +88,7 @@ public class ViewSentence extends AppCompatActivity {
                     myTags = (ArrayList<String>)msg.obj;
                 }
             };
-            ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
+            ViewSentenceTask task = new ViewSentenceTask(view,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
             task.execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
@@ -100,10 +97,6 @@ public class ViewSentence extends AppCompatActivity {
                 tl.removeAllViews();
             }
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
         }
     }

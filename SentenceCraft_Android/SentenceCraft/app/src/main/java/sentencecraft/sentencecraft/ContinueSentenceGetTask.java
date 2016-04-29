@@ -4,9 +4,7 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
 import android.support.design.widget.Snackbar;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import org.json.JSONArray;
@@ -46,10 +44,6 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
             //got bad response from server. Let user know
             Snackbar mySnackBar;
             mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();

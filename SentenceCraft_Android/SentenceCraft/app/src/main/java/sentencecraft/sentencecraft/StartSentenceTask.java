@@ -2,9 +2,7 @@ package sentencecraft.sentencecraft;
 
 import android.content.Context;
 import android.support.design.widget.Snackbar;
-import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -31,18 +29,10 @@ public class StartSentenceTask extends DownloadInfoTask {
         Snackbar mySnackBar;
         if(getResponseCode() == 200){
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
         }else{
             //error code. Let user know
             mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);
-            View mView = mySnackBar.getView();
-            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
-            params.gravity = Gravity.TOP;
-            mView.setLayoutParams(params);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();

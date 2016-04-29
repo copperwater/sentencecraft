@@ -58,7 +58,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
             URL url = new URL(myUrl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(10000 /* milliseconds */);
-            conn.setConnectTimeout(15000 /* milliseconds */);
+            conn.setConnectTimeout(1000 /* milliseconds */);
             conn.setRequestMethod(method);
             conn.setDoInput(true);
 
