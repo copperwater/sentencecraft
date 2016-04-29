@@ -20,7 +20,7 @@ class HomeScreenViewController: UIViewController {
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 	private var hasViewed: Bool = false
 	
-	// Create the SentenceCraft Logo on Home Screen
+	// Create the SentenceCraft Logo on Home Screen 
 	func addSentenceCraftLabel() {
 		let sentenceCraftLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 500, 200))
 		sentenceCraftLabel.text = "SentenceCraft"
