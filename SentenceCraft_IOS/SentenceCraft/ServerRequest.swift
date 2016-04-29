@@ -56,9 +56,7 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
 			dict = self.convertDataToDictionary(data!)!
-
 		}
 		task.resume()
 		while(dict.count < 1) {}
@@ -87,11 +85,6 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
-			
-//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-//			print("response \(responseString)")
-			
 		}
 		task.resume()
 
@@ -99,10 +92,7 @@ class ServerRequest {
 	
 	
 	func sendViewRequest(type: String, tags: String) -> [[String: AnyObject]]? {
-//		print(tags)
-//		let urlString = serverURL + "view/?type=\(type)&tags=\(tags)"
 		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
-//		let requestURL = NSURL(string: urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())!)
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		var isDictionary: Bool = true
@@ -118,11 +108,6 @@ class ServerRequest {
 			}
 			
 			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
-//			print("response \(responseString)")
-//			for i in responseString.characters {
-//				print(i)
-//			}
-//			print(responseString[responseString.startIndex])
 			if responseString[responseString.startIndex] != "[" {
 				isDictionary = false
 			} else {
@@ -131,7 +116,6 @@ class ServerRequest {
 
 		}
 		task.resume()
-//		print (isDictionary)
 		while(dict.count < 1) { if isDictionary == false {break} }
 		return dict
 	}

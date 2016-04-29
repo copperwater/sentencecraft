@@ -10,14 +10,17 @@ import UIKit
 
 class HomeScreenViewController: UIViewController {
 	
+	// Buttons that user interacts with on the Home screen
 	@IBOutlet private var startLexemeButton: UIButton!
 	@IBOutlet private var continueLexemeButton: UIButton!
 	@IBOutlet private var viewLexemesButton: UIButton!
 	@IBOutlet private var settingButton: UIButton!
 
+	// Instance of the AppDelegate in order to access
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 	private var hasViewed: Bool = false
 	
+	// Create the SentenceCraft Logo on Home Screen 
 	func addSentenceCraftLabel() {
 		let sentenceCraftLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 500, 200))
 		sentenceCraftLabel.text = "SentenceCraft"
@@ -27,6 +30,7 @@ class HomeScreenViewController: UIViewController {
 		self.view.addSubview(sentenceCraftLabel)
 	}
 	
+	// Create the button that will let users start a lexeme
 	func createStartLexemeButton() {
 		startLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
 		startLexemeButton.setTitle("Start a Lexeme", forState: UIControlState.Normal)
@@ -44,6 +48,7 @@ class HomeScreenViewController: UIViewController {
 		self.view.addSubview(startLexemeButton)
 	}
 	
+	// Create the button that will let users continue/complete a lexeme
 	func createContinueLexemeButton() {
 		continueLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
 		continueLexemeButton.setTitle("Continue a Lexeme", forState: UIControlState.Normal)
@@ -62,6 +67,7 @@ class HomeScreenViewController: UIViewController {
 		self.view.addSubview(continueLexemeButton)
 	}
 	
+	// Create the button that will let users view all completed lexemes
 	func createViewLexemeButton() {
 		viewLexemesButton = UIButton.init(type: UIButtonType.RoundedRect)
 		viewLexemesButton.setTitle("View Completed Lexemes", forState: UIControlState.Normal)
@@ -79,6 +85,7 @@ class HomeScreenViewController: UIViewController {
 		self.view.addSubview(viewLexemesButton)
 	}
 	
+	// Create the button that will lead users to edit the settings for the app settings
 	func createSettingButton() {
 		settingButton = UIButton.init(type: UIButtonType.RoundedRect)
 		settingButton.setTitle("Settings", forState: UIControlState.Normal)
@@ -97,22 +104,32 @@ class HomeScreenViewController: UIViewController {
 	}
 	
 	
+	// Action that will move user from home screen to the start lexeme page
+	// when the button is pressed
 	func startLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("StartLexemeSegue", sender: self)
 	}
 	
+	// Action that will move user from home screen to the coninue/complete lexeme page
+	// when the button is pressed
 	func continueLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("ContinueLexemeSegue", sender: self)
 	}
 	
+	// Action that will move user from home screen to the view lexemes table page
+	// when the button is pressed
 	func viewLexemeButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("ViewLexemesSegue", sender: self)
 	}
 	
+	// Action that will move the user from the home screen to the settings page
+	// when the button is pressed
 	func settingButtonPressed(sender: UIButton!) {
 		self.performSegueWithIdentifier("SettingSegue", sender: self)
 	}
 	
+	// Actions that will happen in between when a user selects to go a new page
+	// and when the next page loads
 	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
 		if segue!.identifier == "ViewLexemesSegue" {
 			let viewLexemesTableViewController : ViewLexemesTableViewController =
@@ -121,7 +138,7 @@ class HomeScreenViewController: UIViewController {
 		}
 	}
 	
-	
+	// Load the view of the HomeScreenViewController
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.addSentenceCraftLabel()
@@ -129,7 +146,6 @@ class HomeScreenViewController: UIViewController {
 		self.createContinueLexemeButton()
 		self.createViewLexemeButton()
 		self.createSettingButton()
-//		print(appDelegate.sentence_or_word_lexeme)
 	}
 	
 	override func didReceiveMemoryWarning() {
