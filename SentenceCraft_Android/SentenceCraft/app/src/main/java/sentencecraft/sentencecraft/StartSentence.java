@@ -102,6 +102,10 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name), sLexeme);
         if (sLexeme.equals("")) {
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
+            View mView = mySnackBar.getView();
+            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
+            params.gravity = Gravity.TOP;
+            mView.setLayoutParams(params);
             mySnackBar.show();
             return;
         }

@@ -67,6 +67,10 @@ public class ContinueSentence extends AppCompatActivity {
             //notify user if no internet
             if(myView != null){
                 Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                View mView = mySnackBar.getView();
+                FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
+                params.gravity = Gravity.TOP;
+                mView.setLayoutParams(params);
                 mySnackBar.show();
             }
         }
@@ -104,11 +108,19 @@ public class ContinueSentence extends AppCompatActivity {
         String sLexeme = lexeme.getText().toString();
         if(sLexeme.equals("")){
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
+            View mView = mySnackBar.getView();
+            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
+            params.gravity = Gravity.TOP;
+            mView.setLayoutParams(params);
             mySnackBar.show();
             return;
         }
         if(key.equals("")){
             Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"), Snackbar.LENGTH_SHORT);
+            View mView = mySnackBar.getView();
+            FrameLayout.LayoutParams params =(FrameLayout.LayoutParams)mView.getLayoutParams();
+            params.gravity = Gravity.TOP;
+            mView.setLayoutParams(params);
             mySnackBar.show();
             return;
         }
