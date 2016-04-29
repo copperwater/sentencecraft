@@ -75,7 +75,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(lexemeText)
 	}
 	
-	// Create the textfield 
+	// Create the textfield for the user to input their appendage for the lexeme
 	func createLexemeField() {
 		let lexemeFieldTag: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
 		lexemeFieldTag.text = "Lexeme:"
@@ -94,7 +94,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(lexemeField)
 	}
 	
-	
+	// Create the button that will submit a request to continue the lexeme with the appendage
 	func createContinueButton() {
 		continueButton = UIButton.init(type: UIButtonType.RoundedRect)
 		continueButton.setTitle("Continue", forState: UIControlState.Normal)
@@ -111,6 +111,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(continueButton)
 	}
 	
+	// Create the button that will submit a request to complete the lexeme with the appendage
 	func createCompleteButton() {
 		completeButton = UIButton.init(type: UIButtonType.RoundedRect)
 		completeButton.setTitle("Complete", forState: UIControlState.Normal)
@@ -127,7 +128,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(completeButton)
 	}
 	
-
+	// Function that will send the user input to the server API if they pressed the continue button
 	func continueButtonPressed(sender: UIButton!) {
 		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
 		                                     action: "false", type: appDelegate.sentence_or_word_lexeme)
@@ -135,6 +136,7 @@ class ContinueLexemeViewController: UIViewController {
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
+	// Function that will send the user input to the server API if they pressed the complete button
 	func completeButtonPressed(sender: UIButton!) {
 		
 		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
@@ -143,11 +145,12 @@ class ContinueLexemeViewController: UIViewController {
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
+	// Function that loads the ContinueLexemeViewController
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		createCompleteButton()
 		createContinueButton()
-		lexeme = server.requestIncompleteLexeme(appDelegate.sentence_or_word_lexeme)!
+		lexeme = appDelegate.server.requestIncompleteLexeme(appDelegate.sentence_or_word_lexeme)!
 		self.parseInfoFromDict()
 		createLexemeInfo()
 		createLexemeField()

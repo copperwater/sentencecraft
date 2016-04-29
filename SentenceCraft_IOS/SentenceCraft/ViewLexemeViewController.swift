@@ -14,7 +14,9 @@ class ViewLexemeViewController: UIViewController {
 	private var tagsInfo: UILabel = UILabel()
 	private var lexemeText: UILabel = UILabel()
 	
+	// Function that reads in the data passed and displays it to the user
 	func addData(tags: String, lexeme: String) {
+		// Displayes the tags
 		tagsInfo = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
 		tagsInfo.text = "Tags: \(tags)"
 		tagsInfo.numberOfLines = 0
@@ -24,6 +26,7 @@ class ViewLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 
+		// Displays the lexeme
 		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width - 40, 400))
 		lexemeText.text = "Lexeme: \n\(lexeme)"
 		lexemeText.numberOfLines = 0
@@ -36,6 +39,7 @@ class ViewLexemeViewController: UIViewController {
 		
 	}
 
+	// Load the View Controller
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.

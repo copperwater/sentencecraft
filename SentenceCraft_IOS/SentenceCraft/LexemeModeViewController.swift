@@ -16,7 +16,7 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 	var modePicker: UIPickerView = UIPickerView()
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
-	
+	// Creates the label to say which mode to select for lexeme
 	func createLexemeMode() {
 		let modeLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 300, 50))
 		modeLabel.text = "Lexeme Mode:"
@@ -26,6 +26,7 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 		self.view.addSubview(modeLabel)
 	}
 	
+	// Create the picker that gives different lexeme mode options
 	func createModePicker() {
 		modePicker = UIPickerView(frame: CGRectMake(0, 200, 200, 200))
 		modePicker.tag = 2
@@ -36,10 +37,12 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 		self.view.addSubview(modePicker)
 	}
 	
+	// Returns the number of components in the picker
 	func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
 		return 1
 	}
 	
+	// Returns the number of rows in a selected picker item if there are any
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
 		if (pickerView.tag == 0) {
 			return modes.count
@@ -48,10 +51,12 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 		}
 	}
 	
+	// Returns the selected mode that the user chose
 	func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
 		return modes[row]
 	}
 	
+	// Depending on what the user chose, change the lexeme mode to either sentence or paragraph
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
 	{
 		if (pickerView.tag == 0) {
@@ -61,6 +66,7 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 		}
 	}
 	
+	// Load the settings page
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		self.createLexemeMode()

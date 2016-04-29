@@ -10,19 +10,20 @@ import UIKit
 
 class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate, UITextFieldDelegate {
 	
-	let navBar: UINavigationBar = UINavigationBar.init()
+	// Search bar that allows for search by tag
 	var searchBar: UISearchBar = UISearchBar()
 	
+	// Collections to hold the data for the lexemes
 	var lexemesDictionary: [[String:AnyObject]] = []
 	var lexemesArray: [String] = []
 	var tagsArray: [String] = []
 	var selectedLexeme: String = String()
 	var selectedTags: String = String()
 	
-	var server : ServerRequest = ServerRequest.init()
+	// Global variable
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
-	
+	// Setup the the table view to display lexemes in a list manner
 	func setupTableView() {
 		self.tableView = UITableView.init(frame: UIScreen.mainScreen().bounds, style: UITableViewStyle.Plain)
 		self.tableView.dataSource = self
@@ -32,6 +33,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "LexemeCell")
 	}
 	
+	// Setup the search bar to work on the current page
 	func setupSearchBar() {
 		searchBar.frame = CGRectMake(0, 0, self.view.frame.width, self.view.frame.height/10)
 		searchBar.showsScopeBar = true
@@ -40,6 +42,8 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		self.view.addSubview(searchBar)
 	}
 	
+	// Whem the user has clicked the search button to find a tag,
+	// request from the server all the lexemes with the requested tag
 	func searchBarSearchButtonClicked( searchBar: UISearchBar) {
 		lexemesArray.removeAll()
 		tagsArray.removeAll()
@@ -51,6 +55,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		self.tableView.reloadData()
 	}
 	
+	// Function to print all the lexemes that are currently stored
 	func printLexemes() {
 		for entry in lexemesDictionary {
 			print(entry["lexemes"])
@@ -58,6 +63,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		}
 	}
 	
+	// Function that reloads the data currently stored in the table
 	func reloadData() {
 		lexemesArray.removeAll()
 		tagsArray.removeAll()
@@ -69,6 +75,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		self.tableView.reloadData()
 	}
 	
+	// Function that gets all the lexemes and tags from the dictionary that is currently stored
 	func getLexemeStrings() {
 		
 		lexemesArray.append("")
@@ -100,10 +107,12 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		}
 	}
 	
+	// Function that tells the number of rows in the table
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 		return lexemesArray.count
 	}
 	
+	// Function that provides a name for each row in the table
 	override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 		let cell: UITableViewCell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: "LexemeCell")
 		cell.textLabel!.text = lexemesArray [indexPath.row]
@@ -111,14 +120,15 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		return cell;
 	}
 	
-
+	// Function that tells which row the user has clicked on for more details
 	override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
 		selectedLexeme = self.lexemesArray[indexPath.row]
 		selectedTags = self.tagsArray[indexPath.row]
 		self.performSegueWithIdentifier("LexemeSegue", sender: self)
 	}
 	
-	
+	// Function that will pass along the information about the lexeme to a view controller
+	// with more detials
 	override func prepareForSegue(segue: UIStoryboardSegue?, sender: AnyObject!) {
 		if segue!.identifier == "LexemeSegue" {
 			let viewLexemeViewController : ViewLexemeViewController =
@@ -127,6 +137,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		}
 	}
 	
+	// Load the TableViewController
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		setupTableView()
