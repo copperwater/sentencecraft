@@ -88,7 +88,8 @@ public class ViewSentence extends AppCompatActivity {
                     myTags = (ArrayList<String>)msg.obj;
                 }
             };
-            ViewSentenceTask task = new ViewSentenceTask(view,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
+            View myView = findViewById(R.id.view_top);
+            ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
             task.execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);

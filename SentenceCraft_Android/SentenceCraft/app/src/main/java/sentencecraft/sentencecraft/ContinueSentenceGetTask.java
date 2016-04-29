@@ -37,9 +37,13 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
         if (getResponseCode() == 200) {
             ArrayList<String> data = interpretContinue(result);
             TextView sentence = (TextView) rootView.findViewById(editId);
-            sentence.setText(context.getString(R.string.continue_lexeme_part, data.get(0)));
+            if(sentence != null){
+                sentence.setText(context.getString(R.string.continue_lexeme_part, data.get(0)));
+            }
             TextView tags = (TextView) rootView.findViewById(tagsId);
-            tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
+            if(tags != null){
+                tags.setText(context.getString(R.string.continue_tags_part, data.get(1)));
+            }
         } else {
             //got bad response from server. Let user know
             Snackbar mySnackBar;
