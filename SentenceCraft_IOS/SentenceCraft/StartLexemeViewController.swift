@@ -10,19 +10,25 @@ import UIKit
 
 class StartLexemeViewController: UIViewController {
 	
+	// Tags for the user to add for a lexeme
 	@IBOutlet private var tagOne: UITextField!
 	@IBOutlet private var tagTwo: UITextField!
 	@IBOutlet private var tagThree: UITextField!
 	@IBOutlet private var tagFour: UITextField!
 	
+	// Field to take user input for new lexeme
 	@IBOutlet private var lexemeField: UITextField!
 	
+	// Button to submit new lexeme
 	@IBOutlet private var submitButton: UIButton!
-	var server: ServerRequest = ServerRequest.init()
+	
+	// global variable
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 
 	
+	// Create the tags and their placeholders for the user
 	func createTags() {
+		// Label that says "Tags:"
 		let tagLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
 		tagLabel.text = "Tags:"
 		tagLabel.font = UIFont(name: tagLabel.font.fontName, size: 25)
@@ -30,7 +36,7 @@ class StartLexemeViewController: UIViewController {
 		tagLabel.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagLabel)
 		
-		
+		// Create first tag
 		tagOne = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
 		tagOne.center = CGPointMake(tagLabel.center.x, tagLabel.center.y + 3*tagLabel.frame.height/2)
 		tagOne.placeholder = "tag"
@@ -40,6 +46,7 @@ class StartLexemeViewController: UIViewController {
 		tagOne.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagOne)
 		
+		// Create second tag
 		tagTwo = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
 		tagTwo.center = CGPointMake(tagOne.center.x + tagOne.frame.width/2 + 50, tagOne.center.y)
 		tagTwo.placeholder = "tag"
@@ -49,6 +56,7 @@ class StartLexemeViewController: UIViewController {
 		tagTwo.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagTwo)
 		
+		// Create third tag
 		tagThree = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
 		tagThree.center = CGPointMake(tagTwo.center.x + tagTwo.frame.width/2 + 50, tagOne.center.y)
 		tagThree.placeholder = "tag"
@@ -58,6 +66,7 @@ class StartLexemeViewController: UIViewController {
 		tagThree.autocorrectionType = UITextAutocorrectionType.No
 		self.view.addSubview(tagThree)
 		
+		// Create fourth tag
 		tagFour = UITextField.init(frame: CGRectMake(0, 0, 75, 50))
 		tagFour.center = CGPointMake(tagThree.center.x + tagThree.frame.width/2 + 50, tagOne.center.y)
 		tagFour.placeholder = "tag"
@@ -70,6 +79,7 @@ class StartLexemeViewController: UIViewController {
 	}
 	
 	
+	// Create text field to recieve user input for lexeme
 	func createLexemeField() {
 		let lexemeFieldTag: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
 		lexemeFieldTag.text = "Lexeme:"
@@ -87,6 +97,7 @@ class StartLexemeViewController: UIViewController {
 		self.view.addSubview(lexemeField)
 	}
 	
+	// Create the button to submit the nex lexeme
 	func createSubmitButton() {
 		submitButton = UIButton.init(type: UIButtonType.RoundedRect)
 		submitButton.setTitle("Submit", forState: UIControlState.Normal)
@@ -104,6 +115,8 @@ class StartLexemeViewController: UIViewController {
 
 	}
 	
+	// When the submit button is pressed, send the new lexeme to the API server and
+	// go back to the main page
 	func submitButtonPressed(sender: UIButton!) {
 		let tags = tagOne.text!
 		appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
@@ -112,7 +125,7 @@ class StartLexemeViewController: UIViewController {
 		
 	}
 
-	
+	// Load the StartLexemeViewController view
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		createTags()

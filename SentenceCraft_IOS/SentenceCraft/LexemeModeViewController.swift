@@ -55,13 +55,9 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
 	{
 		if (pickerView.tag == 0) {
-//			print(modes[row])
 			appDelegate.sentence_or_word_lexeme = "word"
-//			print(appDelegate.sentence_or_word_lexeme)
 		} else  {
-//			print(modes[row])
 			appDelegate.sentence_or_word_lexeme = "sentence"
-//			print(appDelegate.sentence_or_word_lexeme)
 		}
 	}
 	
@@ -69,7 +65,6 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 		super.viewDidLoad()
 		self.createLexemeMode()
 		self.createModePicker()
-		//		self.navigationController?.navigationBar.topItem?.title = "Lexemes"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	
