@@ -117,17 +117,23 @@ public class ContinueSentence extends AppCompatActivity {
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            ContinueSentencePostTask task = new ContinueSentencePostTask(view, getApplicationContext(), R.id.continue_sentence, key);
+            //redirect to main and tell it to start the ContinueSentencePostTask
+            Intent newIntent = new Intent(this,MainMenu.class);
+            newIntent.putExtra("TASK","Continue");
+            newIntent.putExtra("KEY",key);
+            newIntent.putExtra("URL",stringUrl);
+            newIntent.putExtra("LEXEME",sLexeme);
             switch(view.getId()){
                 case R.id.continue_btn:
-                    task.execute("POST",stringUrl,sLexeme,"false");
+                    newIntent.putExtra("COMPLETE","false");
                     break;
                 case R.id.finish_btn:
-                    task.execute("POST",stringUrl,sLexeme,"true");
+                    newIntent.putExtra("COMPLETE","true");
                     break;
                 default:
                     Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
             }
+            startActivity(newIntent);
         } else {
             if(view != null){
                 //notify user if no internet

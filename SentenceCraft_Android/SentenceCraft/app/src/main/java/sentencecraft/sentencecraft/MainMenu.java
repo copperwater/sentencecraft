@@ -17,6 +17,7 @@ public class MainMenu extends AppCompatActivity {
         setContentView(R.layout.activity_main_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        dealWithOtherActivities();
     }
 
     @Override
@@ -59,5 +60,42 @@ public class MainMenu extends AppCompatActivity {
                 return;
         }
         startActivity(intent);
+    }
+
+    //meant to deal with any extras passed to this intent
+    public void dealWithOtherActivities(){
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String value = extras.getString("TASK");
+            if(value == null){
+                Log.d(getString(R.string.app_name),"No task to start");
+                return;
+            }
+            View mainTop = findViewById(R.id.main_top);
+            String stringUrl = extras.getString("URL");
+            String sLexeme = extras.getString("LEXEME");
+            switch(value){
+                case "Continue":
+                    String key = extras.getString("KEY");
+                    String complete = extras.getString("COMPLETE");
+                    if(key == null || stringUrl == null || sLexeme == null || complete == null){
+                        Log.d(getString(R.string.app_name),"Invalid parameters");
+                        return;
+                    }
+                    ContinueSentencePostTask task = new ContinueSentencePostTask(mainTop, getApplicationContext(), R.id.continue_sentence, key);
+                    task.execute("POST",stringUrl,sLexeme,complete);
+                    break;
+                case "Start":
+                    String sTags = extras.getString("TAGS");
+                    if(stringUrl == null || sLexeme == null || sTags == null){
+                        Log.d(getString(R.string.app_name),"Invalid parameters");
+                        return;
+                    }
+                    new StartSentenceTask(mainTop, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
+                    break;
+                default:
+                    Log.d(getString(R.string.app_name),"Don't recognize task to start:"+value);
+            }
+        }
     }
 }
