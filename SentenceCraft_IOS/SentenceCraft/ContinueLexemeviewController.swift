@@ -17,6 +17,8 @@ class ContinueLexemeViewController: UIViewController {
 	@IBOutlet private var continueButton: UIButton!
 	
 	var server: ServerRequest = ServerRequest.init()
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
 	
 	var lexeme: [String: AnyObject] = [:]
 	
@@ -48,7 +50,6 @@ class ContinueLexemeViewController: UIViewController {
 			ret += " "
 			i += 1
 		}
-//		print ret
 		return ret
 	}
 	
@@ -80,6 +81,7 @@ class ContinueLexemeViewController: UIViewController {
 		
 		lexemeField = UITextField.init(frame: CGRectMake(12, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 24, 175))
 		lexemeField.placeholder = "Lexeme"
+		lexemeField.autocapitalizationType = UITextAutocapitalizationType.None
 		lexemeField.keyboardType = UIKeyboardType.Default
 		lexemeField.borderStyle = UITextBorderStyle.Line
 		lexemeField.contentVerticalAlignment = UIControlContentVerticalAlignment.Top
@@ -120,13 +122,21 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(completeButton)
 	}
 	
+
 	func continueButtonPressed(sender: UIButton!) {
-		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "false")
+		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		                                     action: "false", type: appDelegate.sentence_or_word_lexeme)
+
+//		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "false")
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
 	func completeButtonPressed(sender: UIButton!) {
-		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "true")
+		
+		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		                                     action: "true", type: appDelegate.sentence_or_word_lexeme)
+
+//		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "true")
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
@@ -134,7 +144,7 @@ class ContinueLexemeViewController: UIViewController {
 		super.viewDidLoad()
 		createCompleteButton()
 		createContinueButton()
-		lexeme = server.requestIncompleteLexeme()!
+		lexeme = server.requestIncompleteLexeme(appDelegate.sentence_or_word_lexeme)!
 		self.parseInfoFromDict()
 		createLexemeInfo()
 		createLexemeField()

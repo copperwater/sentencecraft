@@ -20,6 +20,7 @@
 		43737BF21CB6E2C700198D34 /* StartLexemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43737BF11CB6E2C700198D34 /* StartLexemeViewController.swift */; };
 		437BF8321CCD49CD00F66E4B /* ServerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437BF8311CCD49CD00F66E4B /* ServerRequest.swift */; };
 		437BF8361CD1892B00F66E4B /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 437BF8351CD1892B00F66E4B /* Settings.bundle */; };
+		437BF8381CD27A2900F66E4B /* LexemeModeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 437BF8371CD27A2900F66E4B /* LexemeModeViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 		43737BF11CB6E2C700198D34 /* StartLexemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartLexemeViewController.swift; sourceTree = "<group>"; };
 		437BF8311CCD49CD00F66E4B /* ServerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerRequest.swift; sourceTree = "<group>"; };
 		437BF8351CD1892B00F66E4B /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		437BF8371CD27A2900F66E4B /* LexemeModeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LexemeModeViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,6 +117,7 @@
 				433037451CBB62B5009B241E /* ContinueLexemeviewController.swift */,
 				433037491CBC1E92009B241E /* ViewLexemesTableViewController.swift */,
 				4330374B1CBC29CB009B241E /* ViewLexemeViewController.swift */,
+				437BF8371CD27A2900F66E4B /* LexemeModeViewController.swift */,
 				437BF8311CCD49CD00F66E4B /* ServerRequest.swift */,
 				43737BC51CB6BDE700198D34 /* Main.storyboard */,
 				43737BC81CB6BDE700198D34 /* Assets.xcassets */,
@@ -280,6 +283,7 @@
 				43737BF01CB6D18600198D34 /* HomeScreenViewController.swift in Sources */,
 				437BF8321CCD49CD00F66E4B /* ServerRequest.swift in Sources */,
 				4330374A1CBC1E92009B241E /* ViewLexemesTableViewController.swift in Sources */,
+				437BF8381CD27A2900F66E4B /* LexemeModeViewController.swift in Sources */,
 				43737BF21CB6E2C700198D34 /* StartLexemeViewController.swift in Sources */,
 				4330374C1CBC29CB009B241E /* ViewLexemeViewController.swift in Sources */,
 			);

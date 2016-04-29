@@ -107,6 +107,23 @@
             </objects>
             <point key="canvasLocation" x="-1221" y="99"/>
         </scene>
+        <!--Lexeme Mode View Controller-->
+        <scene sceneID="lC9-W0-xq5">
+            <objects>
+                <viewController id="jhu-Yb-rZc" customClass="LexemeModeViewController" customModule="SentenceCraft" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="fa0-Yl-svu"/>
+                        <viewControllerLayoutGuide type="bottom" id="Rfd-SD-RYh"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="Wae-Da-9lv">
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="yDa-ub-h1q" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-333" y="-709"/>
+        </scene>
         <!--Home Screen View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
@@ -125,6 +142,7 @@
                         <segue destination="sFt-BM-OE6" kind="show" identifier="StartLexemeSegue" id="mrX-Yw-yfq"/>
                         <segue destination="BQ3-v1-cFX" kind="show" identifier="ContinueLexemeSegue" id="Dfv-FA-o7X"/>
                         <segue destination="8G5-lJ-jwX" kind="show" identifier="ViewLexemesSegue" id="Z1j-cr-Lff"/>
+                        <segue destination="jhu-Yb-rZc" kind="show" identifier="SettingSegue" id="C3k-id-qvc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
