@@ -13,7 +13,7 @@
     tools:context="sentencecraft.sentencecraft.ContinueSentence"
     tools:showIn="@layout/activity_continue_sentence">
 
-    <ScrollView
+    <ScrollView android:id="@+id/continue_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout

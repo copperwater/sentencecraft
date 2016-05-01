@@ -66,7 +66,6 @@ public class ViewSentence extends AppCompatActivity {
     }
 
     public void updateText(View view){
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getViewExtension()+"?"+ GlobalValues.getTypeExtension();
         EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
         String tags = "";
@@ -89,6 +88,7 @@ public class ViewSentence extends AppCompatActivity {
                     myTags = (ArrayList<String>)msg.obj;
                 }
             };
+            View myView = findViewById(R.id.view_top);
             ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
             task.execute("GET", stringUrl);
         } else {

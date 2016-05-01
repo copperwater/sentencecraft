@@ -10,26 +10,30 @@ import UIKit
 
 class ContinueLexemeViewController: UIViewController {
 	
+	// Field to append to the lexeme
 	@IBOutlet private var lexemeField: UITextField!
 	
+	// Buttons that indicate either complete or continue the current lexeme
 	@IBOutlet private var completeButton: UIButton!
-	
 	@IBOutlet private var continueButton: UIButton!
 	
-	var server: ServerRequest = ServerRequest.init()
-	
+	// Global variables
+	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+
+	// Collection that stores the info that was passed in from the server
 	var lexeme: [String: AnyObject] = [:]
 	
+	// Array that will hold all the parts of the lexeme passed from the server
 	var lexemeParts: [String] = []
+	// Comma separated string of the tags for the given lexeme
 	var tags: String = String()
 	
-	
+	// Separate the information from the dictionary into usable information
 	func parseInfoFromDict() {
 		lexemeParts = lexeme["lexemecollection"]!["lexemes"] as! [String]
 		print(lexemeParts)
 
 		
-		print(lexeme["lexemecollection"]!["tags"])
 		if lexeme["lexemecollection"]!["tags"] === nil {
 			return
 		}
@@ -40,6 +44,7 @@ class ContinueLexemeViewController: UIViewController {
 		print(tags)
 	}
 	
+	// Get the last 3 portions of the lexeme to display to the user
 	func lastThreeLexemeParts() -> String {
 		var ret: String = String()
 		var i: Int = max(lexemeParts.endIndex - 4, 0)
@@ -48,10 +53,10 @@ class ContinueLexemeViewController: UIViewController {
 			ret += " "
 			i += 1
 		}
-//		print ret
 		return ret
 	}
 	
+	// Create the tags and text that will show the user the lexeme that was given to them
 	func createLexemeInfo() {
 		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
 		tagsInfo.text = "Tags: \(tags)"
@@ -70,6 +75,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(lexemeText)
 	}
 	
+	// Create the textfield 
 	func createLexemeField() {
 		let lexemeFieldTag: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
 		lexemeFieldTag.text = "Lexeme:"
@@ -80,6 +86,7 @@ class ContinueLexemeViewController: UIViewController {
 		
 		lexemeField = UITextField.init(frame: CGRectMake(12, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 24, 175))
 		lexemeField.placeholder = "Lexeme"
+		lexemeField.autocapitalizationType = UITextAutocapitalizationType.None
 		lexemeField.keyboardType = UIKeyboardType.Default
 		lexemeField.borderStyle = UITextBorderStyle.Line
 		lexemeField.contentVerticalAlignment = UIControlContentVerticalAlignment.Top
@@ -120,13 +127,19 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(completeButton)
 	}
 	
+
 	func continueButtonPressed(sender: UIButton!) {
-		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "false")
+		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		                                     action: "false", type: appDelegate.sentence_or_word_lexeme)
+
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
 	func completeButtonPressed(sender: UIButton!) {
-		server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String), action: "true")
+		
+		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		                                     action: "true", type: appDelegate.sentence_or_word_lexeme)
+
 		navigationController?.popViewControllerAnimated(true)
 	}
 	
@@ -134,11 +147,10 @@ class ContinueLexemeViewController: UIViewController {
 		super.viewDidLoad()
 		createCompleteButton()
 		createContinueButton()
-		lexeme = server.requestIncompleteLexeme()!
+		lexeme = server.requestIncompleteLexeme(appDelegate.sentence_or_word_lexeme)!
 		self.parseInfoFromDict()
 		createLexemeInfo()
 		createLexemeField()
-//		self.navigationController?.navigationBar.topItem?.title = "Continue Lexeme"
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	

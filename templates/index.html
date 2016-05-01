@@ -119,11 +119,16 @@
                     <button type="submit" id="start-new" class="submit" ng-click="view_start_new_lexeme_panel()">START</button>
                 </main>
             </div>
+
+
+            <!-- Panel displayed when the timeout is passed -->
             <div ng-switch-when="Timeout">
                 <h2>Timeout of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
                 <button type="submit" class="submit" ng-click="view_continue_list_panel()">YES</button>
                 <button type="submit" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>       
             </div>
+            
+            <!-- Panel displayed when an invalid continuation is provided by the user -->
             <div ng-switch-when="InvalidContinue">
                 <main>
                     <h2>Invalid continuation of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
@@ -131,6 +136,7 @@
                     <button type="submit" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>
                 </main>
             </div>
+
         </div>
 	</body>
 </html>

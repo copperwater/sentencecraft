@@ -3,6 +3,7 @@ package sentencecraft.sentencecraft;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.TableLayout;
@@ -38,6 +39,9 @@ public class ViewSentenceTask extends DownloadInfoTask{
     protected void onPostExecute(String result) {
         ArrayList<String> data = interpretView(result);
         TableLayout tl=(TableLayout)rootView.findViewById(editId);
+        if(tl == null){
+            return;
+        }
         //remove rows in existing table
         tl.removeAllViews();
         for(int i = 0; i < data.size(); ++i){
@@ -57,6 +61,11 @@ public class ViewSentenceTask extends DownloadInfoTask{
         Message msg = Message.obtain();
         msg.obj= myTags;
         mainUIHandler.sendMessage(msg);
+        //if there was an error let user know
+        if(getResponseCode() != 200){
+            Snackbar mySnackBar = Snackbar.make(rootView,result, Snackbar.LENGTH_LONG);
+            mySnackBar.show();
+        }
     }
 
     //interprets what's read from view-sentences

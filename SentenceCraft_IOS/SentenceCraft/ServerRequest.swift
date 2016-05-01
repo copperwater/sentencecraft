@@ -14,15 +14,16 @@ class ServerRequest {
 
 	init() {
 		serverURL = "http://127.0.0.1:5000/"
+//		serverURL =  "http://128.113.151.26:5000/"
 	}
 	
-	func sendStartSentenceRequest(tags: String, sentence: String) {
+	func sendStartSentenceRequest(tags: String, sentence: String, type: String) {
 		let requestURL = NSURL(string: serverURL + "start/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "tags=\(tags)&start=\(sentence)&type=word"
+		let postString: String = "tags=\(tags)&start=\(sentence)&type=\(type)"
 		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
 		let postLength: String = "\(postData.length)"
 		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
@@ -37,18 +38,13 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
-//			
-//			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-//			print("response \(responseString)")
-			
 		}
 		task.resume()
 	}
 	
 	
-	func requestIncompleteLexeme() -> [String: AnyObject]? {
-		let requestURL = NSURL(string: serverURL + "incomplete/?type=word")
+	func requestIncompleteLexeme(type: String) -> [String: AnyObject]? {
+		let requestURL = NSURL(string: serverURL + "incomplete/?type=\(type)")
 		let request = NSMutableURLRequest(URL: requestURL!)
 		request.HTTPMethod = "GET"
 		var dict: [String:AnyObject] = [:]
@@ -60,26 +56,21 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("response \(responseString)")
-			
 			dict = self.convertDataToDictionary(data!)!
 		}
 		task.resume()
 		while(dict.count < 1) {}
-//		print(dict)
 		return dict
 	}
 	
 	
-	func sendAppendRequest(appendage: String, key: String, action: String) {
+	func sendAppendRequest(appendage: String, key: String, action: String, type: String) {
 		let requestURL = NSURL(string: serverURL + "append/")
 		let request = NSMutableURLRequest(URL:requestURL!);
 		
 		request.HTTPMethod = "POST"
 		
-		let postString: String = "key=\(key)&addition=\(appendage)&type=word&complete=\(action)"
+		let postString: String = "key=\(key)&addition=\(appendage)&type=\(type)&complete=\(action)"
 		let postData: NSData = postString.dataUsingEncoding(NSASCIIStringEncoding, allowLossyConversion: true)!
 		let postLength: String = "\(postData.length)"
 		request.setValue(postLength, forHTTPHeaderField: "Content-Length")
@@ -94,21 +85,17 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
-			
-			
-			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding)
-			print("response \(responseString)")
-			
 		}
 		task.resume()
 
 	}
 	
 	
-	func sendViewRequest() -> [[String: AnyObject]]? {
-		let requestURL = NSURL(string: serverURL + "view/?type=word&tags=")
+	func sendViewRequest(type: String, tags: String) -> [[String: AnyObject]]? {
+		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
+		var isDictionary: Bool = true
 		request.HTTPMethod = "GET"
 		
 		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -120,33 +107,33 @@ class ServerRequest {
 				return
 			}
 			
-			dict = self.convertDataToDictionaryList(data!)!
-			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
+			if responseString[responseString.startIndex] != "[" {
+				isDictionary = false
+			} else {
+				dict = self.convertDataToDictionaryList(data!)!
+			}
+
 		}
 		task.resume()
-		while(dict.count < 1) {}
-//		print("HOHOHOHO \(dict)")
+		while(dict.count < 1) { if isDictionary == false {break} }
 		return dict
 	}
 	
 	func convertDataToDictionaryList(data: NSData) -> [[String:AnyObject]]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
-		} catch let error as NSError {
-			print(error)
-		}
+		} catch _ {}
 		
-		return nil
+		return []
 	}
 	
 	func convertDataToDictionary(data: NSData) -> [String:AnyObject]? {
 		do {
 			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
-		} catch let error as NSError {
-			print(error)
-		}
+		} catch _ {}
 		
-		return nil
+		return [:]
 	}
 	
 }

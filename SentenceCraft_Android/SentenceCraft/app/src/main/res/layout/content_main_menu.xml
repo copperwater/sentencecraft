@@ -12,6 +12,7 @@
     android:background="@color/colorLightGreen"
     android:gravity="center"
     android:dividerPadding="@dimen/activity_vertical_margin"
+    android:id="@+id/main_top"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="sentencecraft.sentencecraft.MainMenu"
     tools:showIn="@layout/activity_main_menu">

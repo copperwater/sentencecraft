@@ -28,6 +28,7 @@ public class ContinueSentence extends AppCompatActivity {
         setContentView(R.layout.activity_continue_sentence);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        View snackView = findViewById(R.id.continue_top);
 
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
@@ -48,7 +49,6 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         //call ContinueSentenceGetTask and register it with a handler so that we receive a key upon completion
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentenceRequest()+"?"+ GlobalValues.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
@@ -59,12 +59,13 @@ public class ContinueSentence extends AppCompatActivity {
                     key = msg.obj.toString();
                 }
             };
-            ContinueSentenceGetTask task = new ContinueSentenceGetTask(myView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
+            ContinueSentenceGetTask task = new ContinueSentenceGetTask(snackView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
             //notify user if no internet
-            if(myView != null){
-                Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+            if(snackView != null){
+                Snackbar mySnackBar = Snackbar.make(snackView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                View mView = mySnackBar.getView();
                 mySnackBar.show();
             }
         }
@@ -112,26 +113,31 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         //call ContinueSentencePostTask with different arguments depending on the id of the button clicked
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentencePost();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            ContinueSentencePostTask task = new ContinueSentencePostTask(myView, getApplicationContext(), R.id.continue_sentence, key);
+            //redirect to main and tell it to start the ContinueSentencePostTask
+            Intent newIntent = new Intent(this,MainMenu.class);
+            newIntent.putExtra("TASK","Continue");
+            newIntent.putExtra("KEY",key);
+            newIntent.putExtra("URL",stringUrl);
+            newIntent.putExtra("LEXEME",sLexeme);
             switch(view.getId()){
                 case R.id.continue_btn:
-                    task.execute("POST",stringUrl,sLexeme,"false");
+                    newIntent.putExtra("COMPLETE","false");
                     break;
                 case R.id.finish_btn:
-                    task.execute("POST",stringUrl,sLexeme,"true");
+                    newIntent.putExtra("COMPLETE","true");
                     break;
                 default:
                     Log.d(getString(R.string.app_name),"button pressed did not have associated id.");
             }
+            startActivity(newIntent);
         } else {
-            if(myView != null){
+            if(view != null){
                 //notify user if no internet
-                Snackbar mySnackBar = Snackbar.make(myView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
             }
         }

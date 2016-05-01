@@ -125,12 +125,17 @@ public class StartSentence extends AppCompatActivity {
         Log.d(getString(R.string.app_name),"your tags:" + sTags);
 
         //make a StartSentenceTask and communicate with the server
-        View myView = findViewById(android.R.id.content);
         String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getStartSentenceExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            new StartSentenceTask(myView, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
+            //redirect to main and ask it to start the StartSentenceTask
+            Intent newIntent = new Intent(this,MainMenu.class);
+            newIntent.putExtra("TASK","Start");
+            newIntent.putExtra("URL",stringUrl);
+            newIntent.putExtra("LEXEME",sLexeme);
+            newIntent.putExtra("TAGS",sTags);
+            startActivity(newIntent);
         } else {
             //no internet
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
