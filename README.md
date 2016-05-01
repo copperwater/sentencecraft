@@ -7,6 +7,7 @@ Paragraph mode is also supported, where each user writes a full sentence instead
 
 ### Installation
 These steps will get the SentenceCraft server installed and running on your system:
+
 1. Install [Python](https://www.python.org/downloads/) Make sure you have version 2.7.
 2. Install [MongoDB](https://www.mongodb.org/downloads).
 3. Install [PyMongo](https://pypi.python.org/pypi/pymongo/).
