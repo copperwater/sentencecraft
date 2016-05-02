@@ -53,6 +53,7 @@ class ServerRequest {
 		let request = NSMutableURLRequest(URL: requestURL!)
 		request.HTTPMethod = "GET"
 		var dict: [String:AnyObject] = [:]
+		var isDictionary: Bool = true
 		
 		// Send the request and wait for a response
 		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -62,11 +63,19 @@ class ServerRequest {
 				print("error=\(error)")
 				return
 			}
+			
+			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
+			if responseString[responseString.startIndex] != "{" {
+				isDictionary = false
+			} else {
 			// Convert the response from JSON to a dictionary
-			dict = self.convertDataToDictionary(data!)!
+				do {
+					dict =  try NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [String:AnyObject]
+				} catch _ {}
+			}
 		}
 		task.resume()
-		while(dict.count < 1) {}
+		while(dict.count < 1) { if isDictionary == false {break} }
 		return dict
 	}
 	
@@ -106,7 +115,7 @@ class ServerRequest {
 		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
-		var isDictionary: Bool = true
+		var isDictionaryList: Bool = true
 		request.HTTPMethod = "GET"
 		
 		// Send the request and wait for a response
@@ -122,35 +131,19 @@ class ServerRequest {
 			// Check the response string to see if it is a list of dictionaries
 			let responseString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
 			if responseString[responseString.startIndex] != "[" {
-				isDictionary = false
+				isDictionaryList = false
 			} else {
 				// If the JSON object is in the right format, convert it into a list of dictionaries
-				dict = self.convertDataToDictionaryList(data!)!
+				do {
+					dict =
+						try NSJSONSerialization.JSONObjectWithData(data!, options: []) as! [[String:AnyObject]]
+				} catch _ {}
 			}
 
 		}
 		task.resume()
 		// Wait for the dictionary to be populated by the request
-		while(dict.count < 1) { if isDictionary == false {break} }
+		while(dict.count < 1) { if isDictionaryList == false {break} }
 		return dict
-	}
-	
-	// Convert JSON to list of dictionaries
-	func convertDataToDictionaryList(data: NSData) -> [[String:AnyObject]]? {
-		do {
-			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [[String:AnyObject]]
-		} catch _ {}
-		
-		return []
-	}
-	
-	// Convert JSON to dictionary
-	func convertDataToDictionary(data: NSData) -> [String:AnyObject]? {
-		do {
-			return try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String:AnyObject]
-		} catch _ {}
-		
-		return [:]
-	}
-	
+	}	
 }
