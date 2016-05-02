@@ -44,7 +44,7 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 	
 	// Returns the number of rows in a selected picker item if there are any
 	func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-		if (pickerView.tag == 0) {
+		if pickerView.tag == 0 {
 			return modes.count
 		} else {
 			return modes.count
@@ -59,7 +59,7 @@ class LexemeModeViewController: UIViewController, UIPickerViewDelegate, UIPicker
 	// Depending on what the user chose, change the lexeme mode to either sentence or paragraph
 	func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int)
 	{
-		if (pickerView.tag == 0) {
+		if pickerView.tag == 0 {
 			appDelegate.sentence_or_word_lexeme = "word"
 		} else  {
 			appDelegate.sentence_or_word_lexeme = "sentence"
