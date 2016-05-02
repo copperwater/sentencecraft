@@ -32,6 +32,6 @@
     <string name="title_activity_settings">Settings</string>
     <string name="title_activity_more_sentence_info">MoreSentenceInfo</string>
 
-    <string name="setting_network">use localhost? no/yes?</string>
-    <string name="setting_lexeme">sentence/word as lexeme</string>
+    <string name="setting_network">Server Location?</string>
+    <string name="setting_lexeme">Lexeme composition?</string>
 </resources>

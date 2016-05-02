@@ -20,17 +20,44 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <Switch
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/setting_network"
-                android:id="@+id/networkSwitch"
-                android:layout_marginBottom="@dimen/activity_vertical_margin" />
-            <Switch
-                android:layout_width="wrap_content"
+                android:text="@string/setting_network"/>
+            <TextView android:id="@+id/settings_localhost"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/setting_lexeme"
-                android:id="@+id/lexemeswitch"/>
+                android:textSize="@dimen/large_font"
+                android:text="Localhost"
+                android:onClick="settingButtonResponse"/>
+            <TextView android:id="@+id/setting_remote"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/large_font"
+                android:text="Remote"
+                android:onClick="settingButtonResponse"/>
+            <TextView
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_lexeme"/>
+            <TextView android:id="@+id/setting_word"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/large_font"
+                android:text="Word"
+                android:onClick="settingButtonResponse"/>
+            <TextView android:id="@+id/setting_sentence"
+                android:layout_marginBottom="@dimen/activity_vertical_margin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/large_font"
+                android:text="Sentence"
+                android:onClick="settingButtonResponse"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
