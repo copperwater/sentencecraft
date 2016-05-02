@@ -99,7 +99,7 @@ class ContinueLexemeViewController: UIViewController {
 		continueButton = UIButton.init(type: UIButtonType.RoundedRect)
 		continueButton.setTitle("Continue", forState: UIControlState.Normal)
 		continueButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-		continueButton.frame = CGRectMake(0, 0, 200, 50)
+		continueButton.frame = CGRectMake(0, 0, 150, 50)
 		continueButton.center = CGPointMake(continueButton.frame.width/2 + 20,
 		                                    self.view.frame.height - continueButton.frame.height/2 - 20)
 		continueButton.layer.cornerRadius = 10
@@ -116,7 +116,7 @@ class ContinueLexemeViewController: UIViewController {
 		completeButton = UIButton.init(type: UIButtonType.RoundedRect)
 		completeButton.setTitle("Complete", forState: UIControlState.Normal)
 		completeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-		completeButton.frame = CGRectMake(0, 0, 200, 50)
+		completeButton.frame = CGRectMake(0, 0, 150, 50)
 		completeButton.center = CGPointMake(self.view.frame.width - completeButton.frame.width/2 - 20,
 		                                  self.view.frame.height - completeButton.frame.height/2 - 20)
 		completeButton.layer.cornerRadius = 10
@@ -151,9 +151,18 @@ class ContinueLexemeViewController: UIViewController {
 		createCompleteButton()
 		createContinueButton()
 		lexeme = appDelegate.server.requestIncompleteLexeme(appDelegate.sentence_or_word_lexeme)!
-		self.parseInfoFromDict()
-		createLexemeInfo()
-		createLexemeField()
+		if lexeme.isEmpty {
+			
+			navigationController?.popViewControllerAnimated(true)
+
+			let alert: UIAlertView = UIAlertView(title: "Continue Lexeme:", message: "There are no lexemes to continue in the server. Consider starting one.", delegate: self, cancelButtonTitle: "Ok")
+			alert.show()
+			
+		} else {
+			self.parseInfoFromDict()
+			createLexemeInfo()
+			createLexemeField()
+		}
 		// Do any additional setup after loading the view, typically from a nib.
 	}
 	

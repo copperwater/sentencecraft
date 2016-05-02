@@ -71,6 +71,11 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		
 		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
 		                                                       tags: "")!
+		
+		if lexemesDictionary.count == 0 {
+			let alert: UIAlertView = UIAlertView(title: "View Lexemes:", message: "There are no completed lexemes in the server. Consider completing one.", delegate: self, cancelButtonTitle: "Ok")
+			alert.show()
+		}
 		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}

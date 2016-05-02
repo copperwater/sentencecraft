@@ -123,6 +123,9 @@ class StartLexemeViewController: UIViewController {
 		                                            type: appDelegate.sentence_or_word_lexeme)
 		navigationController?.popViewControllerAnimated(true)
 		
+		let alert: UIAlertView = UIAlertView(title: "Start Lexeme:", message: "Successfully submitted sentence", delegate: self, cancelButtonTitle: "Ok")
+		alert.show()
+		
 	}
 
 	// Load the StartLexemeViewController view
