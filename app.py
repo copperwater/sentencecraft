@@ -230,6 +230,9 @@ def api_append_to_lexeme_collection():
     if not key in LC_MAP:
         return "ERROR: This lexeme collection has timed out", 408
 
+    # strip any whitespace from the new addition
+    addition = addition.strip()
+
     # assume addition is one lexeme; pull it into the appropriate class
     # also make the LexemeCollection for later
     if typ == 'word':
@@ -307,6 +310,9 @@ def api_start_lexeme_collection():
         #default is Word
         typ = 'word'
         db_collection = MONGO.db.sentences
+
+    # Strip any whitespace from start_str
+    start_str = start_str.strip()
 
     # Construct start_str as a Lexeme
     if typ == 'word':
