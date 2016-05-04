@@ -101,7 +101,6 @@ def api_view_lexeme_collections():
 
     # extract the tag list parameter, if any, and convert to a list of strings
     tags = request.args.get('tags')
-    print type(tags)
     if tags is None or len(tags) == 0:
         tags = []
     else:
