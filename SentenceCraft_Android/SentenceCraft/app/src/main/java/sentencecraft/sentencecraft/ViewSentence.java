@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class ViewSentence extends AppCompatActivity {
@@ -73,6 +74,12 @@ public class ViewSentence extends AppCompatActivity {
         //get tags and submit as part of the URL
         if(viewTags != null){
             tags = viewTags.getText().toString();
+            //Url encode tags
+            try{
+                tags = URLEncoder.encode(tags,"UTF-8");
+            }catch(Exception e){
+                e.printStackTrace();
+            }
         }
         if(!tags.equals("")){
             stringUrl += "&tags=" + tags;
