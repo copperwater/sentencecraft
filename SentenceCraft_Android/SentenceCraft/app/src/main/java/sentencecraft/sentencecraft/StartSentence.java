@@ -97,7 +97,7 @@ public class StartSentence extends AppCompatActivity {
             return;
         }
         String sLexeme = mLexeme.getText().toString();
-        Log.d(getString(R.string.app_name), sLexeme);
+        Log.d(getString(R.string.app_name), "lexeme:" + sLexeme);
         if (sLexeme.equals("")) {
             Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_lexeme, Snackbar.LENGTH_SHORT);
             mySnackBar.show();
