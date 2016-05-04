@@ -71,13 +71,14 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
             //gets lexemes and appends to userData
             JSONObject lexemeCollection = reader.getJSONObject("lexemecollection");
             JSONArray lexemes = lexemeCollection.getJSONArray("lexemes");
-            for (int i = 0; i < lexemes.length(); ++i) {
+            for (int i = Math.max(0,lexemes.length()-3); i < lexemes.length(); ++i) {
                 userData += lexemes.getString(i) + " ";
             }
             try {
                 //get tag data and appends to tagData
                 JSONArray tags = lexemeCollection.getJSONArray("tags");
-                for (int i = 0; i < tags.length(); ++i) {
+                //display up to only 3 Lexemes
+                for ( int i = 0; i < tags.length(); ++i) {
                     if (!tagData.equals("")) {
                         tagData += ",";
                     }
