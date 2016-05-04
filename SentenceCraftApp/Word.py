@@ -25,7 +25,7 @@ class Word(Lexeme):
         punctuations = 0
         for char in self.text:
             if char.isalpha(): letters += 1
-            elif char.isnumeric(): numbers += 1
+            elif unicode(char, 'utf-8').isnumeric(): numbers += 1
             elif char == "'": apostrophes += 1
             else: punctuations += 1
 
