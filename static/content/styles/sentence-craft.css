@@ -338,6 +338,10 @@ footer {
     text-align:center;
 }
 
+.side-menu h3 {
+    color: grey;
+}
+
 .btn-menu {
     width:200px;
     margin: 5px 5px 5px 5px;
