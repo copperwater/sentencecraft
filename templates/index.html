@@ -6,143 +6,225 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
         <script type="text/javascript" src="/static/content/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/cbpAnimatedHeader.js"></script>
+        <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+        <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+        <!-- Custom CSS -->
+        <link href="/static/content/styles/sentence-craft.css" rel="stylesheet" type="text/css">
+        <link href="/static/content/styles/bootstrap.css" rel="stylesheet" type="text/css">
+        <!-- Custom Fonts -->
+        <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+
         <script type="text/javascript" src="/static/content/js/sentence-craft.js"></script>
-        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-        <link rel="stylesheet" type="text/css" href="/static/content/styles/sentencecraft.css" />
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
 	</head>
 
     <!-- Main node-js application that utilizes the MVC design pattern-->
-	<body ng-app="sentence_craft_app" ng-controller="view_controller" class="panel panel-default">
-        <!-- Navigation links -->
-        <header class="panel-heading">
-            <img id="pagetitle" src="../static/content/images/sentencecraft.png">
-            <nav id="controls">
-                <nav id="modes">
-                    
-                        <button type="button" id="start" class="btn btn-success" ng-click="view_start_new_lexeme_panel()">Start</button>
-                        <button type="button" id="continue"  class="btn btn-info" ng-click="view_continue_list_panel()">Continue</button>
-                        <button type="button" id="view"  class="btn btn-warning" ng-click="view_lexeme_list_panel()">View</button>
-                        
-                </nav>
-                <nav id="lexemes">
-                    <div class="btn-group">
-                        <button type="button" id="sentence" class="btn btn-primary" ng-click="switch_sentence_mode()">Sentence</button>
-                        <button type="button" id="paragraph"  class="btn btn-primary" ng-click="switch_paragraph_mode()">Paragraph</button>
+	<body ng-app="sentence_craft_app" ng-controller="view_controller"  class="index">
+        
+            <!-- Navigation links -->
+        <nav class="navbar navbar-default navbar-fixed-top">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="col-lg-2">
                     </div>
-                </nav>
-            </nav>
-        </header>
-        <!-- The ng-switch changes the main panel displayed to the user based on the current operation type -->
-        <div ng-switch on="operation_type">
-
-            <!-- Main panel displayed for starting new sentences-->
-            <div ng-switch-when="StartNewLexeme"  class="panel-body">
-                <main>
-                    <!-- Text field for starting a lexeme-->
-                    <section id="text">
-                        <input id="entry" ng-model="model.start_text"/>
-                    </section>
-                    <!-- Templated tags field. Here tags are created on the fly. -->
-                    <section id="tags">
-                        <button class="add-tag" ng_click="add_tag()">Add Tag</button>
-                        <button class="remove-tag" ng_click="remove_tag()">Remove Tag</button>
-                        <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
-                        </section>
-                    </section>
-                    <button type="submit" id="write" class="submit" ng-click="start_new_lexeme_api_call()">WRITE</button>
-                </main>
-            </div>
-            <!-- Panel displayed for viewing a list of lexemes -->
-            <div ng-switch-when="ViewLexemeList"  class="panel-body">
-                <main>
-                    <!-- Another templated tags field. Tags are created on the fly. -->
-                    <section id="tags2">
-                        <button ng_click="add_tag()" class="btn btn-success">Add Tag</button>
-                        <button class="btn btn-danger" ng_click="remove_tag()">Remove Tag</button>
-                        <section class="input-group">
-                            <input class="tag" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]"/>
-                        </section>
-                    </section>
-                    <!-- Generates a list of the lexemes from the node-js template -->
-                    <div ng-switch on="view_data">
-                        <div ng-switch-when="SomeToView">
-                            <ol  class="list-group">
-                                <li ng-repeat="lexeme in data" class="list-group-item">
-                                    {[lexeme]}
+                    <div class="col-lg-5">
+                        <a class="navbar-brand" href="#page-top">SentenceCraft|</a>
+                    </div>
+                    <div class="col-lg-5">
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav navbar-right">
+                                <li class="hidden">
+                                    <a href="#page-top"></a>
                                 </li>
-                            </ol>
-                        </div>
-                        <div ng-switch-when="NoneToView">
-                            There are no {[model.mode]}s to view matching the tag criteria.
+                                <li class="page-scroll">
+                                    <a href="#about">About</a>
+                                </li>
+                                <li class="page-scroll">
+                                    <a href="#contact">Contact</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
-                    <button type="submit" id="search" class="submit" ng-click="view_lexeme_list_panel()">VIEW</button>
-                </main>
+                </div>
             </div>
+        </nav>
 
-            <!-- Panel display when continuing a lexeme -->
-            <div ng-switch-when="ContinueLexeme"  class="panel-body">
-                <main>
-                    <section id = "to-complete">
-                        <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
-                    </section>
-                    <section id="continue-text">
-                      <input id="entry" ng-model="model.continue_text"/>
-                    </section>
-                    <button type="submit" id="continue" class="submit" ng-click="continue_api_call(false)">CONTINUE</button>
-                    <button type="submit" id="complete" class="submit" ng-click="continue_api_call(true)">COMPLETE</button>
-                </main>
-            </div>
-            <!-- Panel displayed upon successful lexeme completion/continuation -->
-            <div ng-switch-when="ContinueAnother">
-                <main>
-                <h2>Successfully modified {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
-                    <button type="submit" id="complete-yes" class="submit" ng-click="view_continue_list_panel()">YES</button>
-                    <button type="submit" id="complete-no" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>
-                </main>
-            </div>
-            <!-- Panel displayed upon successful lexeme completion -->
-            <div ng-switch-when="SuccessfulComplete">
-                <main>
-                <h2>Successfully started {[model.mode]}. Start another?</h2>
-                    <button type="submit" id="start-yes" class="submit" ng-click="view_start_new_lexeme_panel()">YES</button>
-                </main>
-            </div>
-            <!-- Panel displayed upon failure to start a lexeme -->
-            <div ng-switch-when="FailedStart">
-                <main>
-                <h2>Failed to start {[model.mode]}. Invalid start for {[model.mode]}. Try again?</h2>
-                    <button type="submit" id="try-yes" class="submit" ng-click="view_start_new_lexeme_panel()">YES</button>
-                </main>
-            </div>
+        <div id="main-content-panel">
+            <div class="row">
+                <div class="col-lg-2">
+                    <div class="main-area side-menu" id="controls">
+                        <div id="modes">
+                            <div class="row">
+                                <button type="button" id="start" class="btn btn-success btn-menu" ng-click="view_start_new_lexeme_panel()">Start</button>
+                            </div>
+                            <div class="row">
+                                <button type="button" id="continue" class="btn btn-info btn-menu" ng-click="view_continue_list_panel()">Continue</button>
+                            </div>
+                            <div class="row">
+                                <button type="button" id="view" class="btn btn-warning btn-menu" ng-click="view_lexeme_list_panel()">View</button>
+                            </div>
+                        </div>
+                        <div id="lexemes">
+                            <!--<div class="row">
+                                <button type="button" id="sentence" class="btn btn-primary btn-menu" ng-click="switch_sentence_mode()">Sentence</button>
+                            </div>
+                            <div class="row">
+                                    <button type="button" id="paragraph" class="btn btn-primary btn-menu" ng-click="switch_paragraph_mode()">Paragraph</button>
+                            </div>-->
+                            <div id="mode-switch-button">
+                                <h3>Mode</h3>
+                                <input type="checkbox" checked data-toggle="toggle" data-on="Sentence" data-off="Paragraph" data-onstyle="success" data-offstyle="info" />
+                            </div>
+                         </div>
+                    </div>
+                </div>
+                <div class="col-lg-10 center-panel">
+                    <div ng-switch on="operation_type" class="center-work-area">
+                        <!-- Main panel displayed for starting new sentences-->
+                        <div ng-switch-when="StartNewLexeme">
+                            <main>
+                                <!-- Text field for starting a lexeme-->
+                                <section id="text">
+                                    <input id="entry" rows="2" class="form-control" ng-model="model.start_text" />
+                                </section>
+                                <!-- Templated tags field. Here tags are created on the fly. -->
+                                <section id="tags">
+                                    <button class="btn btn-success btn-menu tag-control" ng_click="add_tag()">Add Tag</button>
+                                    <button class="btn btn-danger btn-menu tag-control" ng_click="remove_tag()">Remove Tag</button>
+                                    <section>
+                                        <input class="form-control tag-control" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]" />
+                                    </section>
+                                </section>
+                                <button type="submit" id="write" class="btn btn-info tag-control" ng-click="start_new_lexeme_api_call()">WRITE</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed for viewing a list of lexemes -->
+                        <div ng-switch-when="ViewLexemeList">
+                            <main>
+                                <!-- Another templated tags field. Tags are created on the fly. -->
+                                <section id="tags2">
+                                    <button ng_click="add_tag()" class="btn btn-success tag-control">Add Tag to be Searched</button>
+                                    <button  ng_click="remove_tag()" class="btn btn-danger tag-control">Remove Tag</button>
+                                    <section>
+                                        <input class="form-control tag-control" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]" />
+                                    </section>
+                                </section>
+                                <!-- Generates a list of the lexemes from the node-js template -->
+                                <div ng-switch on="view_data">
+                                    <div ng-switch-when="SomeToView" class="panel-group" id="accordion">
+                                        <!--<ol class="list-group">
+                                            <li ng-repeat="lexeme in data" class="list-group-item">
+                                                {[lexeme]}
+                                            </li>
+                                        </ol>-->
+                                        <div ng-repeat="lexeme in data" class="panel-group center-work-area" id="accordion">
+                                            <div class="panel panel-default">
+                                                <div class="panel-heading">
+                                                    <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1">                                                        
+                                                            {[lexeme]}
+                                                    </h4>
+                                                </div>
+                                                <div id="collapse1" class="panel-collapse collapse in">
+                                                    <div class="panel-body">
+                                                        {[lexeme]}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div ng-switch-when="NoneToView">
+                                        There are no {[model.mode]}s to view matching the tag criteria.
+                                    </div>
+                                </div>
+                                <button type="submit" id="search" class="btn btn-info tag-control" ng-click="view_lexeme_list_panel()">VIEW</button>
+                            </main>
+                        </div>
+                        <!-- Panel display when continuing a lexeme -->
+                        <div ng-switch-when="ContinueLexeme">
+                            <main>
+                                <section id="to-complete">
+                                    <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
+                                </section>
+                                <section id="continue-text">
+                                    <input id="entry" class="form-control" ng-model="model.continue_text" />
+                                </section>
+                                <button type="submit" id="continue" class="btn btn-info tag-control" ng-click="continue_api_call(false)">CONTINUE</button>
+                                <button type="submit" id="complete" class="btn btn-info tag-control" ng-click="continue_api_call(true)">COMPLETE</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed upon successful lexeme completion/continuation -->
+                        <div ng-switch-when="ContinueAnother">
+                            <main>
+                                <h2>Successfully modified {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
+                                <button type="submit" id="complete-yes" class="btn btn-info tag-control" ng-click="view_continue_list_panel()">YES</button>
+                                <button type="submit" id="complete-no" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">NO</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed upon successful lexeme completion -->
+                        <div ng-switch-when="SuccessfulComplete">
+                            <main>
+                                <h2>Successfully started {[model.mode]}. Start another?</h2>
+                                <button type="submit" id="start-yes" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">YES</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed upon failure to start a lexeme -->
+                        <div ng-switch-when="FailedStart">
+                            <main>
+                                <h2>Failed to start {[model.mode]}. Invalid start for {[model.mode]}. Try again?</h2>
+                                <button type="submit" id="try-yes" class="btn btn-info btn-menu" ng-click="view_start_new_lexeme_panel()">YES</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed when there are no lexemes left to complete in the database -->
+                        <div ng-switch-when="NoneToComplete">
+                            <main>
+                                <h2>No {[model.mode]} left to complete. You should consider starting one.</h2>
+                                <button type="submit" id="start-new" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">START</button>
+                            </main>
+                        </div>
+                        <!-- Panel displayed when the timeout is passed -->
+                        <div ng-switch-when="Timeout">
+                            <h2>Timeout of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
+                            <button type="submit" class="btn btn-info tag-control" ng-click="view_continue_list_panel()">YES</button>
+                            <button type="submit" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">NO</button>
+                        </div>
+                        <!-- Panel displayed when an invalid continuation is provided by the user -->
+                        <div ng-switch-when="InvalidContinue">
+                            <main>
+                                <h2>Invalid continuation of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
+                                <button type="submit" class="btn btn-info tag-control" ng-click="view_continue_list_panel()">YES</button>
+                                <button type="submit" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">NO</button>
+                            </main>
+                        </div>
 
-            <!-- Panel displayed when there are no lexemes left to complete in the database -->
-            <div ng-switch-when="NoneToComplete">
-                <main>
-                <h2>No {[model.mode]} left to complete. You should consider starting one.</h2>
-                    <button type="submit" id="start-new" class="submit" ng-click="view_start_new_lexeme_panel()">START</button>
-                </main>
+                    </div>
+                </div>
+                
             </div>
+        </div>  
+        <!-- The ng-switch changes the main panel displayed to the user based on the current operation type -->
+        
 
-
-            <!-- Panel displayed when the timeout is passed -->
-            <div ng-switch-when="Timeout">
-                <h2>Timeout of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
-                <button type="submit" class="submit" ng-click="view_continue_list_panel()">YES</button>
-                <button type="submit" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>       
-            </div>
-            
-            <!-- Panel displayed when an invalid continuation is provided by the user -->
-            <div ng-switch-when="InvalidContinue">
-                <main>
-                    <h2>Invalid continuation of {[model.mode]}. Continue/complete another {[model.mode]}?</h2>
-                    <button type="submit" class="submit" ng-click="view_continue_list_panel()">YES</button>
-                    <button type="submit" class="submit" ng-click="view_start_new_lexeme_panel()">NO</button>
-                </main>
-            </div>
-
-        </div>
+        <nav class="navbar navbar-default navbar-fixed-bottom">
+            <footer class="text-center">
+                <div>
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                Copyright &copy; SentenceCraft 2016
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </nav>
 	</body>
 </html>
