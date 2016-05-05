@@ -17,22 +17,24 @@ public class StartSentenceTask extends DownloadInfoTask {
     private String lexeme;
     private String tags;
 
-    //default constructor
+    /** default constructor */
     public StartSentenceTask(View rootView, Context context, int editId) {
         super(rootView, context, editId);
     }
 
-    // onPostExecute displays the results of the AsyncTask.
+    /** onPostExecute displays the results of the AsyncTask. */
     @Override
     protected void onPostExecute(String result) {
         String operationName = "start";
         Snackbar mySnackBar;
         if(getResponseCode() == 200){
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName),
+                    Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }else{
             //error code. Let user know
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName),
+                    Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();

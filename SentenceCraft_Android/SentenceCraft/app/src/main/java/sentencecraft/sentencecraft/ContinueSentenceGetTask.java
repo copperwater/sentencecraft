@@ -24,14 +24,14 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
     private int tagsId;
     private String key = "";
 
-    //constructor. Also sets internal handler and tagsId appropriately
+    /** constructor. Also sets internal handler and tagsId appropriately */
     public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
         super(rootView, context, editId);
         this.tagsId = tagsId;
         this.mainUIHandler = mainUIHandler;
     }
 
-    //updates tagsId and editId with the appropriate result
+    /** updates tagsId and editId with the appropriate result */
     protected void onPostExecute(String result) {
         String operationName = "DownloadTask";
         if (getResponseCode() == 200) {
@@ -47,7 +47,8 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
         } else {
             //got bad response from server. Let user know
             Snackbar mySnackBar;
-            mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName), Snackbar.LENGTH_LONG);
+            mySnackBar = Snackbar.make(rootView, context.getString(R.string.error_operation_not_complete, operationName),
+                    Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();
@@ -58,7 +59,7 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
         mainUIHandler.sendMessage(msg);
     }
 
-    //interprets JSON data received from the server
+    /** interprets JSON data received from the server */
     private ArrayList<String> interpretContinue(String data) {
         ArrayList<String> toReturn = new ArrayList<>();
         String userData = "";

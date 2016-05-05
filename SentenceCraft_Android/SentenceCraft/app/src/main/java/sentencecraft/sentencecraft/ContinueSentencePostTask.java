@@ -18,7 +18,7 @@ public class ContinueSentencePostTask extends DownloadInfoTask{
     private String isComplete = "";
     private String key;
 
-    //constructor. needs to be passed the key received from ContinueSentenceGetTask
+    /** constructor. needs to be passed the key received from ContinueSentenceGetTask */
     public ContinueSentencePostTask(View rootView, Context context, int editId, String key) {
         super(rootView, context, editId);
         this.key = key;
@@ -58,11 +58,13 @@ public class ContinueSentencePostTask extends DownloadInfoTask{
         String operationName = "continue sentence";
         Snackbar mySnackBar;
         if(getResponseCode() == 200){
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName), Snackbar.LENGTH_SHORT);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.success_operation,operationName),
+                    Snackbar.LENGTH_SHORT);
             mySnackBar.show();
         }else{
             //bad request from server let user know
-            mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName), Snackbar.LENGTH_LONG);
+            mySnackBar = Snackbar.make(rootView,context.getString(R.string.error_operation_not_complete,operationName),
+                    Snackbar.LENGTH_LONG);
             mySnackBar.show();
             mySnackBar.setText(result);
             mySnackBar.show();

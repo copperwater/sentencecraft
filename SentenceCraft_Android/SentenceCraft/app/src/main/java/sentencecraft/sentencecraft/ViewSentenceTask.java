@@ -34,7 +34,7 @@ public class ViewSentenceTask extends DownloadInfoTask{
         myTags = new ArrayList<>();
     }
 
-    // onPostExecute displays the results of the AsyncTask.
+    /** onPostExecute displays the results of the AsyncTask. */
     @Override
     protected void onPostExecute(String result) {
         ArrayList<String> data = interpretView(result);
@@ -68,7 +68,7 @@ public class ViewSentenceTask extends DownloadInfoTask{
         }
     }
 
-    //interprets what's read from view-sentences
+    /** interprets what's read from view-sentences */
     private ArrayList<String> interpretView(String data){
         ArrayList<String> toReturn = new ArrayList<>();
         String temp;

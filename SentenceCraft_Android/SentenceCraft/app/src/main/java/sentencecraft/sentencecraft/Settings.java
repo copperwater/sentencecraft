@@ -32,7 +32,7 @@ public class Settings extends AppCompatActivity {
         setWordAsLexeme(GlobalValues.lexemeIsWord);
     }
 
-    //respond to user clicks
+    /** respond to user clicks */
     public void settingButtonResponse(View view){
         boolean response = true;
         switch(view.getId()){
@@ -55,7 +55,7 @@ public class Settings extends AppCompatActivity {
         }
     }
 
-    //deals with correctly coloring the right text view options for networking
+    /** deals with correctly coloring the right text view options for networking */
     private void setNetworkAsLocalHost(boolean response){
         Context context = getApplicationContext();
         TextView localhost = (TextView) findViewById(R.id.settings_localhost);
@@ -73,7 +73,7 @@ public class Settings extends AppCompatActivity {
         }
     }
 
-    //deals with correctly coloring the right text view options for lexemes
+    /** deals with correctly coloring the right text view options for lexemes */
     private void setWordAsLexeme(boolean response){
         Context context = getApplicationContext();
         TextView word = (TextView) findViewById(R.id.setting_word);

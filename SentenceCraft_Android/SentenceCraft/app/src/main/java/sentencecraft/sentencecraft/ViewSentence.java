@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
@@ -67,7 +68,8 @@ public class ViewSentence extends AppCompatActivity {
     }
 
     public void updateText(View view){
-        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getViewExtension()+"?"+ GlobalValues.getTypeExtension();
+        String stringUrl = GlobalValues.getBaseURL() + GlobalValues.getViewExtension() + "?" +
+                GlobalValues.getTypeExtension();
         EditText viewTags = (EditText)findViewById(R.id.viewSearchTags);
         String tags = "";
 
@@ -77,7 +79,7 @@ public class ViewSentence extends AppCompatActivity {
             //Url encode tags
             try{
                 tags = URLEncoder.encode(tags,"UTF-8");
-            }catch(Exception e){
+            }catch(UnsupportedEncodingException e){
                 e.printStackTrace();
             }
         }
@@ -96,7 +98,8 @@ public class ViewSentence extends AppCompatActivity {
                 }
             };
             View myView = findViewById(R.id.view_top);
-            ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),R.id.toedit,asyncHandler, new myListener());
+            ViewSentenceTask task = new ViewSentenceTask(myView,getApplicationContext(),
+                    R.id.toedit,asyncHandler, new myListener());
             task.execute("GET", stringUrl);
         } else {
             TableLayout tl = (TableLayout)findViewById(R.id.toedit);
@@ -109,7 +112,7 @@ public class ViewSentence extends AppCompatActivity {
         }
     }
 
-    //listener class to respond to clicks on the completed sentences
+    /** listener class to respond to clicks on the completed sentences */
     public class myListener implements View.OnClickListener{
         @Override
         public void onClick(View v) {

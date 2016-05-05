@@ -24,7 +24,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     protected int editId;
     private int responseCode;
 
-    //constructor. sets values appropriately
+    /** constructor. sets values appropriately */
     protected DownloadInfoTask (View rootView, Context context, int editId){
         this.rootView=rootView;
         this.appName = context.getString(R.string.app_name);
@@ -76,7 +76,8 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
 
             // Convert the InputStream into a string and store in contentAsString
             contentAsString += readIt(is, len);
-            Log.d(appName, "received:length " + contentAsString.length() + " " + contentAsString.substring(0,Math.min(len,contentAsString.length())));
+            Log.d(appName, "received:length " + contentAsString.length() + " " +
+                    contentAsString.substring(0,Math.min(len,contentAsString.length())));
         } finally {
             // Makes sure that the InputStream is closed after the app is finished using it.
             if (is != null) {
@@ -86,7 +87,7 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         return contentAsString;
     }
 
-    // Reads an InputStream and converts it to a String.
+    /** Reads an InputStream and converts it to a String. */
     private String readIt(InputStream stream, int len) throws IOException {
         int numRead = 0;
         String toReturn = "";
@@ -101,12 +102,12 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
         return toReturn;
     }
 
-    //can be overwritten to provide additional form data
+    /** can be overwritten to provide additional form data */
     protected void sendAdditionalData(HttpURLConnection conn) throws IOException{
         conn.connect();
     }
 
-    //others can call to see what the response from the server was
+    /** others can call to see what the response from the server was */
     public int getResponseCode(){
         return responseCode;
     }

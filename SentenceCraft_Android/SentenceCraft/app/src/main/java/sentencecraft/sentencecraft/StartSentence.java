@@ -39,7 +39,8 @@ public class StartSentence extends AppCompatActivity {
         //edit screen according to the current lexeme appropriately
         TextView startDirections = (TextView) findViewById(R.id.start_directions);
         if(startDirections != null){
-            startDirections.setText(getString(R.string.app_start_directions, GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
+            startDirections.setText(getString(R.string.app_start_directions,
+                    GlobalValues.getLexeme(), GlobalValues.getLexemeCollection()));
         }
         EditText startLexeme = (EditText) findViewById(R.id.start_lexeme);
         if(startLexeme != null){
@@ -69,7 +70,7 @@ public class StartSentence extends AppCompatActivity {
         }
     }
 
-    //method to handle adding another EditText field for more tags
+    /** method to handle adding another EditText field for more tags */
     public void addTag(View view) {
         Context context= getApplicationContext();
         TableLayout tl=(TableLayout)findViewById(R.id.start_to_edit);
@@ -78,7 +79,8 @@ public class StartSentence extends AppCompatActivity {
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
             EditText text= new EditText(context);
-            TableRow.LayoutParams textParams = new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
+            TableRow.LayoutParams textParams =
+                    new TableRow.LayoutParams(0, TableRow.LayoutParams.WRAP_CONTENT, 1f);
             text.setLayoutParams(textParams);
             text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
             text.setHintTextColor(ContextCompat.getColor(context, R.color.colorBlack));

@@ -42,7 +42,7 @@ public class MainMenu extends AppCompatActivity {
         }
     }
 
-    /*called on button click. Will check for the button and create appropriate intent*/
+    /** called on button click. Will check for the button and create appropriate intent */
     public void buttonResponse(View view){
         Intent intent;
         switch(view.getId()){
@@ -62,7 +62,7 @@ public class MainMenu extends AppCompatActivity {
         startActivity(intent);
     }
 
-    //meant to deal with any extras passed to this intent
+    /** meant to deal with any extras passed to this intent */
     public void dealWithOtherActivities(){
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -82,7 +82,8 @@ public class MainMenu extends AppCompatActivity {
                         Log.d(getString(R.string.app_name),"Invalid parameters");
                         return;
                     }
-                    ContinueSentencePostTask task = new ContinueSentencePostTask(mainTop, getApplicationContext(), R.id.continue_sentence, key);
+                    ContinueSentencePostTask task = new ContinueSentencePostTask(mainTop,
+                            getApplicationContext(), R.id.continue_sentence, key);
                     task.execute("POST",stringUrl,sLexeme,complete);
                     break;
                 case "Start":
@@ -91,7 +92,8 @@ public class MainMenu extends AppCompatActivity {
                         Log.d(getString(R.string.app_name),"Invalid parameters");
                         return;
                     }
-                    new StartSentenceTask(mainTop, getApplicationContext(), R.id.toedit).execute("POST", stringUrl, sLexeme, sTags);
+                    new StartSentenceTask(mainTop, getApplicationContext(), R.id.toedit).
+                            execute("POST", stringUrl, sLexeme, sTags);
                     break;
                 default:
                     Log.d(getString(R.string.app_name),"Don't recognize task to start:"+value);

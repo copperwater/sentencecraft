@@ -49,7 +49,8 @@ public class ContinueSentence extends AppCompatActivity {
         }
 
         //call ContinueSentenceGetTask and register it with a handler so that we receive a key upon completion
-        String stringUrl = GlobalValues.getBaseURL()+ GlobalValues.getContinueSentenceRequest()+"?"+ GlobalValues.getTypeExtension();
+        String stringUrl = GlobalValues.getBaseURL() + GlobalValues.getContinueSentenceRequest() +
+                "?" + GlobalValues.getTypeExtension();
         ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -59,12 +60,14 @@ public class ContinueSentence extends AppCompatActivity {
                     key = msg.obj.toString();
                 }
             };
-            ContinueSentenceGetTask task = new ContinueSentenceGetTask(snackView, getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
+            ContinueSentenceGetTask task = new ContinueSentenceGetTask(snackView,
+                    getApplicationContext(), R.id.continue_sentence, R.id.continue_tag,asyncHandler);
             task.execute("GET",stringUrl);
         } else {
             //notify user if no internet
             if(snackView != null){
-                Snackbar mySnackBar = Snackbar.make(snackView, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                Snackbar mySnackBar = Snackbar.make(snackView, R.string.error_no_internet,
+                        Snackbar.LENGTH_SHORT);
                 View mView = mySnackBar.getView();
                 mySnackBar.show();
             }
@@ -107,7 +110,8 @@ public class ContinueSentence extends AppCompatActivity {
             return;
         }
         if(key.equals("")){
-            Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"), Snackbar.LENGTH_SHORT);
+            Snackbar mySnackBar = Snackbar.make(view, getString(R.string.error_operation_not_complete,"get key"),
+                    Snackbar.LENGTH_SHORT);
             mySnackBar.show();
             return;
         }
@@ -137,7 +141,8 @@ public class ContinueSentence extends AppCompatActivity {
         } else {
             if(view != null){
                 //notify user if no internet
-                Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet, Snackbar.LENGTH_SHORT);
+                Snackbar mySnackBar = Snackbar.make(view, R.string.error_no_internet,
+                        Snackbar.LENGTH_SHORT);
                 mySnackBar.show();
             }
         }
