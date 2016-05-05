@@ -15,15 +15,11 @@ from flask import render_template
 from flask.ext.pymongo import PyMongo
 
 # Local SentenceCraft modules
-import Word
-from Word import Word
-from WordCollection import WordCollection
-from Sentence import Sentence
-from SentenceCollection import SentenceCollection
-import SentenceCraftConfig as config
-
-# ??? modules
-#from . import APP
+from SentenceCraftApp.Word import Word
+from SentenceCraftApp.WordCollection import WordCollection
+from SentenceCraftApp.Sentence import Sentence
+from SentenceCraftApp.SentenceCollection import SentenceCollection
+from SentenceCraftApp import SentenceCraftConfig as config
 
 APP = Flask("app")
 MONGO = PyMongo(APP)
@@ -315,12 +311,14 @@ def api_start_lexeme_collection():
 
     # Construct start_str as a Lexeme
     if typ == 'word':
+        print "Word"
         start_lex = Word(start_str)
     elif typ == 'sentence':
         start_lex = Sentence(start_str)
 
     # validate it as a beginning lexeme
     if not start_lex.is_valid_beginning():
+        print "FAILED"
         return 'ERROR: '+start_lex.get_text()+' is not a valid beginning '+start_lex.type(), 400
 
     # Insert into the database

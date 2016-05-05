@@ -2,17 +2,18 @@
 SentenceCollection - module for a collection of sentences, which form a paragraph.
 '''
 
-import json
-import Sentence
-from LexemeCollection import LexemeCollection
+from SentenceCraftApp import Sentence
+from SentenceCraftApp.LexemeCollection import LexemeCollection
 
 class SentenceCollection(LexemeCollection):
-
+    '''
+    Implementation of the abstract base Lexeme Collection
+    '''
     # Construct this from a JSON object/dictionary.
     def import_json(self, jsonobj):
         self.lexemes = []
-        for lexStr in jsonobj['lexemes']:
-            self.lexemes.append(Sentence.Sentence(lexStr))
+        for lex_str in jsonobj['lexemes']:
+            self.lexemes.append(Sentence.Sentence(lex_str))
         self.complete = jsonobj['complete']
         if 'tags' in jsonobj:
             self.tags = jsonobj['tags']

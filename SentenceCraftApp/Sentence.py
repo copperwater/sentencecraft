@@ -2,25 +2,28 @@
 Sentence module. Sentence is an instance of Lexeme.
 '''
 
-from Lexeme import Lexeme
+from SentenceCraftApp.Lexeme import Lexeme
 
 class Sentence(Lexeme):
-
+    '''
+    Sentence is an instance of the abstract Lexeme.
+    '''
     # Abstract function instantiations
     def __init__(self, textString):
-        Lexeme.__init__(self, textString);
+        Lexeme.__init__(self, textString)
 
     def type(self):
         return "sentence"
 
-    '''
-    Valid sentences consist of words separated by spaces.
-    For these purposes, a valid word can have at most one non-alphabetic
-    character.
-    The first character must be a capital letter.
-    The last character must be in [.?!].
-    '''
     def is_valid(self):
+        '''
+        Valid sentences consist of words separated by spaces.
+        For these purposes, a valid word can have at most one non-alphabetic
+        character. The first character must be a capital letter.
+        The last character must be in a period, question mark, or
+        exclamation point.
+        '''
+
         text = self.text
         if not text[0].isupper():
             return False

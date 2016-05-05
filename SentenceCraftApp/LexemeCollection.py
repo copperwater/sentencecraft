@@ -5,10 +5,6 @@ of different lexemes to inherit from.
 
 # abstract base class module
 import abc
-import uuid
-import json
-import Lexeme
-
 
 class LexemeCollection(object):
     '''
@@ -23,7 +19,11 @@ class LexemeCollection(object):
     complete = False # boolean
 
     # Constructor
-    def __init__(self, lexList=[], complete=False, tagList=[]):
+    def __init__(self, lexList=None, complete=False, tagList=None):
+        if lexList is None:
+            lexList = []
+        if tagList is None:
+            tagList = []
         self.lexemes = lexList
         self.complete = complete
         self.tags = tagList
@@ -32,7 +32,6 @@ class LexemeCollection(object):
         """
         Add a new lexeme to the list, possibly completing the sentence.
         """
-        # TODO type check on lex == Lexeme
         self.lexemes.append(lex)
         if do_finish:
             self.complete = True
@@ -65,39 +64,35 @@ class LexemeCollection(object):
             lst.append(lex.get_text())
         return lst
 
-    def view(self, format):
+    def view(self, f_mat):
         """
         Render in various data formats according to the parameter.
         """
-        if format.lower() == 'json':
-            '''
-            Expected to return a Python dictonary that can be readily converted
-            to json using json.dumps, but it should NOT be a JSON object.
-            '''
-            strlist=[]
+        if f_mat.lower() == 'json':
+            #Expected to return a Python dictonary that can be readily converted
+            #to json using json.dumps, but it should NOT be a JSON object.
+            strlist = []
             for lex in self.lexemes:
                 strlist.append(lex.get_text())
             prejson = {'lexemes' : strlist,
-                        'complete' : self.complete }
+                       'complete' : self.complete}
             if len(self.tags) > 0:
                 prejson['tags'] = self.tags
             return prejson
 
-        elif format.lower() == 'string':
-            '''
-            Return as a list of the lexemes rendered as strings with get_text.
-            '''
+        elif f_mat.lower() == 'string':
+            #Return as a list of the lexemes rendered as strings with get_text.
             rlist = []
             for lex in self.lexemes:
                 rlist.append(lex.get_text())
             return rlist
-            
-        else:
-            raise ValueError('Must specify a valid format!')
 
-    '''
-    Secondary "constructor" methods which can load it more specifically.
-    '''
+        else:
+            raise ValueError('Must specify a valid f_mat!')
+
     @abc.abstractmethod # define this as an abstract method
     def import_json(self, jsonobj):
+        '''
+        Secondary "constructor" methods which can load it more specifically.
+        '''
         raise NotImplementedError('Unimplemented abstract method!')
