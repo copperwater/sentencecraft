@@ -242,10 +242,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         $scope.operation_type = 'ViewLexemeList';
 
         // Convert the tags to a string if they exist
-        var tagList = '';
-        if ($scope.model.tag_list != undefined){
-            tagList = $scope.model.tag_list.toString();
-        }
+        
 
         var lexType = $scope.get_lex_type();
 
