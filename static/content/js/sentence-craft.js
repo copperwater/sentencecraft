@@ -188,7 +188,6 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
         $scope.operation_type = 'ContinueLexeme';
         dataService.incomplete(lexType).then(function (response){
-                console.log(response);
                 var to_complete = response.data;
                 $scope.model.incomplete_lexeme = to_complete;
                 // Get the last 3 lexemes from the lexeme collection
@@ -197,6 +196,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 for(var i = start; i < to_complete_lexemes.length; ++i){
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
+                $scope.model.tag_list = response.data.lexemecollection.tags;
+                console.log($scope.model.tag_list);
             },
             function (data){
                 // Prompt the user that there are no more sentences to complete

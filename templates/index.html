@@ -148,11 +148,15 @@
                                 <section id="to-complete">
                                     <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
                                 </section>
+                                <section class="tags-text">
+                                    Tags: 
+                                    <p class="tag-list-display" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]">{[input]}</p>
+                                </section>
                                 <section id="continue-text">
                                     <input id="entry" class="form-control" ng-model="model.continue_text" />
                                 </section>
                                 <button type="submit" id="continue" class="btn btn-info tag-control" ng-click="continue_api_call(false)">CONTINUE</button>
-                                <button type="submit" id="complete" class="btn btn-info tag-control" ng-click="continue_api_call(true)">COMPLETE</button>
+                                <button type="submit" id="complete" class="btn btn-info tag-control" ng-click="continue_api_call(true)">COMPLETE</button>                                
                             </main>
                         </div>
                         <!-- Panel displayed upon successful lexeme completion/continuation -->
