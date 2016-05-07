@@ -253,13 +253,18 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         dataService.view(tagList, lexType).then(function (response) {
             var data2 = response.data;
             var rep = [];
+            $scope.model.lexemelist = [];
 
             if (data2.length === 0){
                 $scope.view_data = 'NoneToView';
                 return;
             }
-
+            
+            //$scope.model.tag_list = data2.lexemecollection.tags;
             $scope.view_data = 'SomeToView';
+            for (var i = 0; i < length; i++) {
+
+            }
 
             // Generate the list of lexemes
             for (var i = 0; i < data2.length; ++i){
@@ -269,8 +274,13 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                     tmp = tmp + lexemes[j] + ' ';
                 }
                 rep.push(tmp);
+                var lexemelistobj = {};
+                lexemelistobj.lexeme = tmp;
+                lexemelistobj.tags = data2[i].tags;
+                $scope.model.lexemelist.push(lexemelistobj);
             }
             $scope.data = rep;
+            console.log($scope.model.lexemelist);
         },
         function(data){
             $scope.view_data = 'NoneToView';

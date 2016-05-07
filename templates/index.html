@@ -120,16 +120,22 @@
                                                 {[lexeme]}
                                             </li>
                                         </ol>-->
-                                        <div ng-repeat="lexeme in data" class="panel-group center-work-area" id="accordion">
+                                        <div ng-repeat="lexemeObj in model.lexemelist" ng-model="model.lexemeList" class="panel-group center-work-area" id="accordion">
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
                                                     <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1">                                                        
-                                                            {[lexeme]}
+                                                            {[lexemeObj.lexeme]}
                                                     </h4>
                                                 </div>
                                                 <div id="collapse1" class="panel-collapse collapse in">
                                                     <div class="panel-body">
-                                                        {[lexeme]}
+                                                        {[lexemeObj.lexeme]}
+                                                        <section class="tags-text">
+                                                            Tags:
+                                                            <p class="tag-list-display" type="text" ng-repeat="tag in lexemeObj.tags">
+                                                                {[tag]}
+                                                            </p>
+                                                        </section>
                                                     </div>
                                                 </div>
                                             </div>
