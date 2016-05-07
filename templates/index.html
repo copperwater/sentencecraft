@@ -4,8 +4,8 @@
 	    <title>SentenceCraft</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
         <script type="text/javascript" src="/static/content/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
         <script type="text/javascript" src="/static/content/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/static/content/js/cbpAnimatedHeader.js"></script>
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 	</head>
 
     <!-- Main node-js application that utilizes the MVC design pattern-->
-	<body ng-app="sentence_craft_app" ng-controller="view_controller"  class="index">
+	<body ng-app="sentence_craft_app" ng-controller="view_controller" id="view_controller" class="index">
         
             <!-- Navigation links -->
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -74,15 +74,9 @@
                             </div>
                         </div>
                         <div id="lexemes">
-                            <div class="row">
-                                <button type="button" id="sentence" class="btn btn-primary btn-menu" ng-click="switch_sentence_mode()">Sentence</button>
-                            </div>
-                            <div class="row">
-                                    <button type="button" id="paragraph" class="btn btn-primary btn-menu" ng-click="switch_paragraph_mode()">Paragraph</button>
-                            </div>
                             <div id="mode-switch-button">
                                 <h3>Mode</h3>
-                                <input type="checkbox" checked data-toggle="toggle" data-on="Sentence" data-off="Paragraph" data-onstyle="success" data-offstyle="info" />
+                                <input type="checkbox" id="chk-switch-mode" checked data-toggle="toggle" data-on="Paragraph" data-off="Sentence" data-onstyle="success" data-offstyle="info"/>
                             </div>
                          </div>
                     </div>

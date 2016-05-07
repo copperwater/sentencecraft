@@ -77,6 +77,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_sentence_mode = function(){
         if ($scope.model.mode !== 'sentence'){
             $scope.model.mode = 'sentence';
+            console.log('switched to sentence');
             $('.switchlexeme').removeClass('active');
             $('#sentence').addClass('active');
             $('.switchmode').removeClass('active');
@@ -95,6 +96,19 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $('.switchmode').removeClass('active');
             $('#start').addClass('active');
             $scope.operation_type = 'StartNewLexeme';
+        }
+    };
+
+    //Calls the appropraite switch mode function based on the current Lexeme mode
+    $scope.switch_mode = function () {
+        if ($scope.model.mode == 'sentence') {
+            $scope.switch_paragraph_mode();
+        }
+        else if ($scope.model.mode == 'paragraph') {
+            $scope.switch_sentence_mode();
+        }
+        else {
+            $scope.switch_sentence_mode();
         }
     };
 
@@ -285,3 +299,12 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             })
     }
 });
+
+
+// Jquery that calls the switch_mode function when the toggle button is Clicked
+$(function () {
+    $('#chk-switch-mode').change(function () {
+        angular.element('#view_controller').scope().$apply();
+        angular.element('#view_controller').scope().switch_mode();
+    })
+})
