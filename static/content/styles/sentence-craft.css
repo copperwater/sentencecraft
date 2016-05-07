@@ -398,3 +398,7 @@ footer {
     overflow:hidden;
     white-space: nowrap;
 }
+
+#collapse-panel-heading {
+    cursor:pointer;
+}
