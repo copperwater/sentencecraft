@@ -114,7 +114,7 @@
                                 </section>
                                 <!-- Generates a list of the lexemes from the node-js template -->
                                 <div ng-switch on="view_data">
-                                    <div ng-switch-when="SomeToView" class="panel-group" id="accordion">
+                                    <div ng-switch-when="SomeToView" class="panel-group">
                                         <!--<ol class="list-group">
                                             <li ng-repeat="lexeme in data" class="list-group-item">
                                                 {[lexeme]}
@@ -122,12 +122,12 @@
                                         </ol>-->
                                         <div ng-repeat="lexemeObj in model.lexemelist" ng-model="model.lexemeList" class="panel-group center-work-area" id="accordion">
                                             <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1">                                                        
+                                                <div id="collapse-panel-heading" class="panel-heading"  data-toggle="collapse" data-parent="#accordion" href="#collapse{[$index + 1]}">
+                                                    <h4 class="panel-title">                                                        
                                                             {[lexemeObj.lexeme]}
                                                     </h4>
                                                 </div>
-                                                <div id="collapse1" class="panel-collapse collapse in">
+                                                <div id="collapse{[$index + 1]}" class="panel-collapse collapse">
                                                     <div class="panel-body">
                                                         {[lexemeObj.lexeme]}
                                                         <section class="tags-text">

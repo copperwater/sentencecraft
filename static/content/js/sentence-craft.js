@@ -100,11 +100,11 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     };
 
     //Calls the appropraite switch mode function based on the current Lexeme mode
-    $scope.switch_mode = function () {
-        if ($scope.model.mode == 'sentence') {
+    $scope.switch_mode = function (switchmode) {
+        if (switchmode == 'sentence') {
             $scope.switch_paragraph_mode();
         }
-        else if ($scope.model.mode == 'paragraph') {
+        else if (switchmode == 'paragraph') {
             $scope.switch_sentence_mode();
         }
         else {
@@ -311,11 +311,17 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     }
 });
 
-
 // Jquery that calls the switch_mode function when the toggle button is Clicked
 $(function () {
     $('#chk-switch-mode').change(function () {
         angular.element('#view_controller').scope().$apply();
-        angular.element('#view_controller').scope().switch_mode();
+        console.log(this.checked);
+        if (this.checked == false) {
+            var switchmode = 'sentence';
+        }
+        else {
+            var switchmode = 'paragraph';
+        }
+        angular.element('#view_controller').scope().switch_mode(switchmode);
     })
 })

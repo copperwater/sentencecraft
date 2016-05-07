@@ -393,3 +393,8 @@ footer {
     color:gray;
     font-size: 12px;
 }
+
+.panel-heading{
+    overflow:hidden;
+    white-space: nowrap;
+}
