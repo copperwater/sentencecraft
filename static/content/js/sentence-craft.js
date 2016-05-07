@@ -262,9 +262,6 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             
             //$scope.model.tag_list = data2.lexemecollection.tags;
             $scope.view_data = 'SomeToView';
-            for (var i = 0; i < length; i++) {
-
-            }
 
             // Generate the list of lexemes
             for (var i = 0; i < data2.length; ++i){
