@@ -21,8 +21,8 @@ public class ContinueSentencePostTask extends DownloadInfoTask{
     private String key;
 
     /** constructor. needs to be passed the key received from ContinueSentenceGetTask */
-    public ContinueSentencePostTask(View rootView, Context context, int editId, String key) {
-        super(rootView, context, editId);
+    public ContinueSentencePostTask(View rootView, Context context, String key) {
+        super(rootView, context);
         this.key = key;
     }
 

@@ -24,10 +24,12 @@ public class ContinueSentenceGetTask extends DownloadInfoTask {
     private Handler mainUIHandler;
     private int tagsId;
     private String key = "";
+    private int editId;
 
     /** constructor. Also sets internal handler and tagsId appropriately */
     public ContinueSentenceGetTask(View rootView, Context context, int editId, int tagsId, Handler mainUIHandler) {
-        super(rootView, context, editId);
+        super(rootView, context);
+        this.editId = editId;
         this.tagsId = tagsId;
         this.mainUIHandler = mainUIHandler;
     }

@@ -26,12 +26,14 @@ public class ViewSentenceTask extends DownloadInfoTask{
     private ArrayList<String> myTags;
     private Handler mainUIHandler;
     private View.OnClickListener listener;
+    private int editId;
 
     //constructor. Also sets the call back Handler and a OnClickListener for each of the completed sentences
     public ViewSentenceTask(View rootView, Context context, int editId,Handler mainUIHandler, View.OnClickListener listener){
-        super(rootView,context,editId);
+        super(rootView,context);
         this.mainUIHandler = mainUIHandler;
         this.listener = listener;
+        this.editId = editId;
         myTags = new ArrayList<>();
     }
 

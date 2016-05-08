@@ -24,14 +24,12 @@ public class DownloadInfoTask extends AsyncTask<String, String, String> {
     protected View rootView;
     protected Context context;
     protected String appName;
-    protected int editId;
     private int responseCode;
 
     /** constructor. sets values appropriately */
-    protected DownloadInfoTask (View rootView, Context context, int editId){
+    protected DownloadInfoTask (View rootView, Context context){
         this.rootView=rootView;
         this.appName = context.getString(R.string.app_name);
-        this.editId = editId;
         this.context = context;
         this.responseCode = -1;
     }
