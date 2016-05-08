@@ -49,7 +49,7 @@ public class ViewSentenceTask extends DownloadInfoTask{
             TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT);
             row.setLayoutParams(lp);
             TextView text= new TextView(context);
-            text.setText(context.getString(R.string.view_sentence_part,i,data.get(i)));
+            text.setText(context.getString(R.string.view_sentence_part,i+1,data.get(i)));
             text.setPadding(0, 0, 0, (int) rootView.getResources().getDimension(R.dimen.activity_vertical_margin));
             text.setTextColor(ContextCompat.getColor(context, R.color.colorBlack));
             //makes the text clickable with the listener function
