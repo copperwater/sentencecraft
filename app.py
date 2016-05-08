@@ -295,9 +295,8 @@ def api_start_lexeme_collection():
     # Get the initial tag list
     # The assumption is that individual tags cannot contain commas
     try:
-        if tags != "":
-            tags = request.form["tags"].split(',')
-        else:
+        tags = request.form["tags"].split(',')
+        if tags == '':
             tags = []
     except KeyError:
         tags = []
