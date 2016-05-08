@@ -20,7 +20,7 @@ import android.widget.TextView;
 
 public class ContinueSentence extends AppCompatActivity {
 
-    String key = "";
+    private String key = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

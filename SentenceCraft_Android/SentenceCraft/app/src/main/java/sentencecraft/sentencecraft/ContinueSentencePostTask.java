@@ -11,6 +11,8 @@ import java.net.HttpURLConnection;
 /**
  * Created by zqiu on 4/27/16.
  * Used to asynchronously post to incomplete sentences for the ContinueSentence Activity
+ * Overrides onPostExecute to change how what the task does with the result of the page
+ * Overrides sendAdditionalData to send additional data to the server
  */
 public class ContinueSentencePostTask extends DownloadInfoTask{
 

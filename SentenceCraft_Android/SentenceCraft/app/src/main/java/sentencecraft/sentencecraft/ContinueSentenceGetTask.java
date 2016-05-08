@@ -16,11 +16,12 @@ import java.util.ArrayList;
 /**
  * Created by zqiu on 4/27/16
  * Used to asynchronously get incomplete sentences for the ContinueSentence Activity
+ * Overrides onPostExecute to change how what the task does with the result of the page
  */
 
 public class ContinueSentenceGetTask extends DownloadInfoTask {
 
-    Handler mainUIHandler;
+    private Handler mainUIHandler;
     private int tagsId;
     private String key = "";
 

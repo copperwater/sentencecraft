@@ -15,6 +15,9 @@ import java.net.URL;
 /**
  * Created by zqiu on 4/24/16.
  * Used to make requests to the backend server
+ * Template class for downloading/sending information to and from a site
+ * Has sendAdditionalData that a class can extend to send additional information
+ * Can also extend parent class's onPostExecute to change what to do with the relieved data.
  */
 public class DownloadInfoTask extends AsyncTask<String, String, String> {
 

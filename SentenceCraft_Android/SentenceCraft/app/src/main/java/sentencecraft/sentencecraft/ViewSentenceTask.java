@@ -19,12 +19,13 @@ import java.util.ArrayList;
 /**
  * Created by zqiu on 4/26/16.
  * extends DownloadInfoTask to get view sentences
+ * Overrides onPostExecute to change how what the task does with the result of the page
  */
 public class ViewSentenceTask extends DownloadInfoTask{
 
-    ArrayList<String> myTags;
-    Handler mainUIHandler;
-    View.OnClickListener listener;
+    private ArrayList<String> myTags;
+    private Handler mainUIHandler;
+    private View.OnClickListener listener;
 
     //constructor. Also sets the call back Handler and a OnClickListener for each of the completed sentences
     public ViewSentenceTask(View rootView, Context context, int editId,Handler mainUIHandler, View.OnClickListener listener){
