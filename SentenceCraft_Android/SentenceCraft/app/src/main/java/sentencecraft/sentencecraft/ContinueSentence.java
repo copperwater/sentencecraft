@@ -28,7 +28,6 @@ public class ContinueSentence extends AppCompatActivity {
         setContentView(R.layout.activity_continue_sentence);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        View snackView = findViewById(R.id.continue_top);
 
         // Get a support ActionBar corresponding to this toolbar
         ActionBar ab = getSupportActionBar();
@@ -37,6 +36,12 @@ public class ContinueSentence extends AppCompatActivity {
         if(ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        View snackView = findViewById(R.id.continue_top);
 
         //edit what's on the screen based off the lexeme received
         TextView continueDirections = (TextView)findViewById(R.id.continue_directions);

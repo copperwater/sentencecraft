@@ -35,7 +35,11 @@ public class StartSentence extends AppCompatActivity {
         if(ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
         //edit screen according to the current lexeme appropriately
         TextView startDirections = (TextView) findViewById(R.id.start_directions);
         if(startDirections != null){

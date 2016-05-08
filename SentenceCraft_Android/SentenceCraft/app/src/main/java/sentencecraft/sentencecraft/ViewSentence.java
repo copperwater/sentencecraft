@@ -41,7 +41,10 @@ public class ViewSentence extends AppCompatActivity {
         if(ab != null){
             ab.setDisplayHomeAsUpEnabled(true);
         }
+    }
 
+    public void onResume() {
+        super.onResume();
         //call updateText to fill table with completed sentences
         updateText(findViewById(R.id.test));
     }
