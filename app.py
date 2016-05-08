@@ -266,11 +266,18 @@ def api_append_to_lexeme_collection():
         return 'ERROR: The overall lexeme collection is not valid', 400
 
     # update the document as being complete and remove the key
-    db_collection.update(
-        {"_id": lc_bson_to_be_completed['_id']},
-        {'$set': {"complete":try_to_complete, "lexemes":lexc.view("string")},
-         '$unset': {"key": ""}},
-        upsert=False)
+    
+    if try_to_complete:
+        db_collection.insert(
+        {"lexemes": lexc.view("string"), 
+         "complete": try_to_complete, "tags":lc_bson_to_be_completed['tags']})
+        db_collection.remove({"_id": lc_bson_to_be_completed['_id']})
+    else:
+        db_collection.update(
+            {"_id": lc_bson_to_be_completed['_id']},
+            {'$set': {"complete":try_to_complete, "lexemes":lexc.view("string")},
+             '$unset': {"key": ""}},
+            upsert=False)
 
     # remove it from the timeout list
     del LC_MAP[key]
