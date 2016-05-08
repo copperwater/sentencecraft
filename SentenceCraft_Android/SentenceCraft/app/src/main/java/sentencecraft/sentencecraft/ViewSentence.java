@@ -11,6 +11,7 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -120,7 +121,12 @@ public class ViewSentence extends AppCompatActivity {
             if(selected != null){
                 //get associated lexeme and tag
                 String data = selected.getText().toString();
-                String sTag = myTags.get((data.charAt(0) - '0'));
+                int sIndex = data.indexOf('.');
+                Log.d(getString(R.string.app_name),""+sIndex);
+                //parse and get index of the selected data. Note index start at 1
+                String sTag = myTags.get(Integer.parseInt(data.substring(0,sIndex)) - 1);
+                //truncate data to not include the index number
+                data = data.substring(data.indexOf(' ') + 1);
                 //create MoreSentenceInfo intent and pack with above data
                 Intent intent = new Intent(getBaseContext(), MoreSentenceInfo.class);
                 intent.putExtra("LEXEMES", data);
