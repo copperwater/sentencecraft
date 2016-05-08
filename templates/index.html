@@ -4,8 +4,8 @@
 	    <title>SentenceCraft</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
         <script type="text/javascript" src="/static/content/js/jquery.min.js"></script>
+        <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
         <script type="text/javascript" src="/static/content/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/static/content/js/cbpAnimatedHeader.js"></script>
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
@@ -28,7 +28,7 @@
 	</head>
 
     <!-- Main node-js application that utilizes the MVC design pattern-->
-	<body ng-app="sentence_craft_app" ng-controller="view_controller"  class="index">
+	<body ng-app="sentence_craft_app" ng-controller="view_controller" id="view_controller" class="index">
         
             <!-- Navigation links -->
         <nav class="navbar navbar-default navbar-fixed-top">
@@ -74,15 +74,9 @@
                             </div>
                         </div>
                         <div id="lexemes">
-                            <div class="row">
-                                <button type="button" id="sentence" class="btn btn-primary btn-menu" ng-click="switch_sentence_mode()">Sentence</button>
-                            </div>
-                            <div class="row">
-                                    <button type="button" id="paragraph" class="btn btn-primary btn-menu" ng-click="switch_paragraph_mode()">Paragraph</button>
-                            </div>
                             <div id="mode-switch-button">
                                 <h3>Mode</h3>
-                                <input type="checkbox" checked data-toggle="toggle" data-on="Sentence" data-off="Paragraph" data-onstyle="success" data-offstyle="info" />
+                                <input type="checkbox" id="chk-switch-mode" checked data-toggle="toggle" data-on="Paragraph" data-off="Sentence" data-onstyle="success" data-offstyle="info"/>
                             </div>
                          </div>
                     </div>
@@ -120,22 +114,28 @@
                                 </section>
                                 <!-- Generates a list of the lexemes from the node-js template -->
                                 <div ng-switch on="view_data">
-                                    <div ng-switch-when="SomeToView" class="panel-group" id="accordion">
+                                    <div ng-switch-when="SomeToView" class="panel-group">
                                         <!--<ol class="list-group">
                                             <li ng-repeat="lexeme in data" class="list-group-item">
                                                 {[lexeme]}
                                             </li>
                                         </ol>-->
-                                        <div ng-repeat="lexeme in data" class="panel-group center-work-area" id="accordion">
+                                        <div ng-repeat="lexemeObj in model.lexemelist" ng-model="model.lexemeList" class="panel-group center-work-area" id="accordion">
                                             <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h4 class="panel-title" data-toggle="collapse" data-parent="#accordion" href="#collapse1">                                                        
-                                                            {[lexeme]}
+                                                <div id="collapse-panel-heading" class="panel-heading"  data-toggle="collapse" data-parent="#accordion" href="#collapse{[$index + 1]}">
+                                                    <h4 class="panel-title">                                                        
+                                                            {[lexemeObj.lexeme]}
                                                     </h4>
                                                 </div>
-                                                <div id="collapse1" class="panel-collapse collapse in">
+                                                <div id="collapse{[$index + 1]}" class="panel-collapse collapse">
                                                     <div class="panel-body">
-                                                        {[lexeme]}
+                                                        {[lexemeObj.lexeme]}
+                                                        <section class="tags-text">
+                                                            Tags:
+                                                            <p class="tag-list-display" type="text" ng-repeat="tag in lexemeObj.tags">
+                                                                {[tag]}
+                                                            </p>
+                                                        </section>
                                                     </div>
                                                 </div>
                                             </div>
@@ -145,7 +145,7 @@
                                         There are no {[model.mode]}s to view matching the tag criteria.
                                     </div>
                                 </div>
-                                <button type="submit" id="search" class="btn btn-info tag-control" ng-click="view_lexeme_list_panel()">VIEW</button>
+                                <button type="submit" id="search" class="btn btn-info tag-control" ng-click="view_lexeme_list_panel()">REFRESH</button>
                             </main>
                         </div>
                         <!-- Panel display when continuing a lexeme -->
@@ -154,11 +154,15 @@
                                 <section id="to-complete">
                                     <h2 ng-model="model.previous_lexeme"> ... {[model.previous_lexeme]}</h2>
                                 </section>
+                                <section class="tags-text">
+                                    Tags: 
+                                    <p class="tag-list-display" type="text" ng-repeat="input in model.tag_list track by $index" ng-model="model.tag_list[$index]">{[input]}</p>
+                                </section>
                                 <section id="continue-text">
                                     <input id="entry" class="form-control" ng-model="model.continue_text" />
                                 </section>
                                 <button type="submit" id="continue" class="btn btn-info tag-control" ng-click="continue_api_call(false)">CONTINUE</button>
-                                <button type="submit" id="complete" class="btn btn-info tag-control" ng-click="continue_api_call(true)">COMPLETE</button>
+                                <button type="submit" id="complete" class="btn btn-info tag-control" ng-click="continue_api_call(true)">COMPLETE</button>                                
                             </main>
                         </div>
                         <!-- Panel displayed upon successful lexeme completion/continuation -->

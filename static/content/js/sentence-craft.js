@@ -77,6 +77,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
     $scope.switch_sentence_mode = function(){
         if ($scope.model.mode !== 'sentence'){
             $scope.model.mode = 'sentence';
+            console.log('switched to sentence');
             $('.switchlexeme').removeClass('active');
             $('#sentence').addClass('active');
             $('.switchmode').removeClass('active');
@@ -95,6 +96,19 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             $('.switchmode').removeClass('active');
             $('#start').addClass('active');
             $scope.operation_type = 'StartNewLexeme';
+        }
+    };
+
+    //Calls the appropraite switch mode function based on the current Lexeme mode
+    $scope.switch_mode = function (switchmode) {
+        if (switchmode == 'sentence') {
+            $scope.switch_paragraph_mode();
+        }
+        else if (switchmode == 'paragraph') {
+            $scope.switch_sentence_mode();
+        }
+        else {
+            $scope.switch_sentence_mode();
         }
     };
 
@@ -174,7 +188,6 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
 
         $scope.operation_type = 'ContinueLexeme';
         dataService.incomplete(lexType).then(function (response){
-                console.log(response);
                 var to_complete = response.data;
                 $scope.model.incomplete_lexeme = to_complete;
                 // Get the last 3 lexemes from the lexeme collection
@@ -183,6 +196,8 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                 for(var i = start; i < to_complete_lexemes.length; ++i){
                     $scope.model.previous_lexeme += to_complete_lexemes[i] + ' ';
                 }
+                $scope.model.tag_list = response.data.lexemecollection.tags;
+                console.log($scope.model.tag_list);
             },
             function (data){
                 // Prompt the user that there are no more sentences to complete
@@ -238,12 +253,14 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         dataService.view(tagList, lexType).then(function (response) {
             var data2 = response.data;
             var rep = [];
+            $scope.model.lexemelist = [];
 
             if (data2.length === 0){
                 $scope.view_data = 'NoneToView';
                 return;
             }
-
+            
+            //$scope.model.tag_list = data2.lexemecollection.tags;
             $scope.view_data = 'SomeToView';
 
             // Generate the list of lexemes
@@ -254,8 +271,13 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
                     tmp = tmp + lexemes[j] + ' ';
                 }
                 rep.push(tmp);
+                var lexemelistobj = {};
+                lexemelistobj.lexeme = tmp;
+                lexemelistobj.tags = data2[i].tags;
+                $scope.model.lexemelist.push(lexemelistobj);
             }
             $scope.data = rep;
+            console.log($scope.model.lexemelist);
         },
         function(data){
             $scope.view_data = 'NoneToView';
@@ -285,3 +307,18 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             })
     }
 });
+
+// Jquery that calls the switch_mode function when the toggle button is Clicked
+$(function () {
+    $('#chk-switch-mode').change(function () {
+        angular.element('#view_controller').scope().$apply();
+        console.log(this.checked);
+        if (this.checked == false) {
+            var switchmode = 'sentence';
+        }
+        else {
+            var switchmode = 'paragraph';
+        }
+        angular.element('#view_controller').scope().switch_mode(switchmode);
+    })
+})

@@ -52,7 +52,7 @@ def poll_for_expired():
     '''
     while True: #continue this indefinitely
         for key in list(LC_MAP):
-            if (int(time.time()) - LC_MAP[key]) > config.lexeme_collection_active_time:
+            if (int(time.time()) - LC_MAP[key]) > config.LEXEME_COLLECTION_ACTIVE_TIME:
                 # remove from the map
                 del LC_MAP[key]
 
@@ -66,7 +66,7 @@ def poll_for_expired():
 
                 print 'Key', key, 'timed out'
 
-        time.sleep(config.polling_delay)
+        time.sleep(config.POLLING_DELAY)
 
 @APP.route('/view/', methods=['GET'], strict_slashes=False)
 def api_view_lexeme_collections():
@@ -347,4 +347,4 @@ def single_thread_setup():
 
 
 if __name__ == '__main__':
-    APP.run(debug=True, host=config.flask_host, port=config.flask_port)
+    APP.run(debug=True, host=config.FLASK_HOST, port=config.FLASK_PORT)
