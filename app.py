@@ -28,6 +28,8 @@ MONGO = PyMongo(APP)
 # This will be a map of UUID strings to 2-tuples. The first element will
 # be the lexeme collection, the second will be the timestamp in seconds at
 # which it was created.
+# This is an example of a Singleton design pattern; each server instance will
+# keep track of only one list of keys.
 LC_MAP = {}
 
 '''
