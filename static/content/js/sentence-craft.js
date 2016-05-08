@@ -220,6 +220,7 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
         }, 30);
     }
 
+    // Returns the type of Lexeme(Sentence/Paragraph)
     $scope.get_lex_type = function (){
         var lexType = '';
         if ($scope.model.mode ==='sentence'){
@@ -293,7 +294,6 @@ app.controller('view_controller', function ($scope,$http,$window, dataService) {
             tag_list = $scope.model.tag_list.toString();
         }
         var start_text = $scope.model.start_text;
-
         var lexType = $scope.get_lex_type();
 
         // Forward the API request to the data service

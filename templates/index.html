@@ -4,33 +4,27 @@
 	    <title>SentenceCraft</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!--External JavaScript libraries-->
         <script type="text/javascript" src="/static/content/js/jquery.min.js"></script>
         <script type="text/javascript" src="/static/content/js/angular.min.js"></script>
-        <script type="text/javascript" src="/static/content/js/bootstrap.min.js"></script>
         <script type="text/javascript" src="/static/content/js/cbpAnimatedHeader.js"></script>
+        <!-- Fonts -->
+        <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
+        <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
+        <!--JavaScript and CSS Library for Mode switch button-->
         <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
         <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
         <!-- Custom CSS -->
         <link href="/static/content/styles/sentence-craft.css" rel="stylesheet" type="text/css">
-        <link href="/static/content/styles/bootstrap.css" rel="stylesheet" type="text/css">
-        <!-- Custom Fonts -->
-        <link href="http://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">
-        <link href="http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic" rel="stylesheet" type="text/css">
-
+        <link href="/static/content/styles/bootstrap.css" rel="stylesheet" type="text/css">        
+        <!--Custom JavaScript-->
         <script type="text/javascript" src="/static/content/js/sentence-craft.js"></script>
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-    <![endif]-->
-
 	</head>
 
     <!-- Main node-js application that utilizes the MVC design pattern-->
 	<body ng-app="sentence_craft_app" ng-controller="view_controller" id="view_controller" class="index">
         
-            <!-- Navigation links -->
+        <!-- Navigation links -->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="row">
                 <div class="col-lg-12">
@@ -45,12 +39,6 @@
                                 <li class="hidden">
                                     <a href="#page-top"></a>
                                 </li>
-                                <li class="page-scroll">
-                                    <a href="#about">About</a>
-                                </li>
-                                <li class="page-scroll">
-                                    <a href="#contact">Contact</a>
-                                </li>
                             </ul>
                         </div>
                     </div>
@@ -61,6 +49,7 @@
         <div id="main-content-panel">
             <div class="row">
                 <div class="col-lg-2">
+                    <!--Panel displayed for the menu options-->
                     <div class="main-area side-menu" id="controls">
                         <div id="modes">
                             <div class="row">
@@ -73,10 +62,11 @@
                                 <button type="button" id="view" class="btn btn-warning btn-menu" ng-click="view_lexeme_list_panel()">View</button>
                             </div>
                         </div>
+                        <!--Mode section- Allows switching between modes-->
                         <div id="lexemes">
                             <div id="mode-switch-button">
                                 <h3>Mode</h3>
-                                <input type="checkbox" id="chk-switch-mode" checked data-toggle="toggle" data-on="Paragraph" data-off="Sentence" data-onstyle="success" data-offstyle="info"/>
+                                <input type="checkbox" id="chk-switch-mode" checked data-toggle="toggle" data-on="Sentence" data-off="Paragraph" data-onstyle="success" data-offstyle="info"/>
                             </div>
                          </div>
                     </div>
@@ -208,15 +198,13 @@
                                 <button type="submit" class="btn btn-info tag-control" ng-click="view_start_new_lexeme_panel()">NO</button>
                             </main>
                         </div>
-
                     </div>
-                </div>
-                
+                </div>                
             </div>
         </div>  
         <!-- The ng-switch changes the main panel displayed to the user based on the current operation type -->
         
-
+        <!--The footer section that display the copyright sign at the bottom of the page-->
         <nav class="navbar navbar-default navbar-fixed-bottom">
             <footer class="text-center">
                 <div>
