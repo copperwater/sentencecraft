@@ -1,6 +1,7 @@
 '''
     Lexeme module. This provides an abstract base
     class for various lexemes (like words or sentences) to inherit from.
+    This is the Template in the Template design pattern,
 '''
 
 import abc

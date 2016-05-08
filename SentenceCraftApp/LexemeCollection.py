@@ -1,6 +1,7 @@
 '''
-LexemeCollection module. This provides an abstract base class for collections
-of different lexemes to inherit from.
+LexemeCollection module. This provides an abstract base class 
+utilizing the Template design pattern for collections of different 
+lexemes to inherit from.
 '''
 
 # abstract base class module

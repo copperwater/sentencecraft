@@ -1,5 +1,6 @@
 '''
 SentenceCollection - module for a collection of sentences, which form a paragraph.
+The concrete class of the Template in the Template Design Pattern
 '''
 
 from SentenceCraftApp import Sentence

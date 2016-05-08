@@ -1,5 +1,6 @@
 '''
 WordCollection - module for a collection of words, which form a sentence.
+This is the concrete class of the Template for the Template design pattern
 '''
 
 from SentenceCraftApp import Word
