@@ -119,11 +119,11 @@ class StartLexemeViewController: UIViewController {
 	// go back to the main page
 	func submitButtonPressed(sender: UIButton!) {
 		let tags = tagOne.text!
-		appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
+		let message = appDelegate.server.sendStartSentenceRequest(tags, sentence: lexemeField.text!,
 		                                            type: appDelegate.sentence_or_word_lexeme)
 		navigationController?.popViewControllerAnimated(true)
 		
-		let alert: UIAlertView = UIAlertView(title: "Start Lexeme:", message: "Successfully submitted sentence", delegate: self, cancelButtonTitle: "Ok")
+		let alert: UIAlertView = UIAlertView(title: "Start Lexeme:", message: "\(message)", delegate: self, cancelButtonTitle: "Ok")
 		alert.show()
 		
 	}

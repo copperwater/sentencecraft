@@ -18,7 +18,10 @@ class ServerRequest {
 	}
 	
 	// Function to send a Start Lexeme request to the server
-	func sendStartSentenceRequest(tags: String, sentence: String, type: String) {
+	func sendStartSentenceRequest(tags: String, sentence: String, type: String) -> String {
+		
+		var retString: String = String()
+		
 		// Create the request
 		let requestURL = NSURL(string: serverURL + "start/")
 		let request = NSMutableURLRequest(URL:requestURL!);
@@ -36,6 +39,8 @@ class ServerRequest {
 		// Send the task and wait for a response
 		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
 			data, response, error in
+			
+			retString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
 				
 			// Check for error
 			if error != nil {
@@ -44,6 +49,8 @@ class ServerRequest {
 			}
 		}
 		task.resume()
+		while(retString.isEmpty) {}
+		return retString
 	}
 	
 	// Function to request an incomplete lexeme from the server for the user to complete or continue
@@ -80,7 +87,10 @@ class ServerRequest {
 	}
 	
 	// Function to send the user input to the server API to continue or complete a sentence
-	func sendAppendRequest(appendage: String, key: String, action: String, type: String) {
+	func sendAppendRequest(appendage: String, key: String, action: String, type: String) -> String {
+		
+		var retString: String = String()
+		
 		// Create the request
 		let requestURL = NSURL(string: serverURL + "append/")
 		let request = NSMutableURLRequest(URL:requestURL!);
@@ -99,6 +109,8 @@ class ServerRequest {
 		let task = NSURLSession.sharedSession().dataTaskWithRequest(request) {
 			data, response, error in
 			
+			retString = NSString(data: data!, encoding: NSUTF8StringEncoding) as! String
+			
 			// Check for error
 			if error != nil {
 				print("error=\(error)")
@@ -106,13 +118,16 @@ class ServerRequest {
 			}
 		}
 		task.resume()
-
+		while(retString.isEmpty) {}
+		return retString
 	}
 	
 	// Function to send a view request to the server
 	func sendViewRequest(type: String, tags: String) -> [[String: AnyObject]]? {
 		// Create the request
-		let requestURL = NSURL(string: serverURL + "view/?type=\(type)&tags=\(tags)")
+		let urlString = serverURL + "view/?type=\(type)&tags=\(tags)"
+		let encodedURL = urlString.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet())
+		let requestURL = NSURL(string: encodedURL!)
 		let request = NSMutableURLRequest(URL:requestURL!)
 		var dict: [[String:AnyObject]] = []
 		var isDictionaryList: Bool = true

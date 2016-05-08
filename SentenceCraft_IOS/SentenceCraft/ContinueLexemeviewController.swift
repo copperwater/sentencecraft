@@ -31,8 +31,6 @@ class ContinueLexemeViewController: UIViewController {
 	// Separate the information from the dictionary into usable information
 	func parseInfoFromDict() {
 		lexemeParts = lexeme["lexemecollection"]!["lexemes"] as! [String]
-		print(lexemeParts)
-
 		
 		if lexeme["lexemecollection"]!["tags"] === nil {
 			return
@@ -41,7 +39,6 @@ class ContinueLexemeViewController: UIViewController {
 			tags += tag
 			tags += ", "
 		}
-		print(tags)
 	}
 	
 	// Get the last 3 portions of the lexeme to display to the user
@@ -130,19 +127,27 @@ class ContinueLexemeViewController: UIViewController {
 	
 	// Function that will send the user input to the server API if they pressed the continue button
 	func continueButtonPressed(sender: UIButton!) {
-		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		let message = appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
 		                                     action: "false", type: appDelegate.sentence_or_word_lexeme)
 
 		navigationController?.popViewControllerAnimated(true)
+		
+		let alert: UIAlertView = UIAlertView(title: "Continue/Complete Lexeme:", message: "\(message)", delegate: self, cancelButtonTitle: "Ok")
+		alert.show()
+
 	}
 	
 	// Function that will send the user input to the server API if they pressed the complete button
 	func completeButtonPressed(sender: UIButton!) {
 		
-		appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
+		let message = appDelegate.server.sendAppendRequest(lexemeField.text!, key: (lexeme["key"] as! String),
 		                                     action: "true", type: appDelegate.sentence_or_word_lexeme)
 
 		navigationController?.popViewControllerAnimated(true)
+		
+		let alert: UIAlertView = UIAlertView(title: "Continue/Complete Lexeme:", message: "\(message)", delegate: self, cancelButtonTitle: "Ok")
+		alert.show()
+
 	}
 	
 	// Function that loads the ContinueLexemeViewController
