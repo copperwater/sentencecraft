@@ -300,6 +300,13 @@ def api_start_lexeme_collection():
     except KeyError:
         tags = []
 
+    # Validate the initial tag list
+    # Tags can only contain alphanumeric characters and spaces
+    for tag in tags:
+        for char in tag:
+            if not (char.isalnum() or char == " "):
+                return "ERROR: Tags can only contain alphanumerics or spaces.", 400
+
     # extract the type parameter (type of lexeme)
     if typ_param == 'sentence':
         typ = 'sentence'
