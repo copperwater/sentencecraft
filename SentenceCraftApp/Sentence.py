@@ -1,5 +1,6 @@
 '''
 Sentence module. Sentence is an instance of Lexeme.
+This is the concrete class in the Template Design pattern
 '''
 
 from SentenceCraftApp.Lexeme import Lexeme

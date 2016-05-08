@@ -1,5 +1,6 @@
 '''
 Word module. Word is an instance of Lexeme.
+This is the concrete class in the Template design pattern.
 '''
 
 from SentenceCraftApp.Lexeme import Lexeme
