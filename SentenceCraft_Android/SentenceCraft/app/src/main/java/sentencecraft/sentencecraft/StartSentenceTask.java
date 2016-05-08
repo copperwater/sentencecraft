@@ -20,8 +20,8 @@ public class StartSentenceTask extends DownloadInfoTask {
     private String tags;
 
     /** default constructor */
-    public StartSentenceTask(View rootView, Context context, int editId) {
-        super(rootView, context, editId);
+    public StartSentenceTask(View rootView, Context context) {
+        super(rootView, context);
     }
 
     /** onPostExecute displays the results of the AsyncTask. */

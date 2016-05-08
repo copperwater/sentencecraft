@@ -83,7 +83,7 @@ public class MainMenu extends AppCompatActivity {
                         return;
                     }
                     ContinueSentencePostTask task = new ContinueSentencePostTask(mainTop,
-                            getApplicationContext(), R.id.continue_sentence, key);
+                            getApplicationContext(), key);
                     task.execute("POST",stringUrl,sLexeme,complete);
                     break;
                 case "Start":
@@ -92,7 +92,7 @@ public class MainMenu extends AppCompatActivity {
                         Log.d(getString(R.string.app_name),"Invalid parameters");
                         return;
                     }
-                    new StartSentenceTask(mainTop, getApplicationContext(), R.id.toedit).
+                    new StartSentenceTask(mainTop, getApplicationContext()).
                             execute("POST", stringUrl, sLexeme, sTags);
                     break;
                 default:
