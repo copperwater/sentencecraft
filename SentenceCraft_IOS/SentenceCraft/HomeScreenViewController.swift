@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import SlideMenuControllerSwift
 
 class HomeScreenViewController: UIViewController {
 	

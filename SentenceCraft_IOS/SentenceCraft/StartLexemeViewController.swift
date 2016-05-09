@@ -13,8 +13,8 @@ class StartLexemeViewController: UIViewController {
 	// Tags for the user to add for a lexeme
 	@IBOutlet private var tag: UITextField!
 	
-	@IBOutlet private var addLexemeButton: UIButton!
-	@IBOutlet private var removeLexemeButton: UIButton!
+	@IBOutlet private var addTagButton: UIButton!
+	@IBOutlet private var removeTagButton: UIButton!
 	
 	// Field to take user input for new lexeme
 	@IBOutlet private var lexemeField: UITextView!
@@ -26,14 +26,14 @@ class StartLexemeViewController: UIViewController {
 	let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 	
 	var tags: [String] = []
-	var tagsStringList: String = String()
+	var tagsListString: String = String()
 	
 	private var tagLabel: UITextView!
 	
 	// Create the tags and their placeholders for the user
 	func createTags() {
 		
-		// Create first tag
+		// Create TextField to type new tags into
 		tag = UITextField.init(frame: CGRectMake(20, 0, 100, 50))
 		tag.center = CGPointMake(tag.center.x, tag.frame.height + (self.navigationController?.navigationBar.frame.height)!)
 		tag.placeholder = "Tag"
@@ -44,41 +44,42 @@ class StartLexemeViewController: UIViewController {
 		tag.autocapitalizationType = UITextAutocapitalizationType.None
 		self.view.addSubview(tag)
 		
-		addLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
-		addLexemeButton.setTitle("Add tag", forState: UIControlState.Normal)
-		addLexemeButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-		addLexemeButton.backgroundColor = UIColor(netHex: 0x18bc9c)
-		addLexemeButton.frame = CGRectMake(tag.frame.minX, 0, 125, 50)
-		addLexemeButton.center = CGPointMake(addLexemeButton.center.x, tag.frame.maxY + tag.frame.height)
-		addLexemeButton.layer.cornerRadius = 10
-		addLexemeButton.layer.borderWidth = 5
-		addLexemeButton.layer.borderColor = addLexemeButton.backgroundColor!.CGColor
-		addLexemeButton.addTarget(self,
-		                       action: #selector(StartLexemeViewController.addLexemeButtonPressed(_:)),
+		// Button that adds the new tag
+		addTagButton = UIButton.init(type: UIButtonType.RoundedRect)
+		addTagButton.setTitle("Add Tag", forState: UIControlState.Normal)
+		addTagButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		addTagButton.backgroundColor = UIColor(netHex: 0x18bc9c)
+		addTagButton.frame = CGRectMake(tag.frame.minX, 0, 125, 50)
+		addTagButton.center = CGPointMake(addTagButton.center.x, tag.frame.maxY + tag.frame.height)
+		addTagButton.layer.cornerRadius = 10
+		addTagButton.layer.borderWidth = 5
+		addTagButton.layer.borderColor = addTagButton.backgroundColor!.CGColor
+		addTagButton.addTarget(self,
+		                       action: #selector(StartLexemeViewController.addTagButtonPressed(_:)),
 		                       forControlEvents: UIControlEvents.TouchUpInside)
-		self.view.addSubview(addLexemeButton)
+		self.view.addSubview(addTagButton)
 		
-		
-		removeLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
-		removeLexemeButton.setTitle("Remove tag", forState: UIControlState.Normal)
-		removeLexemeButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
-		removeLexemeButton.backgroundColor = UIColor(netHex: 0xe74c3c)
-		removeLexemeButton.frame = CGRectMake(0, addLexemeButton.frame.minY, 125, 50)
-		removeLexemeButton.center = CGPointMake(addLexemeButton.frame.maxX + 50 + removeLexemeButton.frame.width/2, removeLexemeButton.center.y)
-		removeLexemeButton.layer.cornerRadius = 10
-		removeLexemeButton.layer.borderWidth = 5
-		removeLexemeButton.layer.borderColor = removeLexemeButton.backgroundColor!.CGColor
-		removeLexemeButton.addTarget(self,
-		                          action: #selector(StartLexemeViewController.removeLexemeButtonPressed(_:)),
+		// Button that removes that last tag
+		removeTagButton = UIButton.init(type: UIButtonType.RoundedRect)
+		removeTagButton.setTitle("Remove Tag", forState: UIControlState.Normal)
+		removeTagButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		removeTagButton.backgroundColor = UIColor(netHex: 0xe74c3c)
+		removeTagButton.frame = CGRectMake(0, addTagButton.frame.minY, 125, 50)
+		removeTagButton.center = CGPointMake(addTagButton.frame.maxX + 50 + removeTagButton.frame.width/2, removeTagButton.center.y)
+		removeTagButton.layer.cornerRadius = 10
+		removeTagButton.layer.borderWidth = 5
+		removeTagButton.layer.borderColor = removeTagButton.backgroundColor!.CGColor
+		removeTagButton.addTarget(self,
+		                          action: #selector(StartLexemeViewController.removeTagButtonPressed(_:)),
 		                          forControlEvents: UIControlEvents.TouchUpInside)
 
-		self.view.addSubview(removeLexemeButton)
+		self.view.addSubview(removeTagButton)
 		
-		// Label that says "Tags:"
+		// Label that lists all added tags
 		tagLabel = UITextView.init(frame: CGRectMake(20, 0, self.view.frame.width - 40, 100))
-		tagLabel.text = "Tags: \(tagsStringList)"
+		tagLabel.text = "Tags: \(tagsListString)"
 		tagLabel.font = UIFont(name: tag.font!.fontName, size: 25)
-		tagLabel.center = CGPointMake(tagLabel.center.x, addLexemeButton.frame.maxY + 3 * addLexemeButton.frame.height/2)
+		tagLabel.center = CGPointMake(tagLabel.center.x, addTagButton.frame.maxY + 3 * addTagButton.frame.height/2)
 		tagLabel.editable = false
 		tagLabel.textAlignment = NSTextAlignment.Left
 		self.view.addSubview(tagLabel)
@@ -87,19 +88,19 @@ class StartLexemeViewController: UIViewController {
 	
 	// Create text field to recieve user input for lexeme
 	func createLexemeField() {
-		let lexemeFieldTag: UILabel = UILabel.init(frame: CGRectMake(20, 0, 150, 50))
-		lexemeFieldTag.text = "Lexeme:"
-		lexemeFieldTag.font = UIFont(name: lexemeFieldTag.font.fontName, size: 25)
-		lexemeFieldTag.center = CGPointMake(lexemeFieldTag.center.x, self.view.center.y)
-		lexemeFieldTag.textAlignment = NSTextAlignment.Left
-		self.view.addSubview(lexemeFieldTag)
+		let lexemeLabel: UILabel = UILabel.init(frame: CGRectMake(20, 0, 150, 50))
+		lexemeLabel.text = "Lexeme:"
+		lexemeLabel.font = UIFont(name: lexemeLabel.font.fontName, size: 25)
+		lexemeLabel.center = CGPointMake(lexemeLabel.center.x, self.view.center.y)
+		lexemeLabel.textAlignment = NSTextAlignment.Left
+		self.view.addSubview(lexemeLabel)
 		
-		lexemeField = UITextView.init(frame: CGRectMake(20, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 40, 175))
+		lexemeField = UITextView.init(frame: CGRectMake(20, lexemeLabel.frame.maxY, self.view.frame.width - 40, 175))
 		lexemeField.keyboardType = UIKeyboardType.Default
 		lexemeField.layer.borderWidth = 3
 		lexemeField.layer.borderColor = UIColor.blackColor().CGColor
 		lexemeField.autocapitalizationType = UITextAutocapitalizationType.None
-		lexemeField.font = UIFont(name: (lexemeFieldTag.font.fontName), size: 25)
+		lexemeField.font = UIFont(name: (lexemeLabel.font.fontName), size: 25)
 		self.view.addSubview(lexemeField)
 	}
 	
@@ -125,46 +126,49 @@ class StartLexemeViewController: UIViewController {
 
 	}
 	
-	func addLexemeButtonPressed(sender: UIButton!) {
+	// When the Add Tag button is pressed, add it to the array
+	// and update the tags string
+	func addTagButtonPressed(sender: UIButton!) {
 		let newTag = tag.text!
 		if !newTag.isEmpty {
 			tags.append(newTag)
 		}
 		tag.text = ""
-		tagsStringList = ""
+		tagsListString = ""
 		for t in tags {
-			tagsStringList += t
+			tagsListString += t
 			if t != tags.last {
-				tagsStringList += ","
+				tagsListString += ","
 			}
 		}
-		tagLabel.text = "Tags: \(tagsStringList)"
+		tagLabel.text = "Tags: \(tagsListString)"
 	}
 	
-	
-	func removeLexemeButtonPressed(sender: UIButton!) {
+	// When the Remove Tag button is pressed, remove the last tag from the array
+	// and update the tags string
+	func removeTagButtonPressed(sender: UIButton!) {
 		if tags.endIndex <= 0 {
 			return
 		}
 		tags.removeLast()
-		tagsStringList = ""
+		tagsListString = ""
 		for t in tags {
-			tagsStringList += t
+			tagsListString += t
 			if t != tags.last {
-				tagsStringList += ","
+				tagsListString += ","
 			}
 		}
-		tagLabel.text = "Tags: \(tagsStringList)"
+		tagLabel.text = "Tags: \(tagsListString)"
 	}
 	
 	
 	// When the submit button is pressed, send the new lexeme to the API server and
 	// go back to the main page
 	func submitButtonPressed(sender: UIButton!) {
-		let message = appDelegate.server.sendStartSentenceRequest(tagsStringList, sentence: lexemeField.text!,
+		let message = appDelegate.server.sendStartSentenceRequest(tagsListString, sentence: lexemeField.text!,
 		                                            type: appDelegate.sentence_or_word_lexeme)
 		tags.removeAll()
-		tagsStringList = ""
+		tagsListString = ""
 		
 		navigationController?.popViewControllerAnimated(true)
 		

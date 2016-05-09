@@ -11,7 +11,7 @@ import UIKit
 class ContinueLexemeViewController: UIViewController {
 	
 	// Field to append to the lexeme
-	@IBOutlet private var lexemeField: UITextField!
+	@IBOutlet private var lexemeField: UITextView!
 	
 	// Buttons that indicate either complete or continue the current lexeme
 	@IBOutlet private var completeButton: UIButton!
@@ -46,7 +46,7 @@ class ContinueLexemeViewController: UIViewController {
 	// Get the last 3 portions of the lexeme to display to the user
 	func lastThreeLexemeParts() -> String {
 		var ret: String = String()
-		var i: Int = max(lexemeParts.endIndex - 4, 0)
+		var i: Int = max(lexemeParts.endIndex - 3, 0)
 		if i > 0 {
 			ret += "... "
 		}
@@ -69,13 +69,12 @@ class ContinueLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 		
-		let lexemeText: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
+		let lexemeText: UITextView = UITextView.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
 		lexemeText.text = "\(lastThreeLexemeParts())"
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
+		lexemeText.editable = false
 		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
 		lexemeText.textAlignment = NSTextAlignment.Center
-		lexemeText.numberOfLines = 0
-		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
 		self.view.addSubview(lexemeText)
 	}
 	
@@ -88,13 +87,11 @@ class ContinueLexemeViewController: UIViewController {
 		lexemeFieldTag.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(lexemeFieldTag)
 		
-		lexemeField = UITextField.init(frame: CGRectMake(12, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 24, 175))
-		lexemeField.placeholder = "Lexeme"
+		lexemeField = UITextView.init(frame: CGRectMake(12, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 24, 175))
 		lexemeField.autocapitalizationType = UITextAutocapitalizationType.None
 		lexemeField.keyboardType = UIKeyboardType.Default
-		lexemeField.borderStyle = UITextBorderStyle.Line
-		lexemeField.contentVerticalAlignment = UIControlContentVerticalAlignment.Top
-		lexemeField.font = UIFont(name: (lexemeField.font?.fontName)!, size: 25)
+		lexemeField.layer.borderWidth = 3
+		lexemeField.font = UIFont(name: lexemeFieldTag.font.fontName, size: 25)
 		self.view.addSubview(lexemeField)
 	}
 	
