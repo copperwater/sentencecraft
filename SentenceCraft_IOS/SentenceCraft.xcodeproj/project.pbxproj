@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A27875326A1EFB122C4A07D /* Pods_SentenceCraft.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 41490D2E884D2420ACCB1CAA /* Pods_SentenceCraft.framework */; };
+		432C0FD11CE0472E00A266F0 /* UIColorExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 432C0FD01CE0472E00A266F0 /* UIColorExtension.swift */; };
 		433037461CBB62B5009B241E /* ContinueLexemeviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433037451CBB62B5009B241E /* ContinueLexemeviewController.swift */; };
 		4330374A1CBC1E92009B241E /* ViewLexemesTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 433037491CBC1E92009B241E /* ViewLexemesTableViewController.swift */; };
 		4330374C1CBC29CB009B241E /* ViewLexemeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4330374B1CBC29CB009B241E /* ViewLexemeViewController.swift */; };
@@ -40,6 +42,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		0B12FF12F075A78A92CCDD21 /* Pods-SentenceCraft.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SentenceCraft.release.xcconfig"; path = "Pods/Target Support Files/Pods-SentenceCraft/Pods-SentenceCraft.release.xcconfig"; sourceTree = "<group>"; };
+		41490D2E884D2420ACCB1CAA /* Pods_SentenceCraft.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SentenceCraft.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		432C0FD01CE0472E00A266F0 /* UIColorExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColorExtension.swift; sourceTree = "<group>"; };
 		433037451CBB62B5009B241E /* ContinueLexemeviewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContinueLexemeviewController.swift; sourceTree = "<group>"; };
 		433037491CBC1E92009B241E /* ViewLexemesTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewLexemesTableViewController.swift; sourceTree = "<group>"; };
 		4330374B1CBC29CB009B241E /* ViewLexemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewLexemeViewController.swift; sourceTree = "<group>"; };
@@ -59,6 +64,7 @@
 		43737BF11CB6E2C700198D34 /* StartLexemeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartLexemeViewController.swift; sourceTree = "<group>"; };
 		437BF8311CCD49CD00F66E4B /* ServerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServerRequest.swift; sourceTree = "<group>"; };
 		437BF8371CD27A2900F66E4B /* LexemeModeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LexemeModeViewController.swift; sourceTree = "<group>"; };
+		D3F78099623B2B7446F88801 /* Pods-SentenceCraft.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SentenceCraft.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SentenceCraft/Pods-SentenceCraft.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +72,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A27875326A1EFB122C4A07D /* Pods_SentenceCraft.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,6 +93,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F6B4D067FA6B6706ADE58D2 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				D3F78099623B2B7446F88801 /* Pods-SentenceCraft.debug.xcconfig */,
+				0B12FF12F075A78A92CCDD21 /* Pods-SentenceCraft.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
 		43737BB51CB6BDE700198D34 = {
 			isa = PBXGroup;
 			children = (
@@ -93,6 +109,8 @@
 				43737BD51CB6BDE700198D34 /* SentenceCraftTests */,
 				43737BE01CB6BDE700198D34 /* SentenceCraftUITests */,
 				43737BBF1CB6BDE700198D34 /* Products */,
+				2F6B4D067FA6B6706ADE58D2 /* Pods */,
+				A1F3D39AC27A0B9A18C0BF68 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -117,6 +135,7 @@
 				4330374B1CBC29CB009B241E /* ViewLexemeViewController.swift */,
 				437BF8371CD27A2900F66E4B /* LexemeModeViewController.swift */,
 				437BF8311CCD49CD00F66E4B /* ServerRequest.swift */,
+				432C0FD01CE0472E00A266F0 /* UIColorExtension.swift */,
 				43737BC51CB6BDE700198D34 /* Main.storyboard */,
 				43737BC81CB6BDE700198D34 /* Assets.xcassets */,
 				43737BCA1CB6BDE700198D34 /* LaunchScreen.storyboard */,
@@ -143,6 +162,14 @@
 			path = SentenceCraftUITests;
 			sourceTree = "<group>";
 		};
+		A1F3D39AC27A0B9A18C0BF68 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				41490D2E884D2420ACCB1CAA /* Pods_SentenceCraft.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -150,9 +177,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 43737BE61CB6BDE700198D34 /* Build configuration list for PBXNativeTarget "SentenceCraft" */;
 			buildPhases = (
+				ECC5C087796C00073460332B /* Check Pods Manifest.lock */,
 				43737BBA1CB6BDE700198D34 /* Sources */,
 				43737BBB1CB6BDE700198D34 /* Frameworks */,
 				43737BBC1CB6BDE700198D34 /* Resources */,
+				1205DF01B6A1ECF840FEA3CD /* Embed Pods Frameworks */,
+				9FB13843394898B470C5422C /* Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -269,6 +299,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		1205DF01B6A1ECF840FEA3CD /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SentenceCraft/Pods-SentenceCraft-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		9FB13843394898B470C5422C /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-SentenceCraft/Pods-SentenceCraft-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		ECC5C087796C00073460332B /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		43737BBA1CB6BDE700198D34 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -279,6 +357,7 @@
 				43737BF01CB6D18600198D34 /* HomeScreenViewController.swift in Sources */,
 				437BF8321CCD49CD00F66E4B /* ServerRequest.swift in Sources */,
 				4330374A1CBC1E92009B241E /* ViewLexemesTableViewController.swift in Sources */,
+				432C0FD11CE0472E00A266F0 /* UIColorExtension.swift in Sources */,
 				437BF8381CD27A2900F66E4B /* LexemeModeViewController.swift in Sources */,
 				43737BF21CB6E2C700198D34 /* StartLexemeViewController.swift in Sources */,
 				4330374C1CBC29CB009B241E /* ViewLexemeViewController.swift in Sources */,
@@ -423,6 +502,7 @@
 		};
 		43737BE71CB6BDE700198D34 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = D3F78099623B2B7446F88801 /* Pods-SentenceCraft.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SentenceCraft/Info.plist;
@@ -434,6 +514,7 @@
 		};
 		43737BE81CB6BDE700198D34 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 0B12FF12F075A78A92CCDD21 /* Pods-SentenceCraft.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = SentenceCraft/Info.plist;
