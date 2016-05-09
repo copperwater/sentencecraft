@@ -44,13 +44,24 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 	
 	// Whem the user has clicked the search button to find a tag,
 	// request from the server all the lexemes with the requested tag
-	func searchBarSearchButtonClicked( searchBar: UISearchBar) {
+	func searchBarSearchButtonClicked(searchBar: UISearchBar) {
 		lexemesArray.removeAll()
 		tagsArray.removeAll()
 		lexemesDictionary.removeAll()
 		
 		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
 		                                                       tags: searchBar.text!)!
+		self.getLexemeStrings()
+		self.tableView.reloadData()
+	}
+		
+	func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+		lexemesArray.removeAll()
+		tagsArray.removeAll()
+		lexemesDictionary.removeAll()
+		
+		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
+		                                                       tags: "")!
 		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}

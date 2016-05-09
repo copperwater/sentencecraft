@@ -17,7 +17,7 @@ class ViewLexemeViewController: UIViewController {
 	// Function that reads in the data passed and displays it to the user
 	func addData(tags: String, lexeme: String) {
 		// Displayes the tags
-		tagsInfo = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
+		tagsInfo = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
 		tagsInfo.text = "Tags: \(tags)"
 		tagsInfo.numberOfLines = 0
 		tagsInfo.lineBreakMode = NSLineBreakMode.ByWordWrapping
