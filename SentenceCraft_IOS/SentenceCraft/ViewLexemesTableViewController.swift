@@ -42,6 +42,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		searchBar.showsScopeBar = true
 		searchBar.delegate = self
 		searchBar.autocapitalizationType = UITextAutocapitalizationType.None
+		searchBar.placeholder = "e.g. Bees,Honey"
 		self.view.addSubview(searchBar)
 	}
 	
@@ -57,14 +58,15 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}
-		
-	func searchBarCancelButtonClicked(searchBar: UISearchBar) {
+	
+	// Change the contents of the table based on contents of the searchbar
+	func searchBar(searchBar: UISearchBar, textDidChange searchText: String) {
 		lexemesArray.removeAll()
 		tagsArray.removeAll()
 		lexemesDictionary.removeAll()
-		
+			
 		lexemesDictionary = appDelegate.server.sendViewRequest(appDelegate.sentence_or_word_lexeme,
-		                                                       tags: "")!
+			                                                       tags: searchText)!
 		self.getLexemeStrings()
 		self.tableView.reloadData()
 	}
@@ -127,6 +129,27 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 			tagsArray.append(tags)
 		}
 	}
+	
+	// Displays a message saying no lexemes found based on tag results
+	override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+		if lexemesDictionary.isEmpty {
+			let emptyLabel: UILabel = UILabel(frame: self.tableView.bounds)
+			if appDelegate.sentence_or_word_lexeme == "word" {
+				emptyLabel.text = "No sentences found"
+			} else {
+				emptyLabel.text = "No paragraphs found"
+			}
+			emptyLabel.textAlignment = NSTextAlignment.Center
+			emptyLabel.sizeToFit()
+			self.tableView.backgroundView = emptyLabel
+			self.tableView.separatorStyle = UITableViewCellSeparatorStyle.None
+			return 0
+		}
+		self.tableView.backgroundView = nil
+		self.tableView.separatorStyle = UITableViewCellSeparatorStyle.SingleLine
+		return 1
+	}
+	
 	
 	// Function that tells the number of rows in the table
 	override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
