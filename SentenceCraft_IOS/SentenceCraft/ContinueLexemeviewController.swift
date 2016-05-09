@@ -25,6 +25,7 @@ class ContinueLexemeViewController: UIViewController {
 	
 	// Array that will hold all the parts of the lexeme passed from the server
 	var lexemeParts: [String] = []
+	
 	// Comma separated string of the tags for the given lexeme
 	var tags: String = String()
 	
@@ -62,6 +63,7 @@ class ContinueLexemeViewController: UIViewController {
 	
 	// Create the tags and text that will show the user the lexeme that was given to them
 	func createLexemeInfo() {
+		// Create the tags for the lexeme
 		let tagsInfo: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 50))
 		tagsInfo.text = "Tags: \(tags)"
 		tagsInfo.font = UIFont(name: tagsInfo.font.fontName, size: 25)
@@ -69,6 +71,7 @@ class ContinueLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 		
+		// Create the last 3 portions of the lexeme that are shown
 		let lexemeText: UITextView = UITextView.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
 		lexemeText.text = "\(lastThreeLexemeParts())"
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
@@ -80,18 +83,18 @@ class ContinueLexemeViewController: UIViewController {
 	
 	// Create the textfield for the user to input their appendage for the lexeme
 	func createLexemeField() {
-		let lexemeFieldTag: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
-		lexemeFieldTag.text = "Lexeme:"
-		lexemeFieldTag.font = UIFont(name: lexemeFieldTag.font.fontName, size: 25)
-		lexemeFieldTag.center = CGPointMake(lexemeFieldTag.center.x, self.view.center.y)
-		lexemeFieldTag.textAlignment = NSTextAlignment.Center
-		self.view.addSubview(lexemeFieldTag)
+		let lexemeLabel: UILabel = UILabel.init(frame: CGRectMake(0, 0, 150, 50))
+		lexemeLabel.text = "Lexeme:"
+		lexemeLabel.font = UIFont(name: lexemeLabel.font.fontName, size: 25)
+		lexemeLabel.center = CGPointMake(lexemeLabel.center.x, self.view.center.y)
+		lexemeLabel.textAlignment = NSTextAlignment.Center
+		self.view.addSubview(lexemeLabel)
 		
-		lexemeField = UITextView.init(frame: CGRectMake(12, lexemeFieldTag.center.y + lexemeFieldTag.frame.height/2, self.view.frame.width - 24, 175))
+		lexemeField = UITextView.init(frame: CGRectMake(12, lexemeLabel.frame.maxY, self.view.frame.width - 24, 175))
 		lexemeField.autocapitalizationType = UITextAutocapitalizationType.None
 		lexemeField.keyboardType = UIKeyboardType.Default
 		lexemeField.layer.borderWidth = 3
-		lexemeField.font = UIFont(name: lexemeFieldTag.font.fontName, size: 25)
+		lexemeField.font = UIFont(name: lexemeLabel.font.fontName, size: 25)
 		self.view.addSubview(lexemeField)
 	}
 	

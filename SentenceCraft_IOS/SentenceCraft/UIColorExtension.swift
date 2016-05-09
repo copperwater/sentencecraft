@@ -2,7 +2,7 @@
 //  UIColorExtension.swift
 //  SentenceCraft
 //
-//  Created by Tausif Ahmed on 5/9/16.
+//  Created by Tausif Ahmed on 5/8/16.
 //  Copyright © 2016 SentenceCraft. All rights reserved.
 //
 
