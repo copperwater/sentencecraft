@@ -12,7 +12,7 @@ class ViewLexemeViewController: UIViewController {
 	
 	
 	private var tagsInfo: UILabel = UILabel()
-	private var lexemeText: UILabel = UILabel()
+	private var lexemeText: UITextView = UITextView()
 	
 	// Function that reads in the data passed and displays it to the user
 	func addData(tags: String, lexeme: String) {
@@ -26,15 +26,14 @@ class ViewLexemeViewController: UIViewController {
 		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 
-		// Displays the lexeme
-		lexemeText = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width - 40, 400))
-		lexemeText.text = "Lexeme: \n\(lexeme)"
-		lexemeText.numberOfLines = 0
-		lexemeText.lineBreakMode = NSLineBreakMode.ByWordWrapping
-		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
-		lexemeText.center = CGPointMake(lexemeText.center.x, self.view.center.y)
-		lexemeText.textAlignment = NSTextAlignment.Center
+		// Displays the lexeme		
+		lexemeText = UITextView.init(frame: CGRectMake(20, tagsInfo.frame.maxY + tagsInfo.frame.height/3, self.view.frame.width - 40, 400))
+		lexemeText.text = "\(lexeme)"
+		lexemeText.editable = false
+		lexemeText.font  = UIFont(name: tagsInfo.font.fontName, size: 25)
+		
 		self.view.addSubview(lexemeText)
+		
 
 		
 	}

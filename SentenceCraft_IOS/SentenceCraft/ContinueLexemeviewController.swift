@@ -45,11 +45,16 @@ class ContinueLexemeViewController: UIViewController {
 	func lastThreeLexemeParts() -> String {
 		var ret: String = String()
 		var i: Int = max(lexemeParts.endIndex - 4, 0)
+		if i > 0 {
+			ret += "... "
+		}
+		
 		while i < lexemeParts.endIndex {
 			ret += lexemeParts[i]
 			ret += " "
 			i += 1
 		}
+		
 		return ret
 	}
 	
@@ -63,7 +68,7 @@ class ContinueLexemeViewController: UIViewController {
 		self.view.addSubview(tagsInfo)
 		
 		let lexemeText: UILabel = UILabel.init(frame: CGRectMake(0, 0, self.view.frame.width, 150))
-		lexemeText.text = "So far: ... \(lastThreeLexemeParts())"
+		lexemeText.text = "\(lastThreeLexemeParts())"
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
 		lexemeText.textAlignment = NSTextAlignment.Center
