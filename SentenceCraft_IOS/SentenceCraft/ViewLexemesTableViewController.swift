@@ -8,6 +8,9 @@
 
 import UIKit
 
+// This is a View and Controller since it is used by the User by manipulating the
+// ServerRequest model while also showing the View for the User to interact with
+
 class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate, UITextFieldDelegate {
 	
 	// Search bar that allows for search by tag

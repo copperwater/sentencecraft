@@ -8,6 +8,8 @@
 
 import UIKit
 
+// This is a View since it updates the View for the User to interact with
+
 class ViewLexemeViewController: UIViewController {
 	
 	

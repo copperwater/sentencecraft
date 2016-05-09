@@ -8,6 +8,11 @@
 
 import Foundation
 
+
+// This is a model in the MVC pattern since it has information that is manipulated by other Controllers
+// where different types of information from the Controllers are sent which in turn updates the View that
+// the user sees
+
 class ServerRequest {
 	
 	private var serverURL: String

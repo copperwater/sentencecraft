@@ -8,6 +8,9 @@
 
 import UIKit
 
+// This is a singleton class that extends upon the UIColor class and provides some extra initializers
+// for convenience in the app
+
 extension UIColor {
 	convenience init(red: Int, green: Int, blue: Int) {
 		assert(red >= 0 && red <= 255, "Invalid red component")

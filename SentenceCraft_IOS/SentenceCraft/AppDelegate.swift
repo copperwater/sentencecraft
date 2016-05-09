@@ -9,6 +9,11 @@
 import UIKit
 import SlideMenuControllerSwift
 
+
+// This is a model in the MVC pattern since it has information that is manipulated by other Controllers
+// where sentence_or_word_lexeme is the setting that can be switched between "word" and "sentence" and 
+// also updates the View that the user sees
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
 

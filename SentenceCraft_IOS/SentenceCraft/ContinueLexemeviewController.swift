@@ -8,6 +8,9 @@
 
 import UIKit
 
+// This is a View and Controller since it is used by the User by manipulating the
+// ServerRequest model while also showing the View for the User to interact with
+
 class ContinueLexemeViewController: UIViewController {
 	
 	// Field to append to the lexeme
@@ -68,7 +71,6 @@ class ContinueLexemeViewController: UIViewController {
 		tagsInfo.text = "Tags: \(tags)"
 		tagsInfo.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		tagsInfo.center = CGPointMake(tagsInfo.center.x, tagsInfo.frame.width/3)
-		tagsInfo.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(tagsInfo)
 		
 		// Create the last 3 portions of the lexeme that are shown
@@ -76,7 +78,7 @@ class ContinueLexemeViewController: UIViewController {
 		lexemeText.text = "\(lastThreeLexemeParts())"
 		lexemeText.font = UIFont(name: tagsInfo.font.fontName, size: 25)
 		lexemeText.editable = false
-		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 2*tagsInfo.frame.height)
+		lexemeText.center = CGPointMake(lexemeText.center.x, tagsInfo.center.y + 3*tagsInfo.frame.height)
 		lexemeText.textAlignment = NSTextAlignment.Center
 		self.view.addSubview(lexemeText)
 	}
