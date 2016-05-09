@@ -34,15 +34,16 @@ class HomeScreenViewController: UIViewController {
 	// Create the button that will let users start a lexeme
 	func createStartLexemeButton() {
 		startLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
-		startLexemeButton.setTitle("Start a Lexeme", forState: UIControlState.Normal)
-		startLexemeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		startLexemeButton.setTitle("Start", forState: UIControlState.Normal)
+		startLexemeButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		startLexemeButton.backgroundColor = UIColor(netHex: 0x18bc9c)
 		startLexemeButton.titleLabel!.font = UIFont(name: startLexemeButton.titleLabel!.font!.fontName,
 		                                            size: 25)
-		startLexemeButton.frame = CGRectMake(0, 0, 200, 50)
-		startLexemeButton.center = CGPointMake(self.view.center.x, 3 * self.view.center.y/5)
+		startLexemeButton.frame = CGRectMake(0, 0, 250, 50)
+		startLexemeButton.center = CGPointMake(self.view.center.x, 5 * self.view.center.y/7)
 		startLexemeButton.layer.cornerRadius = 10
 		startLexemeButton.layer.borderWidth = 5
-		startLexemeButton.layer.borderColor = UIColor.blueColor().CGColor
+		startLexemeButton.layer.borderColor = startLexemeButton.backgroundColor!.CGColor
 		startLexemeButton.addTarget(self,
 		                            action: #selector(HomeScreenViewController.startLexemeButtonPressed(_:)),
 		                            forControlEvents: UIControlEvents.TouchUpInside)
@@ -52,16 +53,17 @@ class HomeScreenViewController: UIViewController {
 	// Create the button that will let users continue/complete a lexeme
 	func createContinueLexemeButton() {
 		continueLexemeButton = UIButton.init(type: UIButtonType.RoundedRect)
-		continueLexemeButton.setTitle("Continue a Lexeme", forState: UIControlState.Normal)
-		continueLexemeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		continueLexemeButton.setTitle("Continue", forState: UIControlState.Normal)
+		continueLexemeButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		continueLexemeButton.backgroundColor = UIColor(netHex: 0x3498db)
 		continueLexemeButton.titleLabel!.font =
 											UIFont(name: continueLexemeButton.titleLabel!.font!.fontName,
 											       size: 25)
-		continueLexemeButton.frame = CGRectMake(0, 0, 300, 50)
-		continueLexemeButton.center = CGPointMake(self.view.center.x, 5 * self.view.center.y/5)
+		continueLexemeButton.frame = CGRectMake(0, 0, 250, 50)
+		continueLexemeButton.center = CGPointMake(self.view.center.x, self.view.center.y)
 		continueLexemeButton.layer.cornerRadius = 10
 		continueLexemeButton.layer.borderWidth = 5
-		continueLexemeButton.layer.borderColor = UIColor.blueColor().CGColor
+		continueLexemeButton.layer.borderColor = continueLexemeButton.backgroundColor!.CGColor
 		continueLexemeButton.addTarget(self,
 		                               action: #selector(HomeScreenViewController.continueLexemeButtonPressed(_:)),
 		                               forControlEvents: UIControlEvents.TouchUpInside)
@@ -71,15 +73,16 @@ class HomeScreenViewController: UIViewController {
 	// Create the button that will let users view all completed lexemes
 	func createViewLexemeButton() {
 		viewLexemesButton = UIButton.init(type: UIButtonType.RoundedRect)
-		viewLexemesButton.setTitle("View Completed Lexemes", forState: UIControlState.Normal)
-		viewLexemesButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		viewLexemesButton.setTitle("View", forState: UIControlState.Normal)
+		viewLexemesButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		viewLexemesButton.backgroundColor = UIColor(netHex: 0xf39c12)
 		viewLexemesButton.titleLabel!.font = UIFont(name: viewLexemesButton.titleLabel!.font!.fontName,
 		                                            size: 25)
-		viewLexemesButton.frame = CGRectMake(0, 0, 350, 50)
-		viewLexemesButton.center = CGPointMake(self.view.center.x, 7 * self.view.center.y/5)
+		viewLexemesButton.frame = CGRectMake(0, 0, 250, 50)
+		viewLexemesButton.center = CGPointMake(self.view.center.x, 9 * self.view.center.y/7)
 		viewLexemesButton.layer.cornerRadius = 10
 		viewLexemesButton.layer.borderWidth = 5
-		viewLexemesButton.layer.borderColor = UIColor.blueColor().CGColor
+		viewLexemesButton.layer.borderColor = viewLexemesButton.backgroundColor!.CGColor
 		viewLexemesButton.addTarget(self,
 		                            action: #selector(HomeScreenViewController.viewLexemeButtonPressed(_:)),
 		                            forControlEvents: UIControlEvents.TouchUpInside)
@@ -90,14 +93,15 @@ class HomeScreenViewController: UIViewController {
 	func createSettingButton() {
 		settingButton = UIButton.init(type: UIButtonType.RoundedRect)
 		settingButton.setTitle("Settings", forState: UIControlState.Normal)
-		settingButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		settingButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		settingButton.backgroundColor = UIColor.lightGrayColor()
 		settingButton.titleLabel!.font = UIFont(name: settingButton.titleLabel!.font!.fontName,
 		                                            size: 25)
-		settingButton.frame = CGRectMake(0, 0, 200, 50)
-		settingButton.center = CGPointMake(self.view.center.x, 9 * self.view.center.y/5)
+		settingButton.frame = CGRectMake(0, 0, 250, 50)
+		settingButton.center = CGPointMake(self.view.center.x, 11 * self.view.center.y/7)
 		settingButton.layer.cornerRadius = 10
 		settingButton.layer.borderWidth = 5
-		settingButton.layer.borderColor = UIColor.blueColor().CGColor
+		settingButton.layer.borderColor = settingButton.backgroundColor!.CGColor
 		settingButton.addTarget(self,
 		                            action: #selector(HomeScreenViewController.settingButtonPressed(_:)),
 		                            forControlEvents: UIControlEvents.TouchUpInside)
@@ -147,13 +151,14 @@ class HomeScreenViewController: UIViewController {
 		self.createContinueLexemeButton()
 		self.createViewLexemeButton()
 		self.createSettingButton()
+		
+		self.navigationController!.navigationBar.titleTextAttributes =
+			[NSForegroundColorAttributeName: UIColor.whiteColor()]
 	}
 	
 	override func didReceiveMemoryWarning() {
 		super.didReceiveMemoryWarning()
 		// Dispose of any resources that can be recreated.
-	}
-	
-	
+	}	
 }
 

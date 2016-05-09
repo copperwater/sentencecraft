@@ -5,7 +5,7 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
     </dependencies>
     <scenes>
-        <!--Start Lexeme View Controller-->
+        <!--Start-->
         <scene sceneID="XDM-1q-qGi">
             <objects>
                 <viewController id="sFt-BM-OE6" customClass="StartLexemeViewController" customModule="SentenceCraft" sceneMemberID="viewController">
@@ -18,12 +18,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Start" id="EeX-cD-5Cc"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vhU-dn-Vye" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1003.5" y="-700"/>
         </scene>
-        <!--Continue Lexeme View Controller-->
+        <!--Continue-->
         <scene sceneID="SGF-mf-6DA">
             <objects>
                 <viewController id="BQ3-v1-cFX" customClass="ContinueLexemeViewController" customModule="SentenceCraft" sceneMemberID="viewController">
@@ -36,12 +37,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Continue" id="NuW-6c-IGp"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Jft-lg-hYh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1003.5" y="99"/>
         </scene>
-        <!--Root View Controller-->
+        <!--View-->
         <scene sceneID="rkN-4Q-b5M">
             <objects>
                 <tableViewController id="8G5-lJ-jwX" customClass="ViewLexemesTableViewController" customModule="SentenceCraft" sceneMemberID="viewController">
@@ -54,7 +56,7 @@
                                 <rect key="frame" x="0.0" y="92" width="600" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="qdU-Gi-3Zo" id="LY7-GB-ICp">
-                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43.5"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                             </tableViewCell>
@@ -64,7 +66,9 @@
                             <outlet property="delegate" destination="8G5-lJ-jwX" id="HsW-2F-cZZ"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="qb1-7a-j8R"/>
+                    <toolbarItems/>
+                    <navigationItem key="navigationItem" title="View" id="qb1-7a-j8R"/>
+                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <segue destination="xEq-a2-nga" kind="show" identifier="LexemeSegue" id="roK-Ji-5KO"/>
                     </connections>
@@ -98,6 +102,9 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="0cu-Bo-3AW">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.13725490196078433" green="0.19215686274509802" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="tintColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                        <color key="barTintColor" red="0.13725490196078433" green="0.19215686274509802" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="fzx-kw-r9m"/>
@@ -107,7 +114,7 @@
             </objects>
             <point key="canvasLocation" x="-1221" y="99"/>
         </scene>
-        <!--Lexeme Mode View Controller-->
+        <!--Settings-->
         <scene sceneID="lC9-W0-xq5">
             <objects>
                 <viewController id="jhu-Yb-rZc" customClass="LexemeModeViewController" customModule="SentenceCraft" customModuleProvider="target" sceneMemberID="viewController">
@@ -120,12 +127,13 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Settings" id="MKN-T9-eOG"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yDa-ub-h1q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-333" y="-709"/>
         </scene>
-        <!--Home Screen View Controller-->
+        <!--Home-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="HomeScreenViewController" customModule="SentenceCraft" sceneMemberID="viewController">
@@ -138,7 +146,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" id="ylH-1k-ECZ"/>
+                    <navigationItem key="navigationItem" title="Home" id="Uzh-JS-YUE"/>
                     <connections>
                         <segue destination="sFt-BM-OE6" kind="show" identifier="StartLexemeSegue" id="mrX-Yw-yfq"/>
                         <segue destination="BQ3-v1-cFX" kind="show" identifier="ContinueLexemeSegue" id="Dfv-FA-o7X"/>

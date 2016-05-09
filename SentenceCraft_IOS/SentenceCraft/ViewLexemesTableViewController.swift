@@ -103,7 +103,9 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 						continue
 					}
 					tags += tag
-					tags += " , "
+					if tag != (entry["tags"] as! [String]).last {
+						tags += " , "
+					}
 				}
 			}
 

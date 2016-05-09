@@ -37,7 +37,9 @@ class ContinueLexemeViewController: UIViewController {
 		}
 		for tag in (lexeme["lexemecollection"]!["tags"] as! [String]) {
 			tags += tag
-			tags += ", "
+			if tag != (lexeme["lexemecollection"]!["tags"] as! [String]).last {
+				tags += ", "
+			}
 		}
 	}
 	
@@ -100,13 +102,17 @@ class ContinueLexemeViewController: UIViewController {
 	func createContinueButton() {
 		continueButton = UIButton.init(type: UIButtonType.RoundedRect)
 		continueButton.setTitle("Continue", forState: UIControlState.Normal)
-		continueButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		continueButton.backgroundColor = UIColor(netHex: 0x3498db)
+		continueButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
 		continueButton.frame = CGRectMake(0, 0, 150, 50)
 		continueButton.center = CGPointMake(continueButton.frame.width/2 + 20,
 		                                    self.view.frame.height - continueButton.frame.height/2 - 20)
+		continueButton.titleLabel!.font =
+			UIFont(name: continueButton.titleLabel!.font!.fontName,
+			       size: 25)
 		continueButton.layer.cornerRadius = 10
 		continueButton.layer.borderWidth = 5
-		continueButton.layer.borderColor = UIColor.blueColor().CGColor
+		continueButton.layer.borderColor = continueButton.backgroundColor!.CGColor
 		continueButton.addTarget(self,
 		                         action: #selector(ContinueLexemeViewController.continueButtonPressed(_:)),
 		                         forControlEvents: UIControlEvents.TouchUpInside)
@@ -117,13 +123,17 @@ class ContinueLexemeViewController: UIViewController {
 	func createCompleteButton() {
 		completeButton = UIButton.init(type: UIButtonType.RoundedRect)
 		completeButton.setTitle("Complete", forState: UIControlState.Normal)
-		completeButton.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+		completeButton.setTitleColor(UIColor.whiteColor(), forState: UIControlState.Normal)
+		completeButton.backgroundColor = UIColor(netHex: 0x3498db)
 		completeButton.frame = CGRectMake(0, 0, 150, 50)
 		completeButton.center = CGPointMake(self.view.frame.width - completeButton.frame.width/2 - 20,
 		                                  self.view.frame.height - completeButton.frame.height/2 - 20)
+		completeButton.titleLabel!.font =
+			UIFont(name: completeButton.titleLabel!.font!.fontName,
+			       size: 25)
 		completeButton.layer.cornerRadius = 10
 		completeButton.layer.borderWidth = 5
-		completeButton.layer.borderColor = UIColor.blueColor().CGColor
+		completeButton.layer.borderColor = completeButton.backgroundColor!.CGColor
 		completeButton.addTarget(self,
 		                       action: #selector(ContinueLexemeViewController.completeButtonPressed(_:)),
 		                       forControlEvents: UIControlEvents.TouchUpInside)
