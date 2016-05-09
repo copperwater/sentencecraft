@@ -8,7 +8,6 @@
 
 import Foundation
 
-
 // This is a model in the MVC pattern since it has information that is manipulated by other Controllers
 // where different types of information from the Controllers are sent which in turn updates the View that
 // the user sees
@@ -16,10 +15,26 @@ import Foundation
 class ServerRequest {
 	
 	private var serverURL: String
+	private let LOCALSERVER = "http://127.0.0.1:5000/"
+	private let REMOTESERVER = "http://128.113.151.26:5000/"
 
 	init() {
-		serverURL = "http://127.0.0.1:5000/"
-//		serverURL =  "http://128.113.151.26:5000/"
+		serverURL = LOCALSERVER
+	}
+	
+	func switchToRemoteServer() {
+		serverURL = REMOTESERVER
+	}
+	
+	func switchToLocalServer() {
+		serverURL = LOCALSERVER
+	}
+	
+	func localOrRemoteServer() -> String {
+		if serverURL == LOCALSERVER {
+			return "local"
+		}
+		return "remote"
 	}
 	
 	// Function to send a Start Lexeme request to the server

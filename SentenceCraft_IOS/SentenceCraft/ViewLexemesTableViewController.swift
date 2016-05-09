@@ -42,6 +42,7 @@ class ViewLexemesTableViewController: UITableViewController, UISearchBarDelegate
 		searchBar.showsScopeBar = true
 		searchBar.delegate = self
 		searchBar.autocapitalizationType = UITextAutocapitalizationType.None
+		searchBar.placeholder = "e.g. Bees,Honey"
 		self.view.addSubview(searchBar)
 	}
 	
