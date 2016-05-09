@@ -51,7 +51,6 @@ class LexemeModeViewController: UIViewController {
 		} else {
 			appDelegate.sentence_or_word_lexeme = "sentence"
 		}
-		
 	}
 	
 	// Load the settings page
